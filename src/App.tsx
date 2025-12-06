@@ -41,7 +41,8 @@ import {
   Eye,
   BrainCircuit,
   Target,
-  CornerUpLeft
+  CornerUpLeft,
+  RefreshCcw
 } from 'lucide-react';
 import { cn } from "@/components/ui/utils";
 
@@ -125,10 +126,10 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
       <nav className="relative z-50 flex items-center justify-between px-6 py-6 md:px-12 border-b border-white/5 bg-[#050505]/80 backdrop-blur-md sticky top-0 h-20">
         <div className="flex items-center gap-4 cursor-pointer" onClick={() => onViewChange('HOME')}>
           {/* 3x3 Square Matrix Logo */}
-          <div className="grid grid-cols-3 gap-[2px]">
-            <div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div>
-            <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
-            <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
+          <div className="grid grid-cols-3 gap-[3px]">
+            <div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+            <div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div>
+            <div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div>
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-lg font-bold tracking-tight">THRESHOLD</span>
@@ -675,11 +676,6 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [gateUnlocked, setGateUnlocked] = useState(false);
   const [slidePosition, setSlidePosition] = useState(0);
   const [competitors, setCompetitors] = useState([1, 2, 3]); // Default 3
-  const [governanceChecks, setGovernanceChecks] = useState({
-      accessibility: false,
-      technical: false,
-      usage: false
-  });
   
   // Stage 3 State
   const [designApproved, setDesignApproved] = useState(false);
@@ -706,6 +702,13 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       application: false,
       recommendation: false,
       nextSteps: false
+  });
+
+  // Stage 5 State
+  const [governanceChecks, setGovernanceChecks] = useState({
+      accessibility: false,
+      technical: false,
+      usage: false
   });
 
 
@@ -808,12 +811,6 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
 
       {/* Tape Measure Header */}
       <div className="sticky top-[82px] z-40 bg-[#050505]/95 backdrop-blur border-b border-white/10 py-4 overflow-x-auto">
-        
-        {/* RETURN TO HUB BUTTON */}
-        <button onClick={() => onNavigate('PROJECT_HUB')} className="absolute left-6 top-1/2 -translate-y-1/2 z-50 text-[10px] font-mono text-white/40 hover:text-white flex items-center gap-2 transition-colors">
-            <CornerUpLeft className="w-3 h-3" /> HUB
-        </button>
-
         <div className="flex items-center justify-between min-w-[600px] px-6 relative">
           <div className="absolute left-6 right-6 top-1/2 h-[1px] bg-white/10 -z-10"></div>
           
@@ -852,63 +849,28 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 <SpecBlock id="PARAM_02" label="Brand/Org Name" placeholder="Exact name as it will appear in the logo..." hint="Confirm capitalization." height="h-20" />
              </div>
 
-             <SpecBlock id="PARAM_03" label="Primary Audience" placeholder="Who needs to connect with this work?" hint="Demographics, psychographics, pain points." />
-             <SpecBlock id="PARAM_04" label="Core Message" placeholder="The single most important thing to communicate..." hint="One clear sentence." />
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <SpecBlock id="PARAM_03" label="Business Problem" placeholder="What business problem does this solve?" hint="Connect to measurable outcomes." />
+                <SpecBlock id="PARAM_04" label="Desired Emotional Response" placeholder="How should the audience feel?" hint="E.g., 'Safe,' 'Understood,' 'Empowered'." />
+             </div>
+
+             <SpecBlock id="PARAM_05" label="Primary Audience & Insight" placeholder="Who are they? What do they value/fear?" hint="Demographics + Psychographics." />
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <SpecBlock id="PARAM_05" label="Must-Embody Keywords" placeholder="Non-negotiable qualities (3-5)..." hint="Specific, defendable adjectives." />
-                <SpecBlock id="PARAM_06" label="Must-Avoid Keywords" placeholder="Explicit guardrails (3-5)..." hint="What causes disengagement?" />
+                <SpecBlock id="PARAM_06" label="Must-Embody Keywords" placeholder="Non-negotiable qualities (3-5)..." hint="Specific, defendable adjectives." />
+                <SpecBlock id="PARAM_07" label="Must-Avoid Keywords" placeholder="Explicit guardrails (3-5)..." hint="What causes disengagement?" />
              </div>
 
-             <SpecBlock id="PARAM_07" label="Symbolic Territory" placeholder="Concepts, objects, or metaphors..." hint="Ex: 'Structural Biology' or 'Digital Fortifications'." />
-             <SpecBlock id="PARAM_08" label="Primary Applications" placeholder="Where will this logo live?" hint="App Icon, Signage, Uniforms." />
-
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <SpecBlock id="PARAM_09" label="Brand Voice & Tone" placeholder="How should this brand sound?" hint="Ex: 'Clinical but compassionate'." />
-                <SpecBlock id="PARAM_10" label="Color Direction" placeholder="What palette supports your strategy?" hint="Ex: 'Deep Teals with Signal Orange'." />
-             </div>
-
-             {/* STAGE 1.5: VISUAL INTELLIGENCE */}
-             <div className="mt-16 pt-16 border-t border-white/10">
-                <div className="flex items-center justify-between mb-8">
-                    <div>
-                        <div className="font-mono text-xs text-[#FF7F50] mb-2">[ 1.5 :: VISUAL_INTELLIGENCE ]</div>
-                        <h3 className="text-xl font-bold">Competitor & Visual Research</h3>
-                    </div>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded hover:border-[#FF7F50]/50 transition-colors text-xs font-mono">
-                        <Sparkles className="w-3 h-3 text-[#FF7F50]" /> AUTO_ANALYZE_MARKET
-                    </button>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="aspect-square border border-dashed border-white/20 rounded-lg bg-white/5 flex flex-col items-center justify-center cursor-pointer hover:bg-white/10 transition-colors group">
-                        <Upload className="w-6 h-6 text-white/40 group-hover:text-white mb-2" />
-                        <span className="text-[10px] font-mono text-white/40 uppercase">Upload Reference</span>
-                    </div>
-                    {competitors.map((i) => (
-                        <div key={i} className="aspect-square border border-white/10 rounded-lg bg-black/40 relative group overflow-hidden">
-                            <div className="absolute inset-0 bg-white/5 group-hover:bg-white/10 transition-colors"></div>
-                            <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                                <ImageIcon className="w-8 h-8" />
-                            </div>
-                            <div className="absolute bottom-2 left-2 text-[10px] font-mono text-white/60 bg-black/80 px-1 rounded">
-                                COMPETITOR_0{i}
-                            </div>
-                        </div>
-                    ))}
-                    <button onClick={addCompetitor} className="aspect-square border border-white/10 rounded-lg flex items-center justify-center hover:bg-white/5 transition-colors group">
-                        <Plus className="w-6 h-6 text-white/40 group-hover:text-white transition-colors" />
-                    </button>
-                </div>
-             </div>
+             <SpecBlock id="PARAM_08" label="Sensitivity & Cultural Context" placeholder="What sensitive topics or identities must be handled with care?" hint="Trauma-informed, gender-inclusive, accessibility needs." />
           </div>
         )}
 
-        {/* STAGE 2 */}
+        {/* STAGE 2 (PATTERN EXTRACTION & SEMIOTICS) */}
         {stage === 2 && (
              <div className="space-y-8 animate-in slide-in-from-right duration-500">
                 <div className="mb-8">
                     <h2 className="text-3xl font-bold mb-2">Conceptual Clarity</h2>
-                    <p className="text-white/60 font-light">Generate and evaluate concept directions against your strategic brief.</p>
+                    <p className="text-white/60 font-light">Identify category clichés (AI), build visual context, and generate directions.</p>
                 </div>
 
                 {/* 1.5 SPLIT: AI PATTERN EXTRACTION */}
@@ -950,11 +912,20 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                         <p className="text-xs text-white/40 mb-6">Define the symbolic territory *against* the detected clichés.</p>
                         
                         <div className="space-y-4">
-                            <SpecBlock id="SEMIOTICS_01" label="Metaphor" placeholder="e.g., 'Structural Biology'..." height="h-16" />
-                            <SpecBlock id="SEMIOTICS_02" label="Visual Cues" placeholder="e.g., Arches, Bone..." height="h-16" />
-                            <SpecBlock id="SEMIOTICS_03" label="Emotional Signal" placeholder="e.g., Safety, Containment..." height="h-16" />
+                             <div className="space-y-2">
+                                <label className="text-[10px] font-mono text-[#FF7F50] uppercase">Metaphor</label>
+                                <input className="w-full bg-black/40 border border-[#FF7F50]/30 rounded px-3 py-2 text-sm outline-none" placeholder="e.g. Structural Biology" />
+                             </div>
+                             <div className="space-y-2">
+                                <label className="text-[10px] font-mono text-[#FF7F50] uppercase">Visual Cues</label>
+                                <input className="w-full bg-black/40 border border-[#FF7F50]/30 rounded px-3 py-2 text-sm outline-none" placeholder="e.g. Arches, Bone" />
+                             </div>
+                             <div className="space-y-2">
+                                <label className="text-[10px] font-mono text-[#FF7F50] uppercase">Emotional Signal</label>
+                                <input className="w-full bg-black/40 border border-[#FF7F50]/30 rounded px-3 py-2 text-sm outline-none" placeholder="e.g. Safety, Containment" />
+                             </div>
                             
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 mt-4">
                                 <button onClick={() => onNavigate('MOODBOARD')} className="flex-1 py-3 border border-[#FF7F50]/30 text-[#FF7F50] text-xs font-mono rounded hover:bg-[#FF7F50]/10 flex items-center justify-center gap-2">
                                     <Grid className="w-3 h-3" /> CREATE / EDIT MOODBOARD
                                 </button>
@@ -1168,10 +1139,10 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                          {/* Custom Checks */}
                         {customPresChecks.map((check, i) => (
                              <div key={i} className="flex items-center gap-4 p-3 border border-white/5 rounded bg-white/5">
-                                <div className={cn("w-4 h-4 rounded border flex items-center justify-center bg-[#FF7F50] border-[#FF7F50]")}>
-                                    <Check className="w-3 h-3 text-black" />
-                                </div>
-                                <span className="text-sm text-white/80">{check}</span>
+                                 <div className={cn("w-4 h-4 rounded border flex items-center justify-center bg-[#FF7F50] border-[#FF7F50]")}>
+                                     <Check className="w-3 h-3 text-black" />
+                                 </div>
+                                 <span className="text-sm text-white/80">{check}</span>
                             </div>
                         ))}
 
@@ -1201,73 +1172,72 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                     Assets are compiled and ready for final export.
                  </p>
                  
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left max-w-2xl mx-auto mb-8">
-                     <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
-                         <div className="flex items-center gap-3">
-                             <FileText className="w-5 h-5 text-blue-400" />
-                             <div>
-                                 <h4 className="font-bold">Strategic Brief PDF</h4>
-                                 <p className="text-xs text-white/40">1.2 MB</p>
-                             </div>
-                         </div>
-                         <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
-                     </div>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left max-w-3xl mx-auto mb-8">
                      
-                     <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
-                         <div className="flex items-center gap-3">
-                             <Sparkles className="w-5 h-5 text-purple-400" />
-                             <div>
-                                 <h4 className="font-bold">Visual Research Report</h4>
-                                 <p className="text-xs text-white/40">4.5 MB</p>
+                     {/* LEFT COLUMN: DOWNLOADS */}
+                     <div className="space-y-4">
+                         <div className="font-mono text-xs text-blue-400 mb-2">// GENERATED_DOCUMENTATION</div>
+                         
+                         <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
+                             <div className="flex items-center gap-3">
+                                 <FileText className="w-5 h-5 text-blue-400" />
+                                 <div>
+                                     <h4 className="font-bold">Strategic Brief PDF</h4>
+                                     <p className="text-xs text-white/40">1.2 MB</p>
+                                 </div>
                              </div>
+                             <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
                          </div>
-                         <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
+
+                         <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
+                             <div className="flex items-center gap-3">
+                                 <BookOpen className="w-5 h-5 text-green-400" />
+                                 <div>
+                                     <h4 className="font-bold">Brand Guidelines PDF</h4>
+                                     <p className="text-xs text-white/40">Includes WCAG Rules</p>
+                                 </div>
+                             </div>
+                             <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
+                         </div>
+
+                          <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
+                             <div className="flex items-center gap-3">
+                                 <ImageIcon className="w-5 h-5 text-orange-400" />
+                                 <div>
+                                     <h4 className="font-bold">Logo Asset Suite</h4>
+                                     <p className="text-xs text-white/40">SVG, PNG, JPG</p>
+                                 </div>
+                             </div>
+                             <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
+                         </div>
                      </div>
 
-                     <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
-                         <div className="flex items-center gap-3">
-                             <ImageIcon className="w-5 h-5 text-orange-400" />
-                             <div>
-                                 <h4 className="font-bold">Logo Asset Suite</h4>
-                                 <p className="text-xs text-white/40">SVG, PNG, JPG (15.4 MB)</p>
-                             </div>
+                     {/* RIGHT COLUMN: GOVERNANCE CHECK */}
+                     <div className="bg-white/5 p-6 rounded-xl border border-white/10 h-fit">
+                         <div className="font-mono text-xs text-[#FF7F50] mb-6 flex items-center gap-2">
+                             <Lock className="w-3 h-3"/> GOVERNANCE_VERIFICATION
                          </div>
-                         <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
-                     </div>
+                         
+                         <div className="space-y-4">
+                             <div onClick={() => toggleGovernanceCheck('accessibility')} className="flex items-start gap-3 cursor-pointer group">
+                                 <div className={cn("w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors mt-0.5", governanceChecks.accessibility ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20 group-hover:border-white/40")}>
+                                    {governanceChecks.accessibility && <Check className="w-3 h-3 text-black" />}
+                                 </div>
+                                 <div>
+                                     <span className="text-sm font-bold block">Accessibility Compliance</span>
+                                     <span className="text-xs text-white/40">I have verified the assets against the WCAG guidelines in the generated PDF.</span>
+                                 </div>
+                             </div>
 
-                     <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
-                         <div className="flex items-center gap-3">
-                             <BookOpen className="w-5 h-5 text-green-400" />
-                             <div>
-                                 <h4 className="font-bold">Brand Guidelines PDF</h4>
-                                 <p className="text-xs text-white/40">8.1 MB</p>
+                             <div onClick={() => toggleGovernanceCheck('technical')} className="flex items-start gap-3 cursor-pointer group">
+                                 <div className={cn("w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors mt-0.5", governanceChecks.technical ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20 group-hover:border-white/40")}>
+                                    {governanceChecks.technical && <Check className="w-3 h-3 text-black" />}
+                                 </div>
+                                  <div>
+                                     <span className="text-sm font-bold block">Technical Standards</span>
+                                     <span className="text-xs text-white/40">Files meet all required formats and naming conventions.</span>
+                                 </div>
                              </div>
-                         </div>
-                         <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
-                     </div>
-                 </div>
-
-                 {/* Year Two Governance Checks */}
-                 <div className="max-w-xl mx-auto mb-12 text-left bg-white/5 p-6 rounded-xl border border-white/10">
-                     <h4 className="font-bold text-sm mb-4 flex items-center gap-2"><Lock className="w-4 h-4 text-[#FF7F50]"/> Governance Checks</h4>
-                     <div className="space-y-3">
-                         <div onClick={() => toggleGovernanceCheck('accessibility')} className="flex items-center gap-3 text-sm text-white/60 cursor-pointer hover:text-white">
-                             <div className={cn("w-4 h-4 rounded border flex items-center justify-center transition-colors", governanceChecks.accessibility ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20")}>
-                                {governanceChecks.accessibility && <Check className="w-3 h-3 text-black" />}
-                             </div>
-                             Accessibility Compliance (WCAG)
-                         </div>
-                         <div onClick={() => toggleGovernanceCheck('technical')} className="flex items-center gap-3 text-sm text-white/60 cursor-pointer hover:text-white">
-                             <div className={cn("w-4 h-4 rounded border flex items-center justify-center transition-colors", governanceChecks.technical ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20")}>
-                                {governanceChecks.technical && <Check className="w-3 h-3 text-black" />}
-                             </div>
-                             Technical Specs Document Included
-                         </div>
-                         <div onClick={() => toggleGovernanceCheck('usage')} className="flex items-center gap-3 text-sm text-white/60 cursor-pointer hover:text-white">
-                             <div className={cn("w-4 h-4 rounded border flex items-center justify-center transition-colors", governanceChecks.usage ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20")}>
-                                {governanceChecks.usage && <Check className="w-3 h-3 text-black" />}
-                             </div>
-                             Usage Guidelines Defined
                          </div>
                      </div>
                  </div>
@@ -1284,10 +1254,10 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
         <div className="max-w-3xl mx-auto flex items-center gap-4">
             
             <button 
-                onClick={prevStage}
-                className="h-14 w-14 flex items-center justify-center rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/30 transition-all flex-shrink-0"
+                onClick={() => onNavigate('PROJECT_HUB')}
+                className="h-14 px-6 flex items-center gap-2 rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/30 transition-all flex-shrink-0 font-mono text-xs"
             >
-                <ChevronLeft className="w-5 h-5" />
+                <CornerUpLeft className="w-4 h-4" /> HUB
             </button>
 
             <div className="flex-1 relative">
