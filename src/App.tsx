@@ -21,7 +21,12 @@ import {
   MousePointer2,
   Image as ImageIcon,
   Upload,
-  Sparkles
+  Sparkles,
+  Zap,
+  Layout as LayoutIcon,
+  Presentation,
+  BookOpen,
+  MessageSquare
 } from 'lucide-react';
 import { cn } from "@/components/ui/utils";
 
@@ -48,7 +53,6 @@ const PROJECTS: Project[] = [
 
 // --- HELPER COMPONENTS ---
 
-// The "Spec Block" Input Field - Reusable Component for Stage 1
 const SpecBlock = ({ 
   id, 
   label, 
@@ -97,12 +101,10 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
 
   return (
     <div className="relative min-h-screen w-full bg-[#050505] text-white selection:bg-[#FF7F50]/30 overflow-x-hidden font-sans">
-      {/* Noise Overlay */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.03]"
            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}>
       </div>
 
-      {/* Navigation / Status Bar */}
       <nav className="relative z-50 flex items-center justify-between px-6 py-6 md:px-12 border-b border-white/5 bg-[#050505]/80 backdrop-blur-md sticky top-0">
         <div className="flex items-center gap-4 cursor-pointer" onClick={() => onViewChange('HOME')}>
           <div className="grid grid-cols-3 gap-[2px]">
@@ -147,7 +149,6 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
         {children}
       </main>
 
-       {/* Footer */}
        <footer className="relative z-10 border-t border-white/10 bg-[#020202] py-8 px-6 mt-auto">
         <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-[#FF7F50]/20"></div>
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-[10px] font-mono text-white/40">
@@ -170,7 +171,6 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
 
   return (
     <div className="flex flex-col items-center justify-center pt-12 pb-32 px-4">
-      {/* The Glass HUD */}
       <div className="relative w-full max-w-3xl p-8 md:p-20 border border-white/10 rounded-3xl backdrop-blur-xl bg-white/5 shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-500">
         <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-blue-400 via-purple-400 to-[#FF7F50] opacity-70"></div>
         <div className="absolute top-4 left-4 text-white/20 text-xs">+</div>
@@ -203,7 +203,6 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
         </div>
       </div>
 
-      {/* INTERACTIVE DIFFERENCE ENGINE */}
       <div className="mt-32 max-w-5xl w-full border-t border-white/5 pt-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
@@ -402,21 +401,35 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 5. PROJECT WORKFLOW (Expanded Stage 1 & 1.5)
+// 5. PROJECT WORKFLOW (Updated Stages 2-5)
 const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [stage, setStage] = useState<Stage>(1);
   const [gateUnlocked, setGateUnlocked] = useState(false);
   const [slidePosition, setSlidePosition] = useState(0);
   
-  const [checklist, setChecklist] = useState({
+  // Checklists
+  const [designChecklist, setDesignChecklist] = useState({
       scalability: false,
       monochrome: false,
       cultural: false,
       production: false
   });
 
-  const toggleCheck = (key: keyof typeof checklist) => {
-      setChecklist(prev => ({ ...prev, [key]: !prev[key] }));
+  const [presChecklist, setPresChecklist] = useState({
+      context: false,
+      brief: false,
+      concepts: false,
+      application: false,
+      recommendation: false,
+      nextSteps: false
+  });
+
+  const toggleDesignCheck = (key: keyof typeof designChecklist) => {
+      setDesignChecklist(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const togglePresCheck = (key: keyof typeof presChecklist) => {
+      setPresChecklist(prev => ({ ...prev, [key]: !prev[key] }));
   };
   
   const stages = [
@@ -499,92 +512,37 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       {/* Stage Content */}
       <div className="max-w-3xl mx-auto px-6 pt-12">
         
-        {/* === STAGE 1: STRATEGIC FOUNDATION (EXPANDED) === */}
+        {/* STAGE 1: STRATEGIC FOUNDATION (Full inputs) */}
         {stage === 1 && (
           <div className="space-y-8 animate-in slide-in-from-right duration-500">
              
-             {/* Header */}
              <div className="mb-8">
                 <h2 className="text-3xl font-bold mb-2">Strategic Foundation</h2>
                 <p className="text-white/60 font-light">Define audience, core message, and strategic guardrails before generation.</p>
              </div>
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <SpecBlock 
-                    id="PARAM_01" 
-                    label="Project Name" 
-                    placeholder="Clear project identification..." 
-                    hint="Be specific and descriptive."
-                    height="h-20"
-                />
-                <SpecBlock 
-                    id="PARAM_02" 
-                    label="Brand/Org Name" 
-                    placeholder="Exact name as it will appear in the logo..." 
-                    hint="Confirm capitalization with client."
-                    height="h-20"
-                />
+                <SpecBlock id="PARAM_01" label="Project Name" placeholder="Clear project identification..." hint="Be specific and descriptive." height="h-20" />
+                <SpecBlock id="PARAM_02" label="Brand/Org Name" placeholder="Exact name as it will appear in the logo..." hint="Confirm capitalization." height="h-20" />
              </div>
 
-             <SpecBlock 
-                id="PARAM_03" 
-                label="Primary Audience" 
-                placeholder="Who needs to connect with this work?" 
-                hint="Include demographics, psychographics, pain points, and aspirations."
-             />
-
-             <SpecBlock 
-                id="PARAM_04" 
-                label="Core Message" 
-                placeholder="The single most important thing this work should communicate..." 
-                hint="One clear sentence that couldn't describe a competitor."
-             />
+             <SpecBlock id="PARAM_03" label="Primary Audience" placeholder="Who needs to connect with this work?" hint="Demographics, psychographics, pain points." />
+             <SpecBlock id="PARAM_04" label="Core Message" placeholder="The single most important thing to communicate..." hint="One clear sentence." />
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <SpecBlock 
-                    id="PARAM_05" 
-                    label="Must-Embody Keywords" 
-                    placeholder="Non-negotiable qualities (3-5)..." 
-                    hint="Choose specific, defendable adjectives."
-                />
-                <SpecBlock 
-                    id="PARAM_06" 
-                    label="Must-Avoid Keywords" 
-                    placeholder="Explicit guardrails (3-5)..." 
-                    hint="What would cause your audience to disengage?"
-                />
+                <SpecBlock id="PARAM_05" label="Must-Embody Keywords" placeholder="Non-negotiable qualities (3-5)..." hint="Specific, defendable adjectives." />
+                <SpecBlock id="PARAM_06" label="Must-Avoid Keywords" placeholder="Explicit guardrails (3-5)..." hint="What causes disengagement?" />
              </div>
 
-             <SpecBlock 
-                id="PARAM_07" 
-                label="Symbolic Territory" 
-                placeholder="What concepts, objects, or metaphors align with your message?" 
-                hint="Example: 'Structural Biology' or 'Digital Fortifications'."
-             />
-
-             <SpecBlock 
-                id="PARAM_08" 
-                label="Primary Applications" 
-                placeholder="Where will this logo live?" 
-                hint="Example: App Icon, Building Signage, Uniforms."
-             />
+             <SpecBlock id="PARAM_07" label="Symbolic Territory" placeholder="Concepts, objects, or metaphors..." hint="Ex: 'Structural Biology' or 'Digital Fortifications'." />
+             <SpecBlock id="PARAM_08" label="Primary Applications" placeholder="Where will this logo live?" hint="App Icon, Signage, Uniforms." />
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <SpecBlock 
-                    id="PARAM_09" 
-                    label="Brand Voice & Tone" 
-                    placeholder="How should this brand sound?" 
-                    hint="Example: 'Clinical but compassionate'."
-                />
-                <SpecBlock 
-                    id="PARAM_10" 
-                    label="Color Direction" 
-                    placeholder="What palette supports your strategy?" 
-                    hint="Example: 'Deep Teals with Signal Orange'."
-                />
+                <SpecBlock id="PARAM_09" label="Brand Voice & Tone" placeholder="How should this brand sound?" hint="Ex: 'Clinical but compassionate'." />
+                <SpecBlock id="PARAM_10" label="Color Direction" placeholder="What palette supports your strategy?" hint="Ex: 'Deep Teals with Signal Orange'." />
              </div>
 
-             {/* === STAGE 1.5: VISUAL INTELLIGENCE MODULE === */}
+             {/* STAGE 1.5: VISUAL INTELLIGENCE */}
              <div className="mt-16 pt-16 border-t border-white/10">
                 <div className="flex items-center justify-between mb-8">
                     <div>
@@ -595,20 +553,14 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                         <Sparkles className="w-3 h-3 text-[#FF7F50]" /> AUTO_ANALYZE_MARKET
                     </button>
                 </div>
-
-                {/* Research Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {/* Upload Slot */}
                     <div className="aspect-square border border-dashed border-white/20 rounded-lg bg-white/5 flex flex-col items-center justify-center cursor-pointer hover:bg-white/10 transition-colors group">
                         <Upload className="w-6 h-6 text-white/40 group-hover:text-white mb-2" />
                         <span className="text-[10px] font-mono text-white/40 uppercase">Upload Reference</span>
                     </div>
-                    
-                    {/* Placeholder Research Items */}
                     {[1, 2, 3].map((i) => (
                         <div key={i} className="aspect-square border border-white/10 rounded-lg bg-black/40 relative group overflow-hidden">
                             <div className="absolute inset-0 bg-white/5 group-hover:bg-white/10 transition-colors"></div>
-                            {/* Fake image placeholder */}
                             <div className="absolute inset-0 flex items-center justify-center opacity-20">
                                 <ImageIcon className="w-8 h-8" />
                             </div>
@@ -622,83 +574,174 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
           </div>
         )}
 
-        {/* STAGE 2: CONCEPTUAL CLARITY */}
+        {/* STAGE 2: CONCEPTUAL CLARITY (Choice: AI vs Upload) */}
         {stage === 2 && (
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in slide-in-from-right duration-500">
-                <div className="col-span-full border border-white/10 p-8 rounded-xl bg-white/5 text-center py-16">
-                     <div className="w-16 h-16 rounded-full border border-white/10 mx-auto flex items-center justify-center mb-6 animate-pulse">
-                        <div className="w-12 h-12 bg-white/5 rounded-full blur-md"></div>
-                     </div>
-                     <h3 className="text-xl font-bold mb-2">Concept Generation</h3>
-                     <p className="text-white/40 text-sm max-w-md mx-auto mb-8">
-                        AI models are currently generating directions based on your strategic constraints.
-                     </p>
-                     <div className="flex gap-4 justify-center">
-                        <div className="w-24 h-32 bg-white/5 border border-white/10 rounded"></div>
-                        <div className="w-24 h-32 bg-white/5 border border-white/10 rounded"></div>
-                        <div className="w-24 h-32 bg-white/5 border border-white/10 rounded"></div>
-                     </div>
+             <div className="space-y-8 animate-in slide-in-from-right duration-500">
+                <div className="mb-8">
+                    <h2 className="text-3xl font-bold mb-2">Conceptual Clarity</h2>
+                    <p className="text-white/60 font-light">Generate and evaluate concept directions against your strategic brief.</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* OPTION A: AI Generation */}
+                    <div className="border border-white/10 p-8 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group text-center py-16 flex flex-col items-center">
+                        <div className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center mb-6 group-hover:border-[#FF7F50] transition-colors">
+                            <Sparkles className="w-8 h-8 text-[#FF7F50]" />
+                        </div>
+                        <h3 className="text-xl font-bold mb-2">Generate Concepts</h3>
+                        <p className="text-white/40 text-sm max-w-xs mx-auto mb-6">
+                            Create initial directions based on your specific strategic constraints.
+                        </p>
+                        <button className="px-6 py-2 bg-[#FF7F50]/10 border border-[#FF7F50]/50 text-[#FF7F50] text-xs font-mono rounded hover:bg-[#FF7F50] hover:text-black transition-all">
+                            INITIATE_GENERATION
+                        </button>
+                    </div>
+
+                    {/* OPTION B: Manual Upload */}
+                    <div className="border border-white/10 p-8 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group text-center py-16 flex flex-col items-center">
+                        <div className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center mb-6 group-hover:border-white transition-colors">
+                            <Upload className="w-8 h-8 text-white/60" />
+                        </div>
+                        <h3 className="text-xl font-bold mb-2">Upload Sketches</h3>
+                        <p className="text-white/40 text-sm max-w-xs mx-auto mb-6">
+                            Import existing concepts to evaluate against the Threshold framework.
+                        </p>
+                        <button className="px-6 py-2 bg-white/5 border border-white/20 text-white text-xs font-mono rounded hover:bg-white hover:text-black transition-all">
+                            SELECT_FILES
+                        </button>
+                    </div>
                 </div>
              </div>
         )}
 
-        {/* STAGE 3: DESIGN INTEGRITY */}
+        {/* STAGE 3: DESIGN INTEGRITY (Refinement & Technical Checks) */}
         {stage === 3 && (
-            <div className="space-y-4 animate-in slide-in-from-right duration-500">
-                <div className="font-mono text-xs text-[#FF7F50] mb-4">// INTEGRITY_CHECKLIST</div>
-                <div className="grid gap-4">
-                    <div onClick={() => toggleCheck('scalability')} className="flex items-start justify-between p-5 border border-white/10 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
-                        <div>
-                            <span className="font-medium text-sm block mb-1">Scalability Test (16px)</span>
-                            <span className="text-xs text-white/40 font-light">Verifies legibility at favicon and app icon sizes.</span>
-                        </div>
-                        <div className={cn("w-4 h-4 rounded border mt-1 transition-colors flex items-center justify-center", checklist.scalability ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20")}>
-                            {checklist.scalability && <Check className="w-3 h-3 text-black" />}
-                        </div>
-                    </div>
+            <div className="space-y-8 animate-in slide-in-from-right duration-500">
+                <div className="mb-8">
+                    <h2 className="text-3xl font-bold mb-2">Design Integrity</h2>
+                    <p className="text-white/60 font-light">Refine and validate technical execution. AI assists with checks; you make strategic decisions.</p>
+                </div>
 
-                     <div onClick={() => toggleCheck('monochrome')} className="flex items-start justify-between p-5 border border-white/10 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
-                        <div>
-                            <span className="font-medium text-sm block mb-1">Monochrome Integrity</span>
-                            <span className="text-xs text-white/40 font-light">Ensures visual distinctiveness in single-color formats.</span>
-                        </div>
-                        <div className={cn("w-4 h-4 rounded border mt-1 transition-colors flex items-center justify-center", checklist.monochrome ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20")}>
-                            {checklist.monochrome && <Check className="w-3 h-3 text-black" />}
-                        </div>
+                {/* Refinement Module */}
+                <div className="border border-white/10 p-6 rounded-xl bg-white/5 mb-8">
+                    <div className="flex items-center gap-2 mb-4">
+                        <Zap className="w-4 h-4 text-[#FF7F50]" />
+                        <h3 className="font-bold text-lg">AI-Assisted Refinement</h3>
                     </div>
-
-                    <div onClick={() => toggleCheck('cultural')} className="flex items-start justify-between p-5 border border-white/10 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
-                        <div>
-                            <span className="font-medium text-sm block mb-1">Cultural Sensitivity Scan</span>
-                            <span className="text-xs text-white/40 font-light">AI-assisted scan for unintended negative connotations.</span>
-                        </div>
-                        <div className={cn("w-4 h-4 rounded border mt-1 transition-colors flex items-center justify-center", checklist.cultural ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20")}>
-                            {checklist.cultural && <Check className="w-3 h-3 text-black" />}
-                        </div>
+                    <p className="text-white/60 text-sm mb-6 max-w-xl">
+                        Request technical variations while maintaining strategic intent. Generate weight changes, simplify geometry, or test distinctiveness.
+                    </p>
+                    <div className="flex gap-4">
+                        <button className="px-4 py-2 bg-white/5 border border-white/10 rounded text-xs font-mono hover:border-white/30 transition-colors">
+                            GENERATE_BOLD_VARIANTS
+                        </button>
+                        <button className="px-4 py-2 bg-white/5 border border-white/10 rounded text-xs font-mono hover:border-white/30 transition-colors">
+                            SIMPLIFY_GEOMETRY
+                        </button>
                     </div>
+                </div>
 
-                     <div onClick={() => toggleCheck('production')} className="flex items-start justify-between p-5 border border-white/10 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
-                        <div>
-                            <span className="font-medium text-sm block mb-1">Production Feasibility</span>
-                            <span className="text-xs text-white/40 font-light">Checks for gradients/lines that fail in embroidery/vinyl.</span>
-                        </div>
-                        <div className={cn("w-4 h-4 rounded border mt-1 transition-colors flex items-center justify-center", checklist.production ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20")}>
-                            {checklist.production && <Check className="w-3 h-3 text-black" />}
-                        </div>
+                <div className="space-y-4">
+                    <div className="font-mono text-xs text-[#FF7F50] mb-4">// TECHNICAL_VALIDATION_CHECKLIST</div>
+                    <div className="grid gap-4">
+                        {[
+                            { id: 'scalability', label: 'Scalability Test (16px)', desc: 'Verifies legibility at favicon and app icon sizes.' },
+                            { id: 'monochrome', label: 'Monochrome Integrity', desc: 'Ensures visual distinctiveness in single-color formats.' },
+                            { id: 'cultural', label: 'Cultural Sensitivity Scan', desc: 'AI-assisted scan for unintended negative connotations.' },
+                            { id: 'production', label: 'Production Feasibility', desc: 'Checks for gradients/lines that fail in embroidery/vinyl.' }
+                        ].map((item) => (
+                            <div key={item.id} onClick={() => toggleDesignCheck(item.id as any)} className="flex items-start justify-between p-5 border border-white/10 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
+                                <div>
+                                    <span className="font-medium text-sm block mb-1">{item.label}</span>
+                                    <span className="text-xs text-white/40 font-light">{item.desc}</span>
+                                </div>
+                                <div className={cn("w-4 h-4 rounded border mt-1 transition-colors flex items-center justify-center", designChecklist[item.id as keyof typeof designChecklist] ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20")}>
+                                    {designChecklist[item.id as keyof typeof designChecklist] && <Check className="w-3 h-3 text-black" />}
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
         )}
 
-        {/* STAGE 4/5: VALIDATION & EXPORT */}
-        {stage >= 4 && (
+        {/* STAGE 4: FINAL VALIDATION (Presentation) */}
+        {stage === 4 && (
+             <div className="space-y-8 animate-in slide-in-from-right duration-500">
+                <div className="mb-8">
+                    <h2 className="text-3xl font-bold mb-2">Final Validation</h2>
+                    <p className="text-white/60 font-light">Stakeholder review and approval. Prepare your concept presentation using AI-powered tools.</p>
+                </div>
+
+                {/* Presentation Tools */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <div className="border border-white/10 p-5 rounded-xl bg-white/5 hover:border-purple-500/50 transition-colors group cursor-pointer">
+                        <div className="flex justify-between items-start mb-4">
+                            <Presentation className="w-6 h-6 text-purple-400" />
+                            <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-white" />
+                        </div>
+                        <h4 className="font-bold mb-1">Gamma AI</h4>
+                        <p className="text-xs text-white/40">Generate beautiful, editable slide decks instantly.</p>
+                    </div>
+                    <div className="border border-white/10 p-5 rounded-xl bg-white/5 hover:border-blue-500/50 transition-colors group cursor-pointer">
+                        <div className="flex justify-between items-start mb-4">
+                            <BookOpen className="w-6 h-6 text-blue-400" />
+                            <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-white" />
+                        </div>
+                        <h4 className="font-bold mb-1">NotebookLM</h4>
+                        <p className="text-xs text-white/40">Turn your brief and concepts into presentation notes.</p>
+                    </div>
+                    <div className="border border-white/10 p-5 rounded-xl bg-white/5 hover:border-orange-500/50 transition-colors group cursor-pointer">
+                        <div className="flex justify-between items-start mb-4">
+                            <MessageSquare className="w-6 h-6 text-orange-400" />
+                            <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-white" />
+                        </div>
+                        <h4 className="font-bold mb-1">Claude</h4>
+                        <p className="text-xs text-white/40">Draft speaker notes and stakeholder talking points.</p>
+                    </div>
+                </div>
+
+                {/* Checklist */}
+                <div className="space-y-4">
+                    <div className="font-mono text-xs text-[#FF7F50] mb-4">// PRESENTATION_CHECKLIST</div>
+                    <div className="grid gap-3">
+                        {[
+                            'Context Slide: Project background and objectives',
+                            'Brief Summary: Key strategic inputs and constraints',
+                            'Concept Presentation: Visual + strategic rationale',
+                            'Application Examples: Concepts in context',
+                            'Recommendation: Which concept to move forward',
+                            'Next Steps: Timeline and deliverables'
+                        ].map((item, i) => (
+                            <div key={i} onClick={() => togglePresCheck(Object.keys(presChecklist)[i] as any)} className="flex items-center gap-4 p-3 border border-white/5 rounded hover:bg-white/5 cursor-pointer">
+                                <div className={cn("w-4 h-4 rounded border flex items-center justify-center transition-colors", Object.values(presChecklist)[i] ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20")}>
+                                    {Object.values(presChecklist)[i] && <Check className="w-3 h-3 text-black" />}
+                                </div>
+                                <span className="text-sm text-white/80">{item}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+             </div>
+        )}
+
+        {/* STAGE 5: IMPLEMENTATION (Delivery) */}
+        {stage === 5 && (
              <div className="text-center py-20 animate-in slide-in-from-right duration-500">
-                 <ShieldCheck className="w-16 h-16 text-[#FF7F50] mx-auto mb-6" />
-                 <h2 className="text-3xl font-bold mb-4">Ready for Implementation</h2>
-                 <p className="text-white/40 mb-8">All protocols validated. Assets are ready for export.</p>
-                 <button className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 rounded hover:bg-white/10 font-mono text-sm">
-                    <Download className="w-4 h-4" /> EXPORT_PACKAGE.ZIP
-                 </button>
+                 <ShieldCheck className="w-20 h-20 text-[#FF7F50] mx-auto mb-8" />
+                 <h2 className="text-4xl font-bold mb-4">Implementation Ready</h2>
+                 <p className="text-white/60 mb-12 max-w-md mx-auto">
+                    All strategic thresholds crossed. Protocols validated. 
+                    Assets are compiled and ready for final export.
+                 </p>
+                 <div className="flex flex-col gap-4 max-w-xs mx-auto">
+                    <button className="flex items-center justify-center gap-3 px-6 py-4 bg-white text-black font-bold rounded hover:bg-white/90 transition-colors">
+                        <Download className="w-5 h-5" /> DOWNLOAD ASSET PACKAGE
+                    </button>
+                    <button className="flex items-center justify-center gap-3 px-6 py-4 border border-white/20 rounded hover:bg-white/10 font-mono text-xs">
+                        <FileText className="w-4 h-4" /> EXPORT BRAND GUIDELINES PDF
+                    </button>
+                 </div>
              </div>
         )}
       </div>
