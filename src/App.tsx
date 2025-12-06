@@ -1139,10 +1139,10 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                          {/* Custom Checks */}
                         {customPresChecks.map((check, i) => (
                              <div key={i} className="flex items-center gap-4 p-3 border border-white/5 rounded bg-white/5">
-                                 <div className={cn("w-4 h-4 rounded border flex items-center justify-center bg-[#FF7F50] border-[#FF7F50]")}>
-                                     <Check className="w-3 h-3 text-black" />
-                                 </div>
-                                 <span className="text-sm text-white/80">{check}</span>
+                                <div className={cn("w-4 h-4 rounded border flex items-center justify-center bg-[#FF7F50] border-[#FF7F50]")}>
+                                    <Check className="w-3 h-3 text-black" />
+                                </div>
+                                <span className="text-sm text-white/80">{check}</span>
                             </div>
                         ))}
 
@@ -1264,17 +1264,17 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
         <div className="max-w-3xl mx-auto flex items-center gap-4">
             
             <button 
-                onClick={prevStage}
-                className="h-14 w-14 flex items-center justify-center rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/30 transition-all flex-shrink-0"
-            >
-                <ChevronLeft className="w-5 h-5" />
-            </button>
-
-            <button 
                 onClick={() => onNavigate('PROJECT_HUB')}
                 className="h-14 px-6 flex items-center gap-2 rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/30 transition-all flex-shrink-0 font-mono text-xs uppercase tracking-wider"
             >
                 <CornerUpLeft className="w-4 h-4" /> Return to Hub
+            </button>
+            
+            <button 
+                onClick={prevStage}
+                className="h-14 w-14 flex items-center justify-center rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/30 transition-all flex-shrink-0"
+            >
+                <ChevronLeft className="w-5 h-5" />
             </button>
 
             <div className="flex-1 relative">
