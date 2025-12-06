@@ -1172,7 +1172,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                     Assets are compiled and ready for final export.
                  </p>
                  
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left max-w-3xl mx-auto mb-8">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left max-w-4xl mx-auto mb-8">
                      
                      {/* LEFT COLUMN: DOWNLOADS */}
                      <div className="space-y-4">
@@ -1213,36 +1213,46 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                      </div>
 
                      {/* RIGHT COLUMN: GOVERNANCE CHECK */}
-                     <div className="bg-white/5 p-6 rounded-xl border border-white/10 h-fit">
+                     <div className="bg-white/5 p-6 rounded-xl border border-white/10 h-full flex flex-col justify-center">
                          <div className="font-mono text-xs text-[#FF7F50] mb-6 flex items-center gap-2">
                              <Lock className="w-3 h-3"/> GOVERNANCE_VERIFICATION
                          </div>
                          
-                         <div className="space-y-4">
-                             <div onClick={() => toggleGovernanceCheck('accessibility')} className="flex items-start gap-3 cursor-pointer group">
+                         <div className="space-y-6">
+                             <div onClick={() => toggleGovernanceCheck('accessibility')} className="flex items-start gap-4 cursor-pointer group">
                                  <div className={cn("w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors mt-0.5", governanceChecks.accessibility ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20 group-hover:border-white/40")}>
                                     {governanceChecks.accessibility && <Check className="w-3 h-3 text-black" />}
                                  </div>
                                  <div>
-                                     <span className="text-sm font-bold block">Accessibility Compliance</span>
-                                     <span className="text-xs text-white/40">I have verified the assets against the WCAG guidelines in the generated PDF.</span>
+                                     <span className="text-sm font-bold block group-hover:text-white transition-colors">Accessibility Compliance</span>
+                                     <span className="text-xs text-white/40 leading-relaxed block mt-1">I have verified the assets against the WCAG guidelines in the generated PDF.</span>
                                  </div>
                              </div>
 
-                             <div onClick={() => toggleGovernanceCheck('technical')} className="flex items-start gap-3 cursor-pointer group">
+                             <div onClick={() => toggleGovernanceCheck('technical')} className="flex items-start gap-4 cursor-pointer group">
                                  <div className={cn("w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors mt-0.5", governanceChecks.technical ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20 group-hover:border-white/40")}>
                                     {governanceChecks.technical && <Check className="w-3 h-3 text-black" />}
                                  </div>
                                   <div>
-                                     <span className="text-sm font-bold block">Technical Standards</span>
-                                     <span className="text-xs text-white/40">Files meet all required formats and naming conventions.</span>
+                                     <span className="text-sm font-bold block group-hover:text-white transition-colors">Technical Standards</span>
+                                     <span className="text-xs text-white/40 leading-relaxed block mt-1">Files meet all required formats and naming conventions.</span>
+                                 </div>
+                             </div>
+
+                              <div onClick={() => toggleGovernanceCheck('usage')} className="flex items-start gap-4 cursor-pointer group">
+                                 <div className={cn("w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors mt-0.5", governanceChecks.usage ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20 group-hover:border-white/40")}>
+                                    {governanceChecks.usage && <Check className="w-3 h-3 text-black" />}
+                                 </div>
+                                  <div>
+                                     <span className="text-sm font-bold block group-hover:text-white transition-colors">Usage Guidelines</span>
+                                     <span className="text-xs text-white/40 leading-relaxed block mt-1">Clear space and minimum size rules are defined.</span>
                                  </div>
                              </div>
                          </div>
                      </div>
                  </div>
 
-                 <button className="flex items-center justify-center gap-3 px-8 py-4 bg-[#FF7F50] text-black font-bold rounded hover:bg-[#FF7F50]/90 transition-colors mx-auto">
+                 <button className="flex items-center justify-center gap-3 px-8 py-4 bg-[#FF7F50] text-black font-bold rounded hover:bg-[#FF7F50]/90 transition-colors mx-auto shadow-[0_0_30px_rgba(255,127,80,0.3)]">
                         <Download className="w-5 h-5" /> DOWNLOAD FULL PROJECT PACKAGE (ZIP)
                  </button>
              </div>
@@ -1254,10 +1264,17 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
         <div className="max-w-3xl mx-auto flex items-center gap-4">
             
             <button 
-                onClick={() => onNavigate('PROJECT_HUB')}
-                className="h-14 px-6 flex items-center gap-2 rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/30 transition-all flex-shrink-0 font-mono text-xs"
+                onClick={prevStage}
+                className="h-14 w-14 flex items-center justify-center rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/30 transition-all flex-shrink-0"
             >
-                <CornerUpLeft className="w-4 h-4" /> HUB
+                <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            <button 
+                onClick={() => onNavigate('PROJECT_HUB')}
+                className="h-14 px-6 flex items-center gap-2 rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/30 transition-all flex-shrink-0 font-mono text-xs uppercase tracking-wider"
+            >
+                <CornerUpLeft className="w-4 h-4" /> Return to Hub
             </button>
 
             <div className="flex-1 relative">
@@ -1321,14 +1338,14 @@ const ProtocolsView = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
                  <div>
                      <h3 className="font-bold text-white mb-2">Why Threshold?</h3>
-                     <p className="text-sm text-white/60">
+                     <p className="text-sm text-white/60 leading-relaxed">
                          Generative AI models default to the statistical mean—creating "average" work by design. 
                          Without structural intervention, this leads to brand homogeneity and semiotic collapse.
                      </p>
                  </div>
                  <div>
                      <h3 className="font-bold text-white mb-2">The Solution</h3>
-                     <p className="text-sm text-white/60">
+                     <p className="text-sm text-white/60 leading-relaxed">
                          We introduce intentional friction at critical decision points. By separating 
                          pattern recognition (AI) from meaning-making (Human), we preserve creative integrity.
                      </p>
