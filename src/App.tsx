@@ -36,7 +36,11 @@ import {
   Send,
   FolderOpen,
   File,
-  Grid
+  Grid,
+  BarChart3,
+  Eye,
+  BrainCircuit,
+  Target
 } from 'lucide-react';
 import { cn } from "@/components/ui/utils";
 
@@ -121,6 +125,8 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
         <div className="flex items-center gap-4 cursor-pointer" onClick={() => onViewChange('HOME')}>
           <div className="grid grid-cols-3 gap-[2px]">
             <div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div>
+            <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
+            <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
             <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
             <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
           </div>
@@ -488,7 +494,7 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// NEW: PROJECT HUB VIEW (Updated with functional menu and links)
+// NEW: PROJECT HUB VIEW (Updated Visuals Card)
 const ProjectHubView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [showMenu, setShowMenu] = useState(false);
 
@@ -522,9 +528,7 @@ const ProjectHubView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               
-              {/* Column 1: Strategy & Research */}
               <div className="space-y-6">
-                  
                   <div className="border border-white/10 rounded-xl bg-white/5 p-6 relative group hover:border-white/20 transition-all cursor-pointer" onClick={() => onNavigate('PROJECT_WIZARD')}>
                        <div className="flex items-center justify-between mb-4">
                            <div className="flex items-center gap-3">
@@ -541,20 +545,29 @@ const ProjectHubView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                        <div className="flex items-center justify-between mb-4">
                            <div className="flex items-center gap-3">
                                <div className="p-2 bg-purple-500/10 rounded-lg"><Sparkles className="w-5 h-5 text-purple-400" /></div>
-                               <h3 className="font-bold">Visual Intelligence</h3>
+                               <h3 className="font-bold">Visuals & Research</h3>
                            </div>
                            <span className="text-[10px] font-mono text-white/40 bg-white/5 px-2 py-1 rounded">3 ASSETS</span>
                        </div>
+                       
+                       <div className="space-y-3 mb-6">
+                           {['Moodboard', 'Competitor Audit', 'Market Trends'].map((item, i) => (
+                               <div key={i} className="flex items-center gap-2 text-sm text-white/60">
+                                   <div className="w-1 h-1 bg-purple-400 rounded-full"></div>
+                                   {item}
+                               </div>
+                           ))}
+                       </div>
+
                        <div className="flex gap-2 mb-6">
                           {[1,2,3].map(i => (
                              <div key={i} className="w-12 h-12 rounded bg-black/40 border border-white/5 flex items-center justify-center"><ImageIcon className="w-4 h-4 text-white/20"/></div>
                           ))}
                        </div>
-                       <button className="text-xs font-mono text-white/60 hover:text-white flex items-center gap-2">VIEW MOODBOARD <ArrowRight className="w-3 h-3" /></button>
+                       <button className="text-xs font-mono text-white/60 hover:text-white flex items-center gap-2">VIEW ASSETS <ArrowRight className="w-3 h-3" /></button>
                   </div>
               </div>
 
-              {/* Column 2: Concepts & WIP */}
               <div className="space-y-6">
                   <div className="border border-white/10 rounded-xl bg-white/5 p-6 h-full relative group hover:border-white/20 transition-all flex flex-col">
                        <div className="flex items-center justify-between mb-6">
@@ -582,7 +595,6 @@ const ProjectHubView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                   </div>
               </div>
 
-               {/* Column 3: Final Assets */}
                <div className="space-y-6">
                   <div className="border border-white/10 rounded-xl bg-white/5 p-6 h-full relative group hover:border-white/20 transition-all flex flex-col opacity-50">
                        <div className="flex items-center justify-between mb-6">
@@ -797,7 +809,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       {/* Stage Content - ADDED EXTRA BOTTOM PADDING FOR FOOTER CLEARANCE */}
       <div className="max-w-3xl mx-auto px-6 pt-12 pb-32">
         
-        {/* STAGE 1 */}
+        {/* STAGE 1 (STRATEGY ONLY) */}
         {stage === 1 && (
           <div className="space-y-8 animate-in slide-in-from-right duration-500">
              
@@ -811,90 +823,104 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 <SpecBlock id="PARAM_02" label="Brand/Org Name" placeholder="Exact name as it will appear in the logo..." hint="Confirm capitalization." height="h-20" />
              </div>
 
-             <SpecBlock id="PARAM_03" label="Primary Audience" placeholder="Who needs to connect with this work?" hint="Demographics, psychographics, pain points." />
-             <SpecBlock id="PARAM_04" label="Core Message" placeholder="The single most important thing to communicate..." hint="One clear sentence." />
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <SpecBlock id="PARAM_03" label="Business Problem" placeholder="What business problem does this solve?" hint="Connect to measurable outcomes." />
+                <SpecBlock id="PARAM_04" label="Desired Emotional Response" placeholder="How should the audience feel?" hint="E.g., 'Safe,' 'Understood,' 'Empowered'." />
+             </div>
+
+             <SpecBlock id="PARAM_05" label="Primary Audience & Insight" placeholder="Who are they? What do they value/fear?" hint="Demographics + Psychographics." />
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <SpecBlock id="PARAM_05" label="Must-Embody Keywords" placeholder="Non-negotiable qualities (3-5)..." hint="Specific, defendable adjectives." />
-                <SpecBlock id="PARAM_06" label="Must-Avoid Keywords" placeholder="Explicit guardrails (3-5)..." hint="What causes disengagement?" />
+                <SpecBlock id="PARAM_06" label="Must-Embody Keywords" placeholder="Non-negotiable qualities (3-5)..." hint="Specific, defendable adjectives." />
+                <SpecBlock id="PARAM_07" label="Must-Avoid Keywords" placeholder="Explicit guardrails (3-5)..." hint="What causes disengagement?" />
              </div>
 
-             <SpecBlock id="PARAM_07" label="Symbolic Territory" placeholder="Concepts, objects, or metaphors..." hint="Ex: 'Structural Biology' or 'Digital Fortifications'." />
-             <SpecBlock id="PARAM_08" label="Primary Applications" placeholder="Where will this logo live?" hint="App Icon, Signage, Uniforms." />
-
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <SpecBlock id="PARAM_09" label="Brand Voice & Tone" placeholder="How should this brand sound?" hint="Ex: 'Clinical but compassionate'." />
-                <SpecBlock id="PARAM_10" label="Color Direction" placeholder="What palette supports your strategy?" hint="Ex: 'Deep Teals with Signal Orange'." />
-             </div>
-
-             {/* STAGE 1.5: VISUAL INTELLIGENCE */}
-             <div className="mt-16 pt-16 border-t border-white/10">
-                <div className="flex items-center justify-between mb-8">
-                    <div>
-                        <div className="font-mono text-xs text-[#FF7F50] mb-2">[ 1.5 :: VISUAL_INTELLIGENCE ]</div>
-                        <h3 className="text-xl font-bold">Competitor & Visual Research</h3>
-                    </div>
-                    <button onClick={() => onNavigate('MOODBOARD')} className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded hover:border-[#FF7F50]/50 transition-colors text-xs font-mono">
-                        <Sparkles className="w-3 h-3 text-[#FF7F50]" /> OPEN_MOODBOARD_EDITOR
-                    </button>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="aspect-square border border-dashed border-white/20 rounded-lg bg-white/5 flex flex-col items-center justify-center cursor-pointer hover:bg-white/10 transition-colors group">
-                        <Upload className="w-6 h-6 text-white/40 group-hover:text-white mb-2" />
-                        <span className="text-[10px] font-mono text-white/40 uppercase">Upload Reference</span>
-                    </div>
-                    {competitors.map((i) => (
-                        <div key={i} className="aspect-square border border-white/10 rounded-lg bg-black/40 relative group overflow-hidden">
-                            <div className="absolute inset-0 bg-white/5 group-hover:bg-white/10 transition-colors"></div>
-                            <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                                <ImageIcon className="w-8 h-8" />
-                            </div>
-                            <div className="absolute bottom-2 left-2 text-[10px] font-mono text-white/60 bg-black/80 px-1 rounded">
-                                COMPETITOR_0{i}
-                            </div>
-                        </div>
-                    ))}
-                    <button onClick={addCompetitor} className="aspect-square border border-white/10 rounded-lg flex items-center justify-center hover:bg-white/5 transition-colors group">
-                        <Plus className="w-6 h-6 text-white/40 group-hover:text-white transition-colors" />
-                    </button>
-                </div>
-             </div>
+             <SpecBlock id="PARAM_08" label="Sensitivity & Cultural Context" placeholder="What sensitive topics or identities must be handled with care?" hint="Trauma-informed, gender-inclusive, accessibility needs." />
           </div>
         )}
 
-        {/* STAGE 2 */}
+        {/* STAGE 2 (PATTERN EXTRACTION & SEMIOTICS) */}
         {stage === 2 && (
              <div className="space-y-8 animate-in slide-in-from-right duration-500">
                 <div className="mb-8">
-                    <h2 className="text-3xl font-bold mb-2">Conceptual Clarity</h2>
-                    <p className="text-white/60 font-light">Generate and evaluate concept directions against your strategic brief.</p>
+                    <h2 className="text-3xl font-bold mb-2">Pattern Extraction & Semiotics</h2>
+                    <p className="text-white/60 font-light">Identify category clichés (AI) and define unique symbolic territory (Human).</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="border border-white/10 p-8 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group text-center py-16 flex flex-col items-center">
-                        <div className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center mb-6 group-hover:border-[#FF7F50] transition-colors">
-                            <Sparkles className="w-8 h-8 text-[#FF7F50]" />
+                {/* 1.5 SPLIT: AI PATTERN EXTRACTION */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <div className="border border-white/10 rounded-xl bg-white/5 p-6">
+                        <div className="flex items-center gap-2 mb-4 text-blue-400">
+                            <BrainCircuit className="w-5 h-5" />
+                            <h3 className="font-bold text-sm uppercase tracking-wider">AI :: Pattern Extraction</h3>
                         </div>
-                        <h3 className="text-xl font-bold mb-2">Generate Concepts</h3>
-                        <p className="text-white/40 text-sm max-w-xs mx-auto mb-6">
-                            Create initial directions based on your specific strategic constraints.
-                        </p>
-                        <button className="px-6 py-2 bg-[#FF7F50]/10 border border-[#FF7F50]/50 text-[#FF7F50] text-xs font-mono rounded hover:bg-[#FF7F50] hover:text-black transition-all">
-                            INITIATE_GENERATION
-                        </button>
+                        <p className="text-xs text-white/40 mb-6">Upload competitors to detect visual clichés and overused tropes.</p>
+                        
+                        <div className="grid grid-cols-3 gap-2 mb-6">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="aspect-square bg-black/40 rounded flex items-center justify-center border border-white/5">
+                                    <ImageIcon className="w-4 h-4 text-white/20" />
+                                </div>
+                            ))}
+                            <button className="aspect-square bg-white/5 rounded flex items-center justify-center border border-white/10 hover:border-white/30 transition-colors">
+                                <Plus className="w-4 h-4 text-white/40" />
+                            </button>
+                        </div>
+
+                        <div className="bg-black/40 rounded p-4 border border-white/5">
+                            <div className="text-[10px] font-mono text-white/30 mb-2">DETECTED_CLICHES</div>
+                            <ul className="space-y-1 text-xs text-white/60">
+                                <li>• Teal / Mint gradients</li>
+                                <li>• Lotus flower motifs</li>
+                                <li>• Thin, wispy script fonts</li>
+                            </ul>
+                        </div>
                     </div>
 
-                    <div className="border border-white/10 p-8 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group text-center py-16 flex flex-col items-center">
-                        <div className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center mb-6 group-hover:border-white transition-colors">
-                            <Upload className="w-8 h-8 text-white/60" />
+                    {/* 1.5 SPLIT: HUMAN SEMIOTIC INTERPRETATION */}
+                    <div className="border border-[#FF7F50]/30 rounded-xl bg-[#FF7F50]/5 p-6">
+                        <div className="flex items-center gap-2 mb-4 text-[#FF7F50]">
+                            <Target className="w-5 h-5" />
+                            <h3 className="font-bold text-sm uppercase tracking-wider">Human :: Semiotic Interpretation</h3>
                         </div>
-                        <h3 className="text-xl font-bold mb-2">Upload Sketches</h3>
-                        <p className="text-white/40 text-sm max-w-xs mx-auto mb-6">
-                            Import existing concepts to evaluate against the Threshold framework.
-                        </p>
-                        <button className="px-6 py-2 bg-white/5 border border-white/20 text-white text-xs font-mono rounded hover:bg-white hover:text-black transition-all">
-                            SELECT_FILES
-                        </button>
+                        <p className="text-xs text-white/40 mb-6">Define the symbolic territory *against* the detected clichés.</p>
+                        
+                        <div className="space-y-4">
+                            <SpecBlock id="SEMIOTICS_01" label="Symbolic Territory" placeholder="Define the visual metaphor (e.g., 'Structural Biology' vs 'Wellness Flower')..." height="h-24" />
+                            <div className="flex gap-2">
+                                <button onClick={() => onNavigate('MOODBOARD')} className="flex-1 py-3 border border-[#FF7F50]/30 text-[#FF7F50] text-xs font-mono rounded hover:bg-[#FF7F50]/10 flex items-center justify-center gap-2">
+                                    <Grid className="w-3 h-3" /> OPEN MOODBOARD
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* CONCEPT GENERATION CHOICES */}
+                <div className="border-t border-white/10 pt-8">
+                    <h3 className="font-bold mb-6">Concept Generation Method</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="border border-white/10 p-8 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group text-center py-12 flex flex-col items-center">
+                            <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center mb-4 group-hover:border-[#FF7F50] transition-colors">
+                                <Sparkles className="w-6 h-6 text-[#FF7F50]" />
+                            </div>
+                            <h3 className="font-bold mb-1">Generate with AI</h3>
+                            <p className="text-white/40 text-xs mb-4">Based on defined territory.</p>
+                            <button className="px-4 py-2 bg-[#FF7F50]/10 border border-[#FF7F50]/50 text-[#FF7F50] text-xs font-mono rounded hover:bg-[#FF7F50] hover:text-black transition-all">
+                                INITIATE
+                            </button>
+                        </div>
+
+                        <div className="border border-white/10 p-8 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group text-center py-12 flex flex-col items-center">
+                            <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center mb-4 group-hover:border-white transition-colors">
+                                <Upload className="w-6 h-6 text-white/60" />
+                            </div>
+                            <h3 className="font-bold mb-1">Upload Sketches</h3>
+                            <p className="text-white/40 text-xs mb-4">Import manual concepts.</p>
+                            <button className="px-4 py-2 bg-white/5 border border-white/20 text-white text-xs font-mono rounded hover:bg-white hover:text-black transition-all">
+                                SELECT_FILES
+                            </button>
+                        </div>
                     </div>
                 </div>
              </div>
@@ -1093,17 +1119,17 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
              </div>
         )}
 
-        {/* STAGE 5 */}
+        {/* STAGE 5 (UPDATED TO IMPLEMENTATION PACKAGE) */}
         {stage === 5 && (
              <div className="text-center py-20 animate-in slide-in-from-right duration-500">
                  <ShieldCheck className="w-20 h-20 text-[#FF7F50] mx-auto mb-8" />
-                 <h2 className="text-4xl font-bold mb-4">Implementation Ready</h2>
+                 <h2 className="text-4xl font-bold mb-4">Implementation Package</h2>
                  <p className="text-white/60 mb-12 max-w-md mx-auto">
                     All strategic thresholds crossed. Protocols validated. 
                     Assets are compiled and ready for final export.
                  </p>
                  
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left max-w-2xl mx-auto">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left max-w-2xl mx-auto mb-8">
                      <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
                          <div className="flex items-center gap-3">
                              <FileText className="w-5 h-5 text-blue-400" />
@@ -1149,7 +1175,23 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                      </div>
                  </div>
 
-                 <button className="mt-8 flex items-center justify-center gap-3 px-8 py-4 bg-[#FF7F50] text-black font-bold rounded hover:bg-[#FF7F50]/90 transition-colors mx-auto">
+                 {/* Year Two Governance Checks */}
+                 <div className="max-w-xl mx-auto mb-12 text-left bg-white/5 p-6 rounded-xl border border-white/10">
+                     <h4 className="font-bold text-sm mb-4 flex items-center gap-2"><Lock className="w-4 h-4 text-[#FF7F50]"/> Governance Checks</h4>
+                     <div className="space-y-3">
+                         <div className="flex items-center gap-3 text-sm text-white/60">
+                             <Check className="w-4 h-4 text-[#FF7F50]" /> Accessibility Compliance (WCAG)
+                         </div>
+                         <div className="flex items-center gap-3 text-sm text-white/60">
+                             <Check className="w-4 h-4 text-[#FF7F50]" /> Technical Specs Document Included
+                         </div>
+                         <div className="flex items-center gap-3 text-sm text-white/60">
+                             <Check className="w-4 h-4 text-[#FF7F50]" /> Usage Guidelines Defined
+                         </div>
+                     </div>
+                 </div>
+
+                 <button className="flex items-center justify-center gap-3 px-8 py-4 bg-[#FF7F50] text-black font-bold rounded hover:bg-[#FF7F50]/90 transition-colors mx-auto">
                         <Download className="w-5 h-5" /> DOWNLOAD FULL PROJECT PACKAGE (ZIP)
                  </button>
              </div>
