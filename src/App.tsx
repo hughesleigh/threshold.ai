@@ -107,11 +107,13 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
 
       <nav className="relative z-50 flex items-center justify-between px-6 py-6 md:px-12 border-b border-white/5 bg-[#050505]/80 backdrop-blur-md sticky top-0">
         <div className="flex items-center gap-4 cursor-pointer" onClick={() => onViewChange('HOME')}>
+          {/* UPDATED LOGO: 3x3 Square Matrix */}
           <div className="grid grid-cols-3 gap-[2px]">
+            {/* Row 1 */}
             <div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div>
+            {/* Row 2 */}
             <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
-            <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
-            <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
+            {/* Row 3 */}
             <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
           </div>
           <div className="flex items-baseline gap-2">
@@ -290,11 +292,13 @@ const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
 
         <div className="text-center mb-10">
           <div className="mx-auto mb-6 w-fit">
+            {/* UPDATED LOGO: 3x3 Square Matrix (Larger Dots) */}
             <div className="grid grid-cols-3 gap-[3px]">
+                {/* Row 1 */}
                 <div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                {/* Row 2 */}
                 <div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div>
-                <div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div>
-                <div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div>
+                {/* Row 3 */}
                 <div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div>
             </div>
           </div>
@@ -401,12 +405,22 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 5. PROJECT WORKFLOW (Updated Stages 2-5)
+// 5. PROJECT WORKFLOW
 const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [stage, setStage] = useState<Stage>(1);
   const [gateUnlocked, setGateUnlocked] = useState(false);
   const [slidePosition, setSlidePosition] = useState(0);
   
+  const [checklist, setChecklist] = useState({
+      scalability: false,
+      monochrome: false,
+      cultural: false,
+      production: false
+  });
+
+  // State for Stage 3 Gate
+  const [designApproved, setDesignApproved] = useState(false);
+
   // Checklists
   const [designChecklist, setDesignChecklist] = useState({
       scalability: false,
@@ -512,7 +526,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       {/* Stage Content */}
       <div className="max-w-3xl mx-auto px-6 pt-12">
         
-        {/* STAGE 1: STRATEGIC FOUNDATION (Full inputs) */}
+        {/* STAGE 1: STRATEGIC FOUNDATION */}
         {stage === 1 && (
           <div className="space-y-8 animate-in slide-in-from-right duration-500">
              
@@ -542,7 +556,6 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 <SpecBlock id="PARAM_10" label="Color Direction" placeholder="What palette supports your strategy?" hint="Ex: 'Deep Teals with Signal Orange'." />
              </div>
 
-             {/* STAGE 1.5: VISUAL INTELLIGENCE */}
              <div className="mt-16 pt-16 border-t border-white/10">
                 <div className="flex items-center justify-between mb-8">
                     <div>
@@ -574,7 +587,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
           </div>
         )}
 
-        {/* STAGE 2: CONCEPTUAL CLARITY (Choice: AI vs Upload) */}
+        {/* STAGE 2: CONCEPTUAL CLARITY */}
         {stage === 2 && (
              <div className="space-y-8 animate-in slide-in-from-right duration-500">
                 <div className="mb-8">
@@ -583,7 +596,6 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* OPTION A: AI Generation */}
                     <div className="border border-white/10 p-8 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group text-center py-16 flex flex-col items-center">
                         <div className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center mb-6 group-hover:border-[#FF7F50] transition-colors">
                             <Sparkles className="w-8 h-8 text-[#FF7F50]" />
@@ -597,7 +609,6 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                         </button>
                     </div>
 
-                    {/* OPTION B: Manual Upload */}
                     <div className="border border-white/10 p-8 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group text-center py-16 flex flex-col items-center">
                         <div className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center mb-6 group-hover:border-white transition-colors">
                             <Upload className="w-8 h-8 text-white/60" />
@@ -614,7 +625,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
              </div>
         )}
 
-        {/* STAGE 3: DESIGN INTEGRITY (Refinement & Technical Checks) */}
+        {/* STAGE 3: DESIGN INTEGRITY */}
         {stage === 3 && (
             <div className="space-y-8 animate-in slide-in-from-right duration-500">
                 <div className="mb-8">
@@ -622,7 +633,6 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                     <p className="text-white/60 font-light">Refine and validate technical execution. AI assists with checks; you make strategic decisions.</p>
                 </div>
 
-                {/* Refinement Module */}
                 <div className="border border-white/10 p-6 rounded-xl bg-white/5 mb-8">
                     <div className="flex items-center gap-2 mb-4">
                         <Zap className="w-4 h-4 text-[#FF7F50]" />
@@ -662,10 +672,25 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                         ))}
                     </div>
                 </div>
+
+                {/* HUMAN GATE */}
+                <div className="mt-8 border border-[#FF7F50]/20 bg-[#FF7F50]/5 p-6 rounded-xl">
+                    <div className="flex items-center gap-3 mb-4">
+                        <ShieldCheck className="w-5 h-5 text-[#FF7F50]" />
+                        <h4 className="font-bold text-[#FF7F50]">Human Approval Gate</h4>
+                    </div>
+                    <p className="text-sm text-white/60 mb-6">Before proceeding, confirm the refined design(s) meet all strategic criteria and technical requirements.</p>
+                    <div onClick={() => setDesignApproved(!designApproved)} className="flex items-center gap-3 cursor-pointer">
+                        <div className={cn("w-5 h-5 rounded border transition-colors flex items-center justify-center", designApproved ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/40")}>
+                            {designApproved && <Check className="w-4 h-4 text-black" />}
+                        </div>
+                        <span className="text-sm text-white/80">I confirm the refined design maintains strategic alignment.</span>
+                    </div>
+                </div>
             </div>
         )}
 
-        {/* STAGE 4: FINAL VALIDATION (Presentation) */}
+        {/* STAGE 4: FINAL VALIDATION */}
         {stage === 4 && (
              <div className="space-y-8 animate-in slide-in-from-right duration-500">
                 <div className="mb-8">
@@ -673,7 +698,6 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                     <p className="text-white/60 font-light">Stakeholder review and approval. Prepare your concept presentation using AI-powered tools.</p>
                 </div>
 
-                {/* Presentation Tools */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                     <div className="border border-white/10 p-5 rounded-xl bg-white/5 hover:border-purple-500/50 transition-colors group cursor-pointer">
                         <div className="flex justify-between items-start mb-4">
@@ -701,7 +725,6 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                     </div>
                 </div>
 
-                {/* Checklist */}
                 <div className="space-y-4">
                     <div className="font-mono text-xs text-[#FF7F50] mb-4">// PRESENTATION_CHECKLIST</div>
                     <div className="grid gap-3">
@@ -725,7 +748,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
              </div>
         )}
 
-        {/* STAGE 5: IMPLEMENTATION (Delivery) */}
+        {/* STAGE 5: IMPLEMENTATION */}
         {stage === 5 && (
              <div className="text-center py-20 animate-in slide-in-from-right duration-500">
                  <ShieldCheck className="w-20 h-20 text-[#FF7F50] mx-auto mb-8" />
