@@ -40,7 +40,8 @@ import {
   BarChart3,
   Eye,
   BrainCircuit,
-  Target
+  Target,
+  CornerUpLeft
 } from 'lucide-react';
 import { cn } from "@/components/ui/utils";
 
@@ -123,10 +124,9 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
 
       <nav className="relative z-50 flex items-center justify-between px-6 py-6 md:px-12 border-b border-white/5 bg-[#050505]/80 backdrop-blur-md sticky top-0 h-20">
         <div className="flex items-center gap-4 cursor-pointer" onClick={() => onViewChange('HOME')}>
+          {/* 3x3 Square Matrix Logo */}
           <div className="grid grid-cols-3 gap-[2px]">
             <div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div>
-            <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
-            <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
             <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
             <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
           </div>
@@ -138,7 +138,7 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
         <div className="flex items-center gap-8">
             <div className="hidden md:flex items-center gap-8 font-mono text-xs text-white/60">
                 <button onClick={() => onViewChange('HOME')} className={cn("hover:text-white transition-colors", currentView === 'HOME' && "text-white")}>HOME</button>
-                <button onClick={() => onViewChange('PROTOCOLS')} className={cn("hover:text-white transition-colors", currentView === 'PROTOCOLS' && "text-white")}>FRAMEWORK</button>
+                <button onClick={() => onViewChange('PROTOCOLS')} className={cn("hover:text-white transition-colors", currentView === 'PROTOCOLS' && "text-white")}>METHODOLOGY</button>
                 <button onClick={() => onViewChange('RESOURCES')} className={cn("hover:text-white transition-colors", currentView === 'RESOURCES' && "text-white")}>RESOURCES</button>
                 {isLoggedInContext && (
                     <button onClick={() => onViewChange('DASHBOARD')} className={cn("hover:text-white transition-colors font-bold", (currentView === 'DASHBOARD' || currentView === 'PROJECT_HUB' || currentView === 'MOODBOARD') && "text-[#FF7F50]")}>DASHBOARD</button>
@@ -497,6 +497,20 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
 // NEW: PROJECT HUB VIEW (Updated Visuals Card)
 const ProjectHubView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuRef]);
 
   return (
       <div className="max-w-6xl mx-auto px-6 py-12">
@@ -508,7 +522,7 @@ const ProjectHubView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                   <div className="font-mono text-xs text-[#FF7F50] mb-2">// PROJECT_HUB :: ID_01</div>
                   <h1 className="text-4xl font-bold">Pelvic Door Identity</h1>
               </div>
-              <div className="flex gap-3 relative">
+              <div className="flex gap-3 relative" ref={menuRef}>
                   <button onClick={() => onNavigate('PROJECT_WIZARD')} className="flex items-center gap-2 px-4 py-2 bg-[#FF7F50] text-black text-sm font-bold rounded hover:bg-[#FF7F50]/90 transition-colors">
                       <Play className="w-4 h-4 fill-current" /> CONTINUE WORKFLOW
                   </button>
@@ -661,6 +675,11 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [gateUnlocked, setGateUnlocked] = useState(false);
   const [slidePosition, setSlidePosition] = useState(0);
   const [competitors, setCompetitors] = useState([1, 2, 3]); // Default 3
+  const [governanceChecks, setGovernanceChecks] = useState({
+      accessibility: false,
+      technical: false,
+      usage: false
+  });
   
   // Stage 3 State
   const [designApproved, setDesignApproved] = useState(false);
@@ -712,6 +731,10 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
           setNewPresCheckInput("");
       }
   }
+
+  const toggleGovernanceCheck = (key: keyof typeof governanceChecks) => {
+      setGovernanceChecks(prev => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const handleChatSend = () => {
       if(!chatInput.trim()) return;
@@ -785,6 +808,12 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
 
       {/* Tape Measure Header */}
       <div className="sticky top-[82px] z-40 bg-[#050505]/95 backdrop-blur border-b border-white/10 py-4 overflow-x-auto">
+        
+        {/* RETURN TO HUB BUTTON */}
+        <button onClick={() => onNavigate('PROJECT_HUB')} className="absolute left-6 top-1/2 -translate-y-1/2 z-50 text-[10px] font-mono text-white/40 hover:text-white flex items-center gap-2 transition-colors">
+            <CornerUpLeft className="w-3 h-3" /> HUB
+        </button>
+
         <div className="flex items-center justify-between min-w-[600px] px-6 relative">
           <div className="absolute left-6 right-6 top-1/2 h-[1px] bg-white/10 -z-10"></div>
           
@@ -809,7 +838,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       {/* Stage Content - ADDED EXTRA BOTTOM PADDING FOR FOOTER CLEARANCE */}
       <div className="max-w-3xl mx-auto px-6 pt-12 pb-32">
         
-        {/* STAGE 1 (STRATEGY ONLY) */}
+        {/* STAGE 1 */}
         {stage === 1 && (
           <div className="space-y-8 animate-in slide-in-from-right duration-500">
              
@@ -823,28 +852,63 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 <SpecBlock id="PARAM_02" label="Brand/Org Name" placeholder="Exact name as it will appear in the logo..." hint="Confirm capitalization." height="h-20" />
              </div>
 
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <SpecBlock id="PARAM_03" label="Business Problem" placeholder="What business problem does this solve?" hint="Connect to measurable outcomes." />
-                <SpecBlock id="PARAM_04" label="Desired Emotional Response" placeholder="How should the audience feel?" hint="E.g., 'Safe,' 'Understood,' 'Empowered'." />
-             </div>
-
-             <SpecBlock id="PARAM_05" label="Primary Audience & Insight" placeholder="Who are they? What do they value/fear?" hint="Demographics + Psychographics." />
+             <SpecBlock id="PARAM_03" label="Primary Audience" placeholder="Who needs to connect with this work?" hint="Demographics, psychographics, pain points." />
+             <SpecBlock id="PARAM_04" label="Core Message" placeholder="The single most important thing to communicate..." hint="One clear sentence." />
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <SpecBlock id="PARAM_06" label="Must-Embody Keywords" placeholder="Non-negotiable qualities (3-5)..." hint="Specific, defendable adjectives." />
-                <SpecBlock id="PARAM_07" label="Must-Avoid Keywords" placeholder="Explicit guardrails (3-5)..." hint="What causes disengagement?" />
+                <SpecBlock id="PARAM_05" label="Must-Embody Keywords" placeholder="Non-negotiable qualities (3-5)..." hint="Specific, defendable adjectives." />
+                <SpecBlock id="PARAM_06" label="Must-Avoid Keywords" placeholder="Explicit guardrails (3-5)..." hint="What causes disengagement?" />
              </div>
 
-             <SpecBlock id="PARAM_08" label="Sensitivity & Cultural Context" placeholder="What sensitive topics or identities must be handled with care?" hint="Trauma-informed, gender-inclusive, accessibility needs." />
+             <SpecBlock id="PARAM_07" label="Symbolic Territory" placeholder="Concepts, objects, or metaphors..." hint="Ex: 'Structural Biology' or 'Digital Fortifications'." />
+             <SpecBlock id="PARAM_08" label="Primary Applications" placeholder="Where will this logo live?" hint="App Icon, Signage, Uniforms." />
+
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <SpecBlock id="PARAM_09" label="Brand Voice & Tone" placeholder="How should this brand sound?" hint="Ex: 'Clinical but compassionate'." />
+                <SpecBlock id="PARAM_10" label="Color Direction" placeholder="What palette supports your strategy?" hint="Ex: 'Deep Teals with Signal Orange'." />
+             </div>
+
+             {/* STAGE 1.5: VISUAL INTELLIGENCE */}
+             <div className="mt-16 pt-16 border-t border-white/10">
+                <div className="flex items-center justify-between mb-8">
+                    <div>
+                        <div className="font-mono text-xs text-[#FF7F50] mb-2">[ 1.5 :: VISUAL_INTELLIGENCE ]</div>
+                        <h3 className="text-xl font-bold">Competitor & Visual Research</h3>
+                    </div>
+                    <button className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded hover:border-[#FF7F50]/50 transition-colors text-xs font-mono">
+                        <Sparkles className="w-3 h-3 text-[#FF7F50]" /> AUTO_ANALYZE_MARKET
+                    </button>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="aspect-square border border-dashed border-white/20 rounded-lg bg-white/5 flex flex-col items-center justify-center cursor-pointer hover:bg-white/10 transition-colors group">
+                        <Upload className="w-6 h-6 text-white/40 group-hover:text-white mb-2" />
+                        <span className="text-[10px] font-mono text-white/40 uppercase">Upload Reference</span>
+                    </div>
+                    {competitors.map((i) => (
+                        <div key={i} className="aspect-square border border-white/10 rounded-lg bg-black/40 relative group overflow-hidden">
+                            <div className="absolute inset-0 bg-white/5 group-hover:bg-white/10 transition-colors"></div>
+                            <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                                <ImageIcon className="w-8 h-8" />
+                            </div>
+                            <div className="absolute bottom-2 left-2 text-[10px] font-mono text-white/60 bg-black/80 px-1 rounded">
+                                COMPETITOR_0{i}
+                            </div>
+                        </div>
+                    ))}
+                    <button onClick={addCompetitor} className="aspect-square border border-white/10 rounded-lg flex items-center justify-center hover:bg-white/5 transition-colors group">
+                        <Plus className="w-6 h-6 text-white/40 group-hover:text-white transition-colors" />
+                    </button>
+                </div>
+             </div>
           </div>
         )}
 
-        {/* STAGE 2 (PATTERN EXTRACTION & SEMIOTICS) */}
+        {/* STAGE 2 */}
         {stage === 2 && (
              <div className="space-y-8 animate-in slide-in-from-right duration-500">
                 <div className="mb-8">
-                    <h2 className="text-3xl font-bold mb-2">Pattern Extraction & Semiotics</h2>
-                    <p className="text-white/60 font-light">Identify category clichés (AI) and define unique symbolic territory (Human).</p>
+                    <h2 className="text-3xl font-bold mb-2">Conceptual Clarity</h2>
+                    <p className="text-white/60 font-light">Generate and evaluate concept directions against your strategic brief.</p>
                 </div>
 
                 {/* 1.5 SPLIT: AI PATTERN EXTRACTION */}
@@ -868,7 +932,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                         </div>
 
                         <div className="bg-black/40 rounded p-4 border border-white/5">
-                            <div className="text-[10px] font-mono text-white/30 mb-2">DETECTED_CLICHES</div>
+                            <div className="text-[10px] font-mono text-white/30 mb-2">DETECTED_CLICHES (AI_PREDICTION)</div>
                             <ul className="space-y-1 text-xs text-white/60">
                                 <li>• Teal / Mint gradients</li>
                                 <li>• Lotus flower motifs</li>
@@ -886,10 +950,13 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                         <p className="text-xs text-white/40 mb-6">Define the symbolic territory *against* the detected clichés.</p>
                         
                         <div className="space-y-4">
-                            <SpecBlock id="SEMIOTICS_01" label="Symbolic Territory" placeholder="Define the visual metaphor (e.g., 'Structural Biology' vs 'Wellness Flower')..." height="h-24" />
+                            <SpecBlock id="SEMIOTICS_01" label="Metaphor" placeholder="e.g., 'Structural Biology'..." height="h-16" />
+                            <SpecBlock id="SEMIOTICS_02" label="Visual Cues" placeholder="e.g., Arches, Bone..." height="h-16" />
+                            <SpecBlock id="SEMIOTICS_03" label="Emotional Signal" placeholder="e.g., Safety, Containment..." height="h-16" />
+                            
                             <div className="flex gap-2">
                                 <button onClick={() => onNavigate('MOODBOARD')} className="flex-1 py-3 border border-[#FF7F50]/30 text-[#FF7F50] text-xs font-mono rounded hover:bg-[#FF7F50]/10 flex items-center justify-center gap-2">
-                                    <Grid className="w-3 h-3" /> OPEN MOODBOARD
+                                    <Grid className="w-3 h-3" /> CREATE / EDIT MOODBOARD
                                 </button>
                             </div>
                         </div>
@@ -1045,6 +1112,11 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                         {/* CHANGED ARROW COLOR TO ORANGE */}
                         <button onClick={handleChatSend} className="px-4 py-2 border border-white/10 rounded hover:bg-[#FF7F50]/20 font-mono text-xs text-[#FF7F50] flex items-center justify-center"><Send className="w-4 h-4"/></button>
                     </div>
+                    <div className="flex justify-end mt-2">
+                         <button className="flex items-center gap-2 text-[10px] font-mono text-[#FF7F50] hover:underline">
+                            <Eye className="w-3 h-3" /> RUN_CLARITY_SCAN
+                         </button>
+                    </div>
                 </div>
 
                 {/* Presentation Tools (RESTORED) */}
@@ -1179,14 +1251,23 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                  <div className="max-w-xl mx-auto mb-12 text-left bg-white/5 p-6 rounded-xl border border-white/10">
                      <h4 className="font-bold text-sm mb-4 flex items-center gap-2"><Lock className="w-4 h-4 text-[#FF7F50]"/> Governance Checks</h4>
                      <div className="space-y-3">
-                         <div className="flex items-center gap-3 text-sm text-white/60">
-                             <Check className="w-4 h-4 text-[#FF7F50]" /> Accessibility Compliance (WCAG)
+                         <div onClick={() => toggleGovernanceCheck('accessibility')} className="flex items-center gap-3 text-sm text-white/60 cursor-pointer hover:text-white">
+                             <div className={cn("w-4 h-4 rounded border flex items-center justify-center transition-colors", governanceChecks.accessibility ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20")}>
+                                {governanceChecks.accessibility && <Check className="w-3 h-3 text-black" />}
+                             </div>
+                             Accessibility Compliance (WCAG)
                          </div>
-                         <div className="flex items-center gap-3 text-sm text-white/60">
-                             <Check className="w-4 h-4 text-[#FF7F50]" /> Technical Specs Document Included
+                         <div onClick={() => toggleGovernanceCheck('technical')} className="flex items-center gap-3 text-sm text-white/60 cursor-pointer hover:text-white">
+                             <div className={cn("w-4 h-4 rounded border flex items-center justify-center transition-colors", governanceChecks.technical ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20")}>
+                                {governanceChecks.technical && <Check className="w-3 h-3 text-black" />}
+                             </div>
+                             Technical Specs Document Included
                          </div>
-                         <div className="flex items-center gap-3 text-sm text-white/60">
-                             <Check className="w-4 h-4 text-[#FF7F50]" /> Usage Guidelines Defined
+                         <div onClick={() => toggleGovernanceCheck('usage')} className="flex items-center gap-3 text-sm text-white/60 cursor-pointer hover:text-white">
+                             <div className={cn("w-4 h-4 rounded border flex items-center justify-center transition-colors", governanceChecks.usage ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20")}>
+                                {governanceChecks.usage && <Check className="w-3 h-3 text-black" />}
+                             </div>
+                             Usage Guidelines Defined
                          </div>
                      </div>
                  </div>
@@ -1260,12 +1341,29 @@ const ProtocolsView = () => {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
         <div className="mb-12 border-b border-white/10 pb-8">
-            <div className="font-mono text-xs text-[#FF7F50] mb-2">// FIELD_MANUAL</div>
-            <h1 className="text-4xl font-bold mb-4">Operational Directives</h1>
-            <p className="text-white/60 font-light text-lg">
-                The Threshold Method is not just a tool; it is a governance layer. 
-                Adherence to these protocols ensures semiotic integrity.
+            <div className="font-mono text-xs text-[#FF7F50] mb-2">// THE_METHODOLOGY</div>
+            <h1 className="text-4xl font-bold mb-4">Strategic Governance</h1>
+            <p className="text-white/60 font-light text-lg mb-8">
+                Threshold is not just a tool; it is a governance layer for high-stakes creative work.
+                We operationalize the "Human-in-the-Loop" standard to ensure AI outputs remain strategic, safe, and distinct.
             </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                 <div>
+                     <h3 className="font-bold text-white mb-2">Why Threshold?</h3>
+                     <p className="text-sm text-white/60">
+                         Generative AI models default to the statistical mean—creating "average" work by design. 
+                         Without structural intervention, this leads to brand homogeneity and semiotic collapse.
+                     </p>
+                 </div>
+                 <div>
+                     <h3 className="font-bold text-white mb-2">The Solution</h3>
+                     <p className="text-sm text-white/60">
+                         We introduce intentional friction at critical decision points. By separating 
+                         pattern recognition (AI) from meaning-making (Human), we preserve creative integrity.
+                     </p>
+                 </div>
+            </div>
         </div>
 
         <div className="space-y-12">
