@@ -17,7 +17,11 @@ import {
   Search,
   AlertCircle,
   X,
-  Play
+  Play,
+  MousePointer2,
+  Image as ImageIcon,
+  Upload,
+  Sparkles
 } from 'lucide-react';
 import { cn } from "@/components/ui/utils";
 
@@ -42,9 +46,51 @@ const PROJECTS: Project[] = [
   { id: '2', name: 'Nexus Architecture', type: 'WEB_DESIGN', progress: 20, status: 'ACTIVE', lastEdited: '1d ago' },
 ];
 
-// --- COMPONENTS ---
+// --- HELPER COMPONENTS ---
 
-// 1. GLOBAL LAYOUT WRAPPER
+// The "Spec Block" Input Field - Reusable Component for Stage 1
+const SpecBlock = ({ 
+  id, 
+  label, 
+  placeholder, 
+  hint, 
+  height = "h-32" 
+}: { 
+  id: string, 
+  label: string, 
+  placeholder: string, 
+  hint?: string,
+  height?: string 
+}) => (
+  <div className="border border-white/10 p-6 rounded-xl bg-white/5 relative group transition-all hover:border-white/20">
+    <div className="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
+    <div className="font-mono text-[10px] text-blue-400 mb-2 uppercase tracking-wider">
+      [ {id} ]
+    </div>
+    <h3 className="text-lg font-bold mb-4 text-white">{label}</h3>
+    
+    <div className="relative">
+      <textarea 
+        className={`w-full bg-black/40 border border-white/10 rounded-lg p-4 text-sm font-light text-white/90 focus:border-blue-500 outline-none transition-colors resize-none ${height}`}
+        placeholder={placeholder}
+      />
+      <div className="absolute right-2 bottom-2">
+        <button className="flex items-center gap-2 text-[10px] font-mono bg-white/5 hover:bg-blue-500/20 border border-white/10 px-2 py-1 rounded text-white/60 hover:text-blue-300 transition-colors">
+          <Terminal className="w-3 h-3" /> AI_ASSIST
+        </button>
+      </div>
+    </div>
+    
+    {hint && (
+      <div className="mt-3 flex items-start gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
+        <Activity className="w-3 h-3 text-[#FF7F50] mt-0.5 flex-shrink-0" />
+        <p className="text-[10px] text-white/60 font-mono leading-tight">{hint}</p>
+      </div>
+    )}
+  </div>
+);
+
+// --- GLOBAL LAYOUT WRAPPER ---
 const Layout = ({ children, currentView, onViewChange }: { children: React.ReactNode, currentView: View, onViewChange: (v: View) => void }) => {
   
   const isLoggedInContext = currentView === 'DASHBOARD' || currentView === 'PROJECT_WIZARD';
@@ -118,10 +164,13 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
   );
 };
 
-// 2. HOME VIEW
+// 2. HOME VIEW 
 const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
+  const [sliderVal, setSliderVal] = useState(50);
+
   return (
     <div className="flex flex-col items-center justify-center pt-12 pb-32 px-4">
+      {/* The Glass HUD */}
       <div className="relative w-full max-w-3xl p-8 md:p-20 border border-white/10 rounded-3xl backdrop-blur-xl bg-white/5 shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-500">
         <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-blue-400 via-purple-400 to-[#FF7F50] opacity-70"></div>
         <div className="absolute top-4 left-4 text-white/20 text-xs">+</div>
@@ -154,23 +203,76 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
         </div>
       </div>
 
-      <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl items-center border-t border-white/5 pt-24 w-full">
-        <div className="space-y-6">
-          <span className="font-mono text-xs text-[#FF7F50]">// PROBLEM_DETECTION</span>
-          <h2 className="text-3xl font-bold">The Semiotic Collapse.</h2>
-          <p className="text-white/60 leading-relaxed">
-            Without structural intervention, Large Language Models regress to the statistical mean. 
-            Threshold introduces intentional friction to preserve conceptual distinctiveness.
-          </p>
-        </div>
-        <div className="h-64 border border-white/10 rounded-xl bg-white/5 flex items-center justify-center relative overflow-hidden group">
-           <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-full h-full flex relative">
-                <div className="w-1/2 h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 blur-sm mix-blend-overlay"></div>
-                <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-[#FF7F50] shadow-[0_0_15px_#FF7F50] z-10"></div>
-                <div className="w-1/2 h-full bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:20px_20px] ml-auto"></div>
-              </div>
-           </div>
+      {/* INTERACTIVE DIFFERENCE ENGINE */}
+      <div className="mt-32 max-w-5xl w-full border-t border-white/5 pt-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+                <div className="inline-flex items-center gap-2 text-[#FF7F50] font-mono text-xs">
+                    <Activity className="w-3 h-3" />
+                    <span>// ENTROPY_MONITOR</span>
+                </div>
+                <h2 className="text-4xl font-bold tracking-tight">Stop Generating Average.</h2>
+                <p className="text-xl text-white/60 font-light leading-relaxed">
+                    Standard AI models regress to the statistical mean. Threshold introduces <span className="text-white font-medium">strategic friction</span> to force distinctive output.
+                </p>
+                
+                <div className="grid grid-cols-2 gap-4 pt-4">
+                    <div className="p-4 rounded border border-white/10 bg-white/5">
+                        <div className="text-[10px] font-mono text-white/40 mb-2 uppercase tracking-wider">Without Threshold</div>
+                        <div className="text-lg text-white/60 font-light">Generic Slop</div>
+                    </div>
+                    <div className="p-4 rounded border border-[#FF7F50]/20 bg-[#FF7F50]/5 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-2 opacity-20">
+                            <ShieldCheck className="w-8 h-8 text-[#FF7F50]" />
+                        </div>
+                        <div className="text-[10px] font-mono text-[#FF7F50] mb-2 uppercase tracking-wider">With Threshold</div>
+                        <div className="text-lg text-white font-medium">Strategic Asset</div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="relative h-[400px] rounded-2xl border border-white/10 overflow-hidden select-none group cursor-ew-resize shadow-2xl bg-black">
+                <div className="absolute inset-0 bg-[#111] flex items-center justify-center">
+                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-40 mix-blend-overlay"></div>
+                     <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-6xl md:text-8xl font-bold text-white/5 blur-sm tracking-tighter scale-110">AVERAGE</span>
+                     </div>
+                     <div className="absolute bottom-6 left-6 font-mono text-xs text-white/30">
+                        [ STATUS: UNSTRUCTURED ]
+                     </div>
+                </div>
+
+                <div 
+                    className="absolute inset-0 bg-[#050505] border-r border-[#FF7F50] flex items-center justify-center overflow-hidden"
+                    style={{ width: `${sliderVal}%` }}
+                >
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-6xl md:text-8xl font-bold text-white tracking-tighter whitespace-nowrap z-10">DISTINCT</span>
+                    </div>
+                    <div className="absolute bottom-6 right-6 font-mono text-xs text-[#FF7F50] bg-black/50 px-2 py-1 rounded backdrop-blur-sm border border-[#FF7F50]/20">
+                        [ STATUS: VALIDATED ]
+                    </div>
+                </div>
+
+                <div 
+                    className="absolute top-0 bottom-0 w-1 bg-[#FF7F50] cursor-ew-resize shadow-[0_0_30px_#FF7F50]"
+                    style={{ left: `${sliderVal}%` }}
+                >
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-[#FF7F50] rounded-full flex items-center justify-center text-black shadow-lg hover:scale-110 transition-transform">
+                        <MousePointer2 className="w-5 h-5 fill-current rotate-[-15deg]" />
+                    </div>
+                </div>
+
+                <input 
+                    type="range" 
+                    min="0" 
+                    max="100" 
+                    value={sliderVal} 
+                    onChange={(e) => setSliderVal(Number(e.target.value))}
+                    className="absolute inset-0 opacity-0 cursor-ew-resize z-20"
+                />
+            </div>
         </div>
       </div>
     </div>
@@ -225,7 +327,7 @@ const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 4. DASHBOARD VIEW (Updated New Project Click)
+// 4. DASHBOARD VIEW
 const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
@@ -286,7 +388,6 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
           </div>
         ))}
 
-        {/* New Project Placeholder - NOW FUNCTIONAL */}
         <div 
            onClick={() => onNavigate('PROJECT_WIZARD')}
            className="border border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors cursor-pointer group"
@@ -301,13 +402,12 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 5. PROJECT WORKFLOW (Updated w/ Gradient Bar, Checklist, & Back Nav)
+// 5. PROJECT WORKFLOW (Expanded Stage 1 & 1.5)
 const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [stage, setStage] = useState<Stage>(1);
   const [gateUnlocked, setGateUnlocked] = useState(false);
   const [slidePosition, setSlidePosition] = useState(0);
   
-  // Checklist State
   const [checklist, setChecklist] = useState({
       scalability: false,
       monochrome: false,
@@ -358,13 +458,12 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       }
   }
 
-  // Calculate Progress % for Top Gradient Bar
   const progressPercent = (stage / 5) * 100;
 
   return (
     <div className="min-h-screen pb-40 relative">
       
-      {/* NEW: TOP GRADIENT PROGRESS BAR */}
+      {/* TOP GRADIENT PROGRESS BAR */}
       <div className="sticky top-[80px] left-0 right-0 h-[2px] bg-white/5 z-50">
           <div 
              className="h-full bg-gradient-to-r from-blue-500 to-[#FF7F50] transition-all duration-700 ease-out relative"
@@ -399,41 +498,131 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
 
       {/* Stage Content */}
       <div className="max-w-3xl mx-auto px-6 pt-12">
+        
+        {/* === STAGE 1: STRATEGIC FOUNDATION (EXPANDED) === */}
         {stage === 1 && (
           <div className="space-y-8 animate-in slide-in-from-right duration-500">
-             <div className="border border-white/10 p-6 rounded-xl bg-white/5 relative">
-                <div className="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-xl"></div>
-                <div className="font-mono text-xs text-blue-400 mb-2">[ PARAM_01 ]</div>
-                <h3 className="text-xl font-bold mb-4">Strategic Territory</h3>
-                <div className="relative group">
-                    <textarea 
-                        className="w-full bg-black/40 border border-white/10 rounded-lg p-4 text-sm font-light focus:border-blue-500 outline-none min-h-[120px] transition-colors"
-                        placeholder="Define the symbolic landscape..."
-                    />
-                    <div className="absolute right-2 bottom-2">
-                        <button className="flex items-center gap-2 text-[10px] font-mono bg-white/10 hover:bg-blue-500/20 px-2 py-1 rounded text-white/60 hover:text-blue-300 transition-colors">
-                            <Terminal className="w-3 h-3" /> AI_ASSIST
-                        </button>
-                    </div>
-                </div>
-                <p className="mt-2 text-[10px] text-white/30 flex items-center gap-2">
-                    <Activity className="w-3 h-3" />
-                    HINT: Avoid generic terms like "Innovation" or "Synergy".
-                </p>
+             
+             {/* Header */}
+             <div className="mb-8">
+                <h2 className="text-3xl font-bold mb-2">Strategic Foundation</h2>
+                <p className="text-white/60 font-light">Define audience, core message, and strategic guardrails before generation.</p>
              </div>
 
-             <div className="border border-white/10 p-6 rounded-xl bg-white/5 relative">
-                <div className="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-xl"></div>
-                <div className="font-mono text-xs text-blue-400 mb-2">[ PARAM_02 ]</div>
-                <h3 className="text-xl font-bold mb-4">Negative Constraints</h3>
-                <textarea 
-                    className="w-full bg-black/40 border border-white/10 rounded-lg p-4 text-sm font-light focus:border-blue-500 outline-none min-h-[100px]"
-                    placeholder="List 3-5 keywords the brand must NOT embody..."
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <SpecBlock 
+                    id="PARAM_01" 
+                    label="Project Name" 
+                    placeholder="Clear project identification..." 
+                    hint="Be specific and descriptive."
+                    height="h-20"
                 />
+                <SpecBlock 
+                    id="PARAM_02" 
+                    label="Brand/Org Name" 
+                    placeholder="Exact name as it will appear in the logo..." 
+                    hint="Confirm capitalization with client."
+                    height="h-20"
+                />
+             </div>
+
+             <SpecBlock 
+                id="PARAM_03" 
+                label="Primary Audience" 
+                placeholder="Who needs to connect with this work?" 
+                hint="Include demographics, psychographics, pain points, and aspirations."
+             />
+
+             <SpecBlock 
+                id="PARAM_04" 
+                label="Core Message" 
+                placeholder="The single most important thing this work should communicate..." 
+                hint="One clear sentence that couldn't describe a competitor."
+             />
+
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <SpecBlock 
+                    id="PARAM_05" 
+                    label="Must-Embody Keywords" 
+                    placeholder="Non-negotiable qualities (3-5)..." 
+                    hint="Choose specific, defendable adjectives."
+                />
+                <SpecBlock 
+                    id="PARAM_06" 
+                    label="Must-Avoid Keywords" 
+                    placeholder="Explicit guardrails (3-5)..." 
+                    hint="What would cause your audience to disengage?"
+                />
+             </div>
+
+             <SpecBlock 
+                id="PARAM_07" 
+                label="Symbolic Territory" 
+                placeholder="What concepts, objects, or metaphors align with your message?" 
+                hint="Example: 'Structural Biology' or 'Digital Fortifications'."
+             />
+
+             <SpecBlock 
+                id="PARAM_08" 
+                label="Primary Applications" 
+                placeholder="Where will this logo live?" 
+                hint="Example: App Icon, Building Signage, Uniforms."
+             />
+
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <SpecBlock 
+                    id="PARAM_09" 
+                    label="Brand Voice & Tone" 
+                    placeholder="How should this brand sound?" 
+                    hint="Example: 'Clinical but compassionate'."
+                />
+                <SpecBlock 
+                    id="PARAM_10" 
+                    label="Color Direction" 
+                    placeholder="What palette supports your strategy?" 
+                    hint="Example: 'Deep Teals with Signal Orange'."
+                />
+             </div>
+
+             {/* === STAGE 1.5: VISUAL INTELLIGENCE MODULE === */}
+             <div className="mt-16 pt-16 border-t border-white/10">
+                <div className="flex items-center justify-between mb-8">
+                    <div>
+                        <div className="font-mono text-xs text-[#FF7F50] mb-2">[ 1.5 :: VISUAL_INTELLIGENCE ]</div>
+                        <h3 className="text-xl font-bold">Competitor & Visual Research</h3>
+                    </div>
+                    <button className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded hover:border-[#FF7F50]/50 transition-colors text-xs font-mono">
+                        <Sparkles className="w-3 h-3 text-[#FF7F50]" /> AUTO_ANALYZE_MARKET
+                    </button>
+                </div>
+
+                {/* Research Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {/* Upload Slot */}
+                    <div className="aspect-square border border-dashed border-white/20 rounded-lg bg-white/5 flex flex-col items-center justify-center cursor-pointer hover:bg-white/10 transition-colors group">
+                        <Upload className="w-6 h-6 text-white/40 group-hover:text-white mb-2" />
+                        <span className="text-[10px] font-mono text-white/40 uppercase">Upload Reference</span>
+                    </div>
+                    
+                    {/* Placeholder Research Items */}
+                    {[1, 2, 3].map((i) => (
+                        <div key={i} className="aspect-square border border-white/10 rounded-lg bg-black/40 relative group overflow-hidden">
+                            <div className="absolute inset-0 bg-white/5 group-hover:bg-white/10 transition-colors"></div>
+                            {/* Fake image placeholder */}
+                            <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                                <ImageIcon className="w-8 h-8" />
+                            </div>
+                            <div className="absolute bottom-2 left-2 text-[10px] font-mono text-white/60 bg-black/80 px-1 rounded">
+                                COMPETITOR_0{i}
+                            </div>
+                        </div>
+                    ))}
+                </div>
              </div>
           </div>
         )}
 
+        {/* STAGE 2: CONCEPTUAL CLARITY */}
         {stage === 2 && (
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in slide-in-from-right duration-500">
                 <div className="col-span-full border border-white/10 p-8 rounded-xl bg-white/5 text-center py-16">
@@ -453,10 +642,10 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
              </div>
         )}
 
+        {/* STAGE 3: DESIGN INTEGRITY */}
         {stage === 3 && (
             <div className="space-y-4 animate-in slide-in-from-right duration-500">
                 <div className="font-mono text-xs text-[#FF7F50] mb-4">// INTEGRITY_CHECKLIST</div>
-                {/* FUNCTIONAL CHECKLIST */}
                 <div className="grid gap-4">
                     <div onClick={() => toggleCheck('scalability')} className="flex items-start justify-between p-5 border border-white/10 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
                         <div>
@@ -501,6 +690,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
             </div>
         )}
 
+        {/* STAGE 4/5: VALIDATION & EXPORT */}
         {stage >= 4 && (
              <div className="text-center py-20 animate-in slide-in-from-right duration-500">
                  <ShieldCheck className="w-16 h-16 text-[#FF7F50] mx-auto mb-6" />
@@ -517,7 +707,6 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       <div className="fixed bottom-0 left-0 right-0 bg-[#050505] border-t border-white/10 p-6 z-50">
         <div className="max-w-3xl mx-auto flex items-center gap-4">
             
-            {/* BACK BUTTON */}
             <button 
                 onClick={prevStage}
                 className="h-14 w-14 flex items-center justify-center rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/30 transition-all flex-shrink-0"
@@ -525,7 +714,6 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 <ChevronLeft className="w-5 h-5" />
             </button>
 
-            {/* SLIDE GATE */}
             <div className="flex-1 relative">
                 {!gateUnlocked ? (
                     <div className="relative h-14 bg-white/5 rounded-full overflow-hidden border border-white/10 select-none">
