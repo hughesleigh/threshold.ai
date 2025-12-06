@@ -29,7 +29,10 @@ import {
   MessageSquare,
   Trash2,
   Archive,
-  Edit2
+  Edit2,
+  FileBox,
+  GraduationCap,
+  Wrench
 } from 'lucide-react';
 import { cn } from "@/components/ui/utils";
 
@@ -108,7 +111,7 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}>
       </div>
 
-      <nav className="relative z-50 flex items-center justify-between px-6 py-6 md:px-12 border-b border-white/5 bg-[#050505]/80 backdrop-blur-md sticky top-0">
+      <nav className="relative z-50 flex items-center justify-between px-6 py-6 md:px-12 border-b border-white/5 bg-[#050505]/80 backdrop-blur-md sticky top-0 h-20">
         <div className="flex items-center gap-4 cursor-pointer" onClick={() => onViewChange('HOME')}>
           <div className="grid grid-cols-3 gap-[2px]">
             <div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div>
@@ -120,29 +123,33 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
           </div>
         </div>
 
-        <div className="hidden md:flex items-center gap-8 font-mono text-xs text-white/60">
-            <button onClick={() => onViewChange('HOME')} className="hover:text-white transition-colors">HOME</button>
-            <button onClick={() => onViewChange('PROTOCOLS')} className="hover:text-white transition-colors">FRAMEWORK</button>
-            <button onClick={() => onViewChange('RESOURCES')} className="hover:text-white transition-colors">RESOURCES</button>
-            {isLoggedInContext && (
-                <button onClick={() => onViewChange('DASHBOARD')} className="hover:text-white transition-colors text-white font-bold">DASHBOARD</button>
-            )}
-        </div>
+        <div className="flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-8 font-mono text-xs text-white/60">
+                <button onClick={() => onViewChange('HOME')} className={cn("hover:text-white transition-colors", currentView === 'HOME' && "text-white")}>HOME</button>
+                <button onClick={() => onViewChange('PROTOCOLS')} className={cn("hover:text-white transition-colors", currentView === 'PROTOCOLS' && "text-white")}>FRAMEWORK</button>
+                <button onClick={() => onViewChange('RESOURCES')} className={cn("hover:text-white transition-colors", currentView === 'RESOURCES' && "text-white")}>RESOURCES</button>
+                {isLoggedInContext && (
+                    <button onClick={() => onViewChange('DASHBOARD')} className={cn("hover:text-white transition-colors font-bold", currentView === 'DASHBOARD' && "text-[#FF7F50]")}>DASHBOARD</button>
+                )}
+            </div>
 
-        <div className="flex items-center gap-6">
-          {!isLoggedInContext && currentView !== 'LOGIN' && (
-            <button onClick={() => onViewChange('LOGIN')} className="font-mono text-xs px-4 py-2 border border-white/20 rounded-full text-white hover:border-[#FF7F50] hover:text-[#FF7F50] transition-colors flex items-center gap-2 group">
-              LOGIN <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-            </button>
-          )}
+            <div className="h-4 w-[1px] bg-white/10 hidden md:block"></div>
 
-          {isLoggedInContext && (
-             <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center font-mono text-xs font-bold ring-1 ring-white/20">
-                  AH
-                </div>
-             </div>
-          )}
+            <div className="flex items-center gap-6">
+                {!isLoggedInContext && currentView !== 'LOGIN' && (
+                    <button onClick={() => onViewChange('LOGIN')} className="font-mono text-xs px-4 py-2 border border-white/20 rounded-full text-white hover:border-[#FF7F50] hover:text-[#FF7F50] transition-colors flex items-center gap-2 group">
+                    LOGIN <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                )}
+
+                {isLoggedInContext && (
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center font-mono text-xs font-bold ring-1 ring-white/20 cursor-pointer hover:ring-[#FF7F50] transition-all">
+                        AH
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
       </nav>
 
@@ -325,7 +332,7 @@ const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 4. DASHBOARD VIEW (Updated with Filters, Menu, and New Project Modal)
+// 4. DASHBOARD VIEW
 const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [activeTab, setActiveTab] = useState<ProjectStatus>('ACTIVE');
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
@@ -392,7 +399,6 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 LAST_EDIT :: {project.lastEdited}
               </div>
               <div className="flex items-center gap-4">
-                  {/* More Menu */}
                   <div className="relative">
                       <button onClick={() => setActiveMenuId(activeMenuId === project.id ? null : project.id)} className="p-2 hover:bg-white/10 rounded">
                           <MoreHorizontal className="w-4 h-4 text-white/60" />
@@ -428,7 +434,6 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
         </div>
       </div>
 
-      {/* NEW PROJECT MODAL */}
       {showNewProjectModal && (
           <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
               <div className="w-full max-w-4xl bg-[#0A0A0A] border border-white/10 rounded-2xl p-8 relative">
@@ -656,8 +661,8 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                             </div>
                         </div>
                     ))}
-                    <button onClick={addCompetitor} className="aspect-square border border-white/10 rounded-lg flex items-center justify-center hover:bg-white/5 transition-colors">
-                        <Plus className="w-6 h-6 text-white/40" />
+                    <button onClick={addCompetitor} className="aspect-square border border-white/10 rounded-lg flex items-center justify-center hover:bg-white/5 transition-colors group">
+                        <Plus className="w-6 h-6 text-white/40 group-hover:text-white transition-colors" />
                     </button>
                 </div>
              </div>
@@ -937,26 +942,98 @@ const ProtocolsView = () => {
   );
 };
 
-// 7. RESOURCES VIEW (Placeholder)
+// 7. RESOURCES VIEW (Real Content)
 const ResourcesView = () => {
     return (
         <div className="max-w-4xl mx-auto px-6 py-12">
+            
+            {/* Header */}
             <div className="mb-12 border-b border-white/10 pb-8">
                 <div className="font-mono text-xs text-[#FF7F50] mb-2">// KNOWLEDGE_BASE</div>
                 <h1 className="text-4xl font-bold mb-4">Resources</h1>
                 <p className="text-white/60 font-light text-lg">
-                    Templates, guides, and case studies for the Threshold methodology.
+                    Tools, templates, and guides to help you implement the Threshold Method in your creative practice.
                 </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Placeholders */}
-                {[1,2,3,4].map(i => (
-                    <div key={i} className="border border-white/10 p-6 rounded-xl bg-white/5">
-                        <div className="h-32 bg-white/5 rounded mb-4"></div>
-                        <h3 className="font-bold text-lg mb-2">Resource Title {i}</h3>
-                        <p className="text-sm text-white/40">Description of the resource goes here.</p>
+
+            {/* Templates Section */}
+            <div className="mb-16">
+                <div className="flex items-center gap-2 mb-6 text-white/40 uppercase tracking-widest font-mono text-xs">
+                    <FileBox className="w-4 h-4" /> Downloads
+                </div>
+                <h2 className="text-2xl font-bold mb-6">Templates & Downloads</h2>
+                <div className="space-y-4">
+                    {[
+                        { title: 'Strategic Brief Template', desc: 'Complete fillable PDF for offline strategic brief completion.', type: 'PDF' },
+                        { title: 'Project SOP Template', desc: 'Standard Operating Procedure for agency integration.', type: 'DOCX' },
+                        { title: 'Concept Evaluation Rubric', desc: 'Scoring framework for objective concept evaluation.', type: 'PDF' },
+                        { title: 'Project Timeline Template', desc: 'Excel template with recommended threshold timelines.', type: 'XLSX' }
+                    ].map((item, i) => (
+                        <div key={i} className="flex items-center justify-between p-4 border border-white/10 rounded-lg hover:bg-white/5 transition-colors group cursor-pointer">
+                            <div>
+                                <h3 className="font-bold text-white group-hover:text-[#FF7F50] transition-colors">{item.title}</h3>
+                                <p className="text-sm text-white/40">{item.desc}</p>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <span className="font-mono text-[10px] text-white/30">{item.type}</span>
+                                <Download className="w-4 h-4 text-white/40 group-hover:text-white" />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Learning Section */}
+            <div className="mb-16">
+                <div className="flex items-center gap-2 mb-6 text-white/40 uppercase tracking-widest font-mono text-xs">
+                    <GraduationCap className="w-4 h-4" /> Learning
+                </div>
+                <h2 className="text-2xl font-bold mb-6">Learning Resources</h2>
+                <div className="grid gap-6">
+                    <div className="border border-white/10 p-6 rounded-xl bg-white/5 hover:border-white/20 transition-colors">
+                        <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center mb-4">
+                            <Zap className="w-5 h-5 text-blue-400" />
+                        </div>
+                        <h3 className="font-bold text-lg mb-2">Best Practices Guide</h3>
+                        <p className="text-sm text-white/60 mb-4">Learn how to write effective must-embody and must-avoid keywords, craft strategic prompts, and evaluate AI outputs against your brief.</p>
+                        <button className="text-xs font-mono text-blue-400 hover:text-white flex items-center gap-2">READ GUIDE <ArrowRight className="w-3 h-3" /></button>
                     </div>
-                ))}
+                    
+                    <div className="border border-white/10 p-6 rounded-xl bg-white/5 hover:border-white/20 transition-colors">
+                        <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center mb-4">
+                            <ShieldCheck className="w-5 h-5 text-purple-400" />
+                        </div>
+                        <h3 className="font-bold text-lg mb-2">Implementation Checklist</h3>
+                        <p className="text-sm text-white/60 mb-4">Step-by-step checklist for integrating Threshold into your existing workflow. Covers team onboarding, client communication, and quality control.</p>
+                        <button className="text-xs font-mono text-purple-400 hover:text-white flex items-center gap-2">DOWNLOAD CHECKLIST <ArrowRight className="w-3 h-3" /></button>
+                    </div>
+                </div>
+            </div>
+
+            {/* AI Tools Section */}
+            <div>
+                <div className="flex items-center gap-2 mb-6 text-white/40 uppercase tracking-widest font-mono text-xs">
+                    <Wrench className="w-4 h-4" /> Toolbelt
+                </div>
+                <h2 className="text-2xl font-bold mb-6">Recommended AI Tools</h2>
+                <div className="grid gap-4">
+                    {[
+                        { name: 'Claude', desc: 'Strategic copywriting, concept development, and design rationale.' },
+                        { name: 'ChatGPT', desc: 'Brainstorming, brief refinement, and presentation outlines.' },
+                        { name: 'Gamma', desc: 'AI-powered presentation builder for stakeholder presentations.' },
+                        { name: 'NotebookLM', desc: 'Generate study guides, FAQs, and presentation notes from your brief.' },
+                        { name: 'Midjourney', desc: 'Visual concept generation and stylistically aligned imagery.' },
+                        { name: 'Figma AI', desc: 'AI-powered design assistance for rapid prototyping.' }
+                    ].map((tool, i) => (
+                        <div key={i} className="flex items-center justify-between p-4 border border-white/5 rounded-lg hover:bg-white/5 transition-colors group cursor-pointer">
+                            <div className="flex items-baseline gap-4">
+                                <h3 className="font-bold text-white w-24">{tool.name}</h3>
+                                <p className="text-sm text-white/40 group-hover:text-white/60 transition-colors">{tool.desc}</p>
+                            </div>
+                            <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-white -rotate-45" />
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     )
