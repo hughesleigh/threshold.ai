@@ -35,14 +35,14 @@ import {
   Wrench,
   Send,
   FolderOpen,
-  File
+  File,
+  Grid
 } from 'lucide-react';
 import { cn } from "@/components/ui/utils";
 
 // --- TYPES ---
 
-// Added PROJECT_HUB view
-type View = 'HOME' | 'LOGIN' | 'DASHBOARD' | 'PROJECT_HUB' | 'PROJECT_WIZARD' | 'PROTOCOLS' | 'RESOURCES';
+type View = 'HOME' | 'LOGIN' | 'DASHBOARD' | 'PROJECT_HUB' | 'PROJECT_WIZARD' | 'PROTOCOLS' | 'RESOURCES' | 'MOODBOARD';
 type Stage = 1 | 2 | 3 | 4 | 5;
 type ProjectStatus = 'ACTIVE' | 'ARCHIVED';
 
@@ -84,6 +84,7 @@ const SpecBlock = ({
       [ {id} ]
     </div>
     <h3 className="text-lg font-bold mb-4 text-white">{label}</h3>
+    
     <div className="relative">
       <textarea 
         className={`w-full bg-black/40 border border-white/10 rounded-lg p-4 text-sm font-light text-white/90 focus:border-blue-500 outline-none transition-colors resize-none ${height}`}
@@ -95,6 +96,7 @@ const SpecBlock = ({
         </button>
       </div>
     </div>
+    
     {hint && (
       <div className="mt-3 flex items-start gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
         <Activity className="w-3 h-3 text-[#FF7F50] mt-0.5 flex-shrink-0" />
@@ -107,7 +109,7 @@ const SpecBlock = ({
 // --- GLOBAL LAYOUT WRAPPER ---
 const Layout = ({ children, currentView, onViewChange }: { children: React.ReactNode, currentView: View, onViewChange: (v: View) => void }) => {
   
-  const isLoggedInContext = currentView === 'DASHBOARD' || currentView === 'PROJECT_WIZARD' || currentView === 'PROJECT_HUB';
+  const isLoggedInContext = ['DASHBOARD', 'PROJECT_WIZARD', 'PROJECT_HUB', 'MOODBOARD'].includes(currentView);
 
   return (
     <div className="relative min-h-screen w-full bg-[#050505] text-white selection:bg-[#FF7F50]/30 overflow-x-hidden font-sans flex flex-col">
@@ -133,7 +135,7 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
                 <button onClick={() => onViewChange('PROTOCOLS')} className={cn("hover:text-white transition-colors", currentView === 'PROTOCOLS' && "text-white")}>FRAMEWORK</button>
                 <button onClick={() => onViewChange('RESOURCES')} className={cn("hover:text-white transition-colors", currentView === 'RESOURCES' && "text-white")}>RESOURCES</button>
                 {isLoggedInContext && (
-                    <button onClick={() => onViewChange('DASHBOARD')} className={cn("hover:text-white transition-colors font-bold", (currentView === 'DASHBOARD' || currentView === 'PROJECT_HUB') && "text-[#FF7F50]")}>DASHBOARD</button>
+                    <button onClick={() => onViewChange('DASHBOARD')} className={cn("hover:text-white transition-colors font-bold", (currentView === 'DASHBOARD' || currentView === 'PROJECT_HUB' || currentView === 'MOODBOARD') && "text-[#FF7F50]")}>DASHBOARD</button>
                 )}
             </div>
 
@@ -486,12 +488,12 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// NEW: PROJECT HUB VIEW
+// NEW: PROJECT HUB VIEW (Updated with functional menu and links)
 const ProjectHubView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
+  const [showMenu, setShowMenu] = useState(false);
+
   return (
       <div className="max-w-6xl mx-auto px-6 py-12">
-          
-          {/* Header & Nav Back */}
           <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-white/10">
               <div>
                   <button onClick={() => onNavigate('DASHBOARD')} className="flex items-center gap-2 text-xs font-mono text-white/60 hover:text-white mb-4 transition-colors">
@@ -500,24 +502,30 @@ const ProjectHubView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                   <div className="font-mono text-xs text-[#FF7F50] mb-2">// PROJECT_HUB :: ID_01</div>
                   <h1 className="text-4xl font-bold">Pelvic Door Identity</h1>
               </div>
-              <div className="flex gap-3">
+              <div className="flex gap-3 relative">
                   <button onClick={() => onNavigate('PROJECT_WIZARD')} className="flex items-center gap-2 px-4 py-2 bg-[#FF7F50] text-black text-sm font-bold rounded hover:bg-[#FF7F50]/90 transition-colors">
                       <Play className="w-4 h-4 fill-current" /> CONTINUE WORKFLOW
                   </button>
-                  <button className="p-2 border border-white/10 rounded hover:bg-white/5 transition-colors text-white/60 hover:text-white">
+                  <button onClick={() => setShowMenu(!showMenu)} className="p-2 border border-white/10 rounded hover:bg-white/5 transition-colors text-white/60 hover:text-white">
                       <MoreHorizontal className="w-5 h-5" />
                   </button>
+                  {showMenu && (
+                      <div className="absolute top-full right-0 mt-2 w-48 bg-[#0A0A0A] border border-white/20 rounded-lg p-1 shadow-2xl z-50">
+                          <button className="flex items-center gap-2 w-full px-3 py-2 text-xs text-white/80 hover:bg-white/10 rounded"><Edit2 className="w-3 h-3"/> Project Settings</button>
+                          <button className="flex items-center gap-2 w-full px-3 py-2 text-xs text-white/80 hover:bg-white/10 rounded"><Download className="w-3 h-3"/> Export All Data</button>
+                          <div className="h-[1px] bg-white/10 my-1"></div>
+                          <button className="flex items-center gap-2 w-full px-3 py-2 text-xs text-red-400 hover:bg-white/10 rounded"><Archive className="w-3 h-3"/> Archive Project</button>
+                      </div>
+                  )}
               </div>
           </div>
 
-          {/* Hub Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               
               {/* Column 1: Strategy & Research */}
               <div className="space-y-6">
                   
-                  {/* Strategic Brief Card */}
-                  <div className="border border-white/10 rounded-xl bg-white/5 p-6 relative group hover:border-white/20 transition-all">
+                  <div className="border border-white/10 rounded-xl bg-white/5 p-6 relative group hover:border-white/20 transition-all cursor-pointer" onClick={() => onNavigate('PROJECT_WIZARD')}>
                        <div className="flex items-center justify-between mb-4">
                            <div className="flex items-center gap-3">
                                <div className="p-2 bg-blue-500/10 rounded-lg"><FileText className="w-5 h-5 text-blue-400" /></div>
@@ -529,8 +537,7 @@ const ProjectHubView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                        <button className="text-xs font-mono text-white/60 hover:text-white flex items-center gap-2">VIEW DOCUMENT <ArrowRight className="w-3 h-3" /></button>
                   </div>
 
-                  {/* Research Card */}
-                   <div className="border border-white/10 rounded-xl bg-white/5 p-6 relative group hover:border-white/20 transition-all">
+                   <div className="border border-white/10 rounded-xl bg-white/5 p-6 relative group hover:border-white/20 transition-all cursor-pointer" onClick={() => onNavigate('MOODBOARD')}>
                        <div className="flex items-center justify-between mb-4">
                            <div className="flex items-center gap-3">
                                <div className="p-2 bg-purple-500/10 rounded-lg"><Sparkles className="w-5 h-5 text-purple-400" /></div>
@@ -595,6 +602,46 @@ const ProjectHubView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       </div>
   )
 };
+
+// NEW: MOODBOARD VIEW
+const MoodboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
+    return (
+        <div className="max-w-6xl mx-auto px-6 py-12">
+            <div className="mb-8 flex items-center justify-between">
+                <button onClick={() => onNavigate('PROJECT_HUB')} className="flex items-center gap-2 text-xs font-mono text-white/60 hover:text-white transition-colors">
+                    <ChevronLeft className="w-3 h-3" /> BACK_TO_HUB
+                </button>
+                <div className="flex gap-2">
+                    <button className="flex items-center gap-2 px-3 py-2 bg-white/5 border border-white/10 rounded hover:border-[#FF7F50] transition-colors text-xs font-mono">
+                        <Upload className="w-3 h-3" /> UPLOAD_IMAGE
+                    </button>
+                    <button className="flex items-center gap-2 px-3 py-2 bg-white/5 border border-white/10 rounded hover:border-[#FF7F50] transition-colors text-xs font-mono">
+                        <Sparkles className="w-3 h-3 text-[#FF7F50]" /> AI_GENERATE
+                    </button>
+                </div>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
+                {/* Large Hero Image */}
+                <div className="col-span-2 row-span-2 bg-white/5 border border-white/10 rounded-xl relative group overflow-hidden">
+                    <div className="absolute inset-0 flex items-center justify-center text-white/20"><ImageIcon className="w-12 h-12"/></div>
+                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/60 backdrop-blur opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span className="font-mono text-xs">HERO_REFERENCE_01</span>
+                    </div>
+                </div>
+                {/* Standard Images */}
+                {[1,2,3,4].map(i => (
+                    <div key={i} className="bg-white/5 border border-white/10 rounded-xl relative group overflow-hidden">
+                        <div className="absolute inset-0 flex items-center justify-center text-white/20"><ImageIcon className="w-8 h-8"/></div>
+                        <div className="absolute bottom-0 left-0 right-0 p-3 bg-black/60 backdrop-blur opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span className="font-mono text-[10px]">TEXTURE_REF_0{i}</span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
+}
 
 // 5. PROJECT WORKFLOW 
 const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
@@ -787,8 +834,8 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                         <div className="font-mono text-xs text-[#FF7F50] mb-2">[ 1.5 :: VISUAL_INTELLIGENCE ]</div>
                         <h3 className="text-xl font-bold">Competitor & Visual Research</h3>
                     </div>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded hover:border-[#FF7F50]/50 transition-colors text-xs font-mono">
-                        <Sparkles className="w-3 h-3 text-[#FF7F50]" /> AUTO_ANALYZE_MARKET
+                    <button onClick={() => onNavigate('MOODBOARD')} className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded hover:border-[#FF7F50]/50 transition-colors text-xs font-mono">
+                        <Sparkles className="w-3 h-3 text-[#FF7F50]" /> OPEN_MOODBOARD_EDITOR
                     </button>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -853,7 +900,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
              </div>
         )}
 
-        {/* STAGE 3 (Updated with Input and Custom Checks) */}
+        {/* STAGE 3 (FIXED BUTTON ALIGNMENT) */}
         {stage === 3 && (
             <div className="space-y-8 animate-in slide-in-from-right duration-500">
                 <div className="mb-8">
@@ -861,19 +908,23 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                     <p className="text-white/60 font-light">Refine and validate technical execution. AI assists with checks; you make strategic decisions.</p>
                 </div>
 
-                {/* AI Refinement Input */}
                 <div className="border border-white/10 p-6 rounded-xl bg-white/5 mb-8 relative">
                     <div className="flex items-center gap-2 mb-4">
                         <Zap className="w-4 h-4 text-[#FF7F50]" />
                         <h3 className="font-bold text-lg">AI-Assisted Refinement</h3>
                     </div>
-                    <textarea 
-                        className="w-full bg-black/40 border border-white/10 rounded-lg p-4 text-sm font-light focus:border-blue-500 outline-none min-h-[100px] pr-32 resize-none placeholder-white/30"
-                        placeholder="Describe the refinement needed (e.g., 'Make lines bolder for small sizes', 'Simplify the geometry')..."
-                    />
-                    <button className="absolute right-6 bottom-6 px-4 py-2 bg-[#FF7F50]/10 border border-[#FF7F50]/50 text-[#FF7F50] text-xs font-mono rounded hover:bg-[#FF7F50] hover:text-black transition-all flex items-center gap-2">
-                        <Sparkles className="w-3 h-3" /> GENERATE VARIATIONS
-                    </button>
+                    <div className="relative">
+                        <textarea 
+                            className="w-full bg-black/40 border border-white/10 rounded-lg p-4 text-sm font-light focus:border-[#FF7F50] outline-none min-h-[120px] resize-none placeholder-white/30"
+                            placeholder="Describe the refinement needed (e.g., 'Make lines bolder for small sizes', 'Simplify the geometry')..."
+                        />
+                        {/* ALIGNED BUTTON INSIDE TEXTAREA */}
+                        <div className="absolute right-2 bottom-2">
+                            <button className="flex items-center gap-2 px-3 py-1 bg-[#FF7F50]/10 border border-[#FF7F50]/50 text-[#FF7F50] text-[10px] font-mono rounded hover:bg-[#FF7F50] hover:text-black transition-all">
+                                <Sparkles className="w-3 h-3" /> GENERATE_VARIATIONS
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="space-y-4">
@@ -936,7 +987,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
             </div>
         )}
 
-        {/* STAGE 4 (Updated with AI Chat and Custom Checks) */}
+        {/* STAGE 4 (RESTORED RESOURCES) */}
         {stage === 4 && (
              <div className="space-y-8 animate-in slide-in-from-right duration-500">
                 <div className="mb-8">
@@ -952,7 +1003,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                     </div>
                     <div className="bg-black/40 border border-white/10 rounded-lg h-48 p-4 mb-4 overflow-y-auto flex flex-col gap-4">
                         {chatHistory.map((msg, i) => (
-                            <div key={i} className={cn("max-w-[80%] p-3 rounded-lg text-sm", msg.role === 'ai' ? "bg-white/10 self-start" : "bg-blue-500/20 self-end")}>
+                            <div key={i} className={cn("max-w-[80%] p-3 rounded-lg text-sm", msg.role === 'ai' ? "bg-white/10 self-start" : "bg-[#FF7F50]/20 self-end text-[#FF7F50]")}>
                                 {msg.content}
                             </div>
                         ))}
@@ -965,10 +1016,38 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                             placeholder="Ask for talking points, rationale, or objection handling..."
                             className="flex-grow bg-white/5 border border-white/10 rounded px-4 py-2 text-sm outline-none focus:border-white/30"
                         />
-                        <button onClick={handleChatSend} className="px-4 py-2 border border-white/10 rounded hover:bg-blue-500/20 font-mono text-xs text-blue-400 flex items-center justify-center"><Send className="w-4 h-4"/></button>
+                        {/* CHANGED ARROW COLOR TO ORANGE */}
+                        <button onClick={handleChatSend} className="px-4 py-2 border border-white/10 rounded hover:bg-[#FF7F50]/20 font-mono text-xs text-[#FF7F50] flex items-center justify-center"><Send className="w-4 h-4"/></button>
                     </div>
                 </div>
 
+                {/* Presentation Tools (RESTORED) */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <div className="border border-white/10 p-5 rounded-xl bg-white/5 hover:border-purple-500/50 transition-colors group cursor-pointer">
+                        <div className="flex justify-between items-start mb-4">
+                            <Presentation className="w-6 h-6 text-purple-400" />
+                            <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-white" />
+                        </div>
+                        <h4 className="font-bold mb-1">Gamma AI</h4>
+                        <p className="text-xs text-white/40">Generate beautiful, editable slide decks instantly.</p>
+                    </div>
+                    <div className="border border-white/10 p-5 rounded-xl bg-white/5 hover:border-blue-500/50 transition-colors group cursor-pointer">
+                        <div className="flex justify-between items-start mb-4">
+                            <BookOpen className="w-6 h-6 text-blue-400" />
+                            <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-white" />
+                        </div>
+                        <h4 className="font-bold mb-1">NotebookLM</h4>
+                        <p className="text-xs text-white/40">Turn your brief and concepts into presentation notes.</p>
+                    </div>
+                    <div className="border border-white/10 p-5 rounded-xl bg-white/5 hover:border-orange-500/50 transition-colors group cursor-pointer">
+                        <div className="flex justify-between items-start mb-4">
+                            <MessageSquare className="w-6 h-6 text-orange-400" />
+                            <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-white" />
+                        </div>
+                        <h4 className="font-bold mb-1">Claude</h4>
+                        <p className="text-xs text-white/40">Draft speaker notes and stakeholder talking points.</p>
+                    </div>
+                </div>
 
                 <div className="space-y-4">
                     <div className="font-mono text-xs text-[#FF7F50] mb-4">// PRESENTATION_CHECKLIST</div>
@@ -1014,7 +1093,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
              </div>
         )}
 
-        {/* STAGE 5 (Updated with Granular Downloads) */}
+        {/* STAGE 5 */}
         {stage === 5 && (
              <div className="text-center py-20 animate-in slide-in-from-right duration-500">
                  <ShieldCheck className="w-20 h-20 text-[#FF7F50] mx-auto mb-8" />
@@ -1294,6 +1373,7 @@ export default function App() {
       {currentView === 'PROJECT_WIZARD' && <ProjectWizard onNavigate={setCurrentView} />}
       {currentView === 'PROTOCOLS' && <ProtocolsView />}
       {currentView === 'RESOURCES' && <ResourcesView />}
+      {currentView === 'MOODBOARD' && <MoodboardView onNavigate={setCurrentView} />}
     </Layout>
   );
 }
