@@ -3,6 +3,7 @@ import {
   ArrowRight, 
   Check, 
   ChevronRight, 
+  ChevronLeft,
   Lock, 
   LayoutGrid, 
   FileText, 
@@ -45,6 +46,9 @@ const PROJECTS: Project[] = [
 
 // 1. GLOBAL LAYOUT WRAPPER
 const Layout = ({ children, currentView, onViewChange }: { children: React.ReactNode, currentView: View, onViewChange: (v: View) => void }) => {
+  
+  const isLoggedInContext = currentView === 'DASHBOARD' || currentView === 'PROJECT_WIZARD';
+
   return (
     <div className="relative min-h-screen w-full bg-[#050505] text-white selection:bg-[#FF7F50]/30 overflow-x-hidden font-sans">
       {/* Noise Overlay */}
@@ -55,7 +59,6 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
       {/* Navigation / Status Bar */}
       <nav className="relative z-50 flex items-center justify-between px-6 py-6 md:px-12 border-b border-white/5 bg-[#050505]/80 backdrop-blur-md sticky top-0">
         <div className="flex items-center gap-4 cursor-pointer" onClick={() => onViewChange('HOME')}>
-          {/* Dot Matrix Logo */}
           <div className="grid grid-cols-3 gap-[2px]">
             <div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div>
             <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
@@ -65,7 +68,6 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-lg font-bold tracking-tight">THRESHOLD</span>
-            <span className="font-mono text-[10px] text-white/40 tracking-widest">[ v1.0 ]</span>
           </div>
         </div>
 
@@ -73,18 +75,21 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
            <button onClick={() => onViewChange('PROTOCOLS')} className="hidden md:block font-mono text-xs text-white/60 hover:text-white transition-colors">
             // PROTOCOLS
            </button>
+           
            <div className="hidden md:flex items-center gap-2 border border-white/10 px-3 py-1 rounded-full bg-white/5">
             <div className="w-1.5 h-1.5 bg-[#FF7F50] rounded-full animate-pulse"></div>
             <span className="font-mono text-[10px] text-white/60">SYSTEM: ONLINE</span>
           </div>
-          {currentView === 'HOME' && (
+
+          {!isLoggedInContext && currentView !== 'LOGIN' && (
             <button onClick={() => onViewChange('LOGIN')} className="font-mono text-xs text-white hover:text-[#FF7F50] transition-colors">
               // LOGIN
             </button>
           )}
-          {currentView !== 'HOME' && currentView !== 'LOGIN' && (
+
+          {isLoggedInContext && (
              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center font-mono text-xs font-bold">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center font-mono text-xs font-bold ring-1 ring-white/20">
                   AH
                 </div>
              </div>
@@ -113,30 +118,29 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
   );
 };
 
-// 2. HOME VIEW (The "Nothing Tech" HUD)
+// 2. HOME VIEW
 const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   return (
     <div className="flex flex-col items-center justify-center pt-12 pb-32 px-4">
-      {/* The Glass HUD */}
-      <div className="relative w-full max-w-3xl p-8 md:p-16 border border-white/10 rounded-3xl backdrop-blur-xl bg-white/5 shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-500">
+      <div className="relative w-full max-w-3xl p-8 md:p-20 border border-white/10 rounded-3xl backdrop-blur-xl bg-white/5 shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-500">
         <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-blue-400 via-purple-400 to-[#FF7F50] opacity-70"></div>
         <div className="absolute top-4 left-4 text-white/20 text-xs">+</div>
         <div className="absolute top-4 right-4 text-white/20 text-xs">+</div>
         <div className="absolute bottom-4 left-4 text-white/20 text-xs">+</div>
         <div className="absolute bottom-4 right-4 text-white/20 text-xs">+</div>
 
-        <div className="text-center space-y-8">
-          <div className="inline-block border border-white/10 bg-black/20 px-3 py-1 rounded text-[10px] font-mono tracking-widest text-blue-300 mb-4">
-            // ARCHITECTURAL_STANDARD
+        <div className="text-center space-y-6">
+          <div className="inline-block px-3 py-1 rounded text-[10px] font-mono tracking-widest text-[#FF7F50]/80 mb-2">
+            // SYSTEM STATUS: VALIDATED
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 pb-2">
+          <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-white pb-2">
             Threshold.
           </h1>
           <p className="text-lg md:text-xl text-white/60 max-w-xl mx-auto font-light leading-relaxed">
             The rigorous methodology for AI-augmented creative workflows. 
             Moving beyond prompt engineering to <span className="text-white/90 font-medium">strategic integrity</span>.
           </p>
-          <div className="pt-6">
+          <div className="pt-8">
             <button 
               onClick={() => onNavigate('LOGIN')}
               className="group relative inline-flex items-center justify-center px-8 py-4 font-mono text-sm uppercase tracking-widest border border-white/20 rounded hover:border-[#FF7F50]/50 transition-all duration-300 bg-black/20 hover:bg-[#FF7F50]/10 overflow-hidden"
@@ -150,7 +154,6 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
         </div>
       </div>
 
-      {/* Insight Section */}
       <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl items-center border-t border-white/5 pt-24 w-full">
         <div className="space-y-6">
           <span className="font-mono text-xs text-[#FF7F50]">// PROBLEM_DETECTION</span>
@@ -162,7 +165,6 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
         </div>
         <div className="h-64 border border-white/10 rounded-xl bg-white/5 flex items-center justify-center relative overflow-hidden group">
            <div className="absolute inset-0 flex items-center justify-center">
-              {/* Abstract Visual: Chaos to Order */}
               <div className="w-full h-full flex relative">
                 <div className="w-1/2 h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 blur-sm mix-blend-overlay"></div>
                 <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-[#FF7F50] shadow-[0_0_15px_#FF7F50] z-10"></div>
@@ -175,19 +177,26 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 3. LOGIN VIEW (The "Access Terminal")
+// 3. LOGIN VIEW
 const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   return (
     <div className="min-h-[80vh] flex items-center justify-center p-4">
-      <div className="relative w-full max-w-md p-8 border border-white/10 rounded-2xl backdrop-blur-xl bg-black/40 shadow-2xl">
-        {/* Scanner Line */}
+      <div className="relative w-full max-w-md p-10 border border-white/10 rounded-2xl backdrop-blur-xl bg-black/40 shadow-2xl overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-coral-500 opacity-80"></div>
         <div className="absolute top-4 left-4 text-white/20 text-xs">+</div>
         <div className="absolute top-4 right-4 text-white/20 text-xs">+</div>
         <div className="absolute bottom-4 left-4 text-white/20 text-[10px] font-mono">SECURE_CONNECTION</div>
 
         <div className="text-center mb-10">
-          <div className="font-mono text-4xl mb-4 text-white tracking-tighter opacity-50">:::</div>
+          <div className="mx-auto mb-6 w-fit">
+            <div className="grid grid-cols-3 gap-[3px]">
+                <div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                <div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div>
+                <div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div>
+                <div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div>
+                <div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div>
+            </div>
+          </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Authenticate.</h1>
           <p className="font-mono text-xs text-[#FF7F50] mt-2">// ENTER_CREDENTIALS</p>
         </div>
@@ -201,7 +210,6 @@ const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
             <label className="block font-mono text-[10px] text-white/50 mb-1 tracking-wider uppercase">[ SECURITY_KEY ]</label>
             <input type="password" className="w-full bg-white/5 border-b border-white/10 focus:border-[#FF7F50] text-white px-3 py-3 outline-none transition-colors font-sans placeholder-white/20" placeholder="••••••••" />
           </div>
-
           <button 
             onClick={() => onNavigate('DASHBOARD')}
             className="w-full mt-8 py-3 border border-white/20 hover:border-[#FF7F50] text-white font-mono text-sm uppercase tracking-widest transition-all group relative overflow-hidden bg-white/5 hover:bg-[#FF7F50]/10"
@@ -209,18 +217,15 @@ const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
             <span className="relative z-10 group-hover:text-[#FFAB85]">Initiate Session -&gt;</span>
           </button>
         </div>
-        
         <div className="mt-8 text-center border-t border-white/5 pt-4">
-          <p className="font-mono text-[10px] text-white/30">
-            &gt; SYSTEM_NOTE: DEMO_ENVIRONMENT_ACTIVE
-          </p>
+          <p className="font-mono text-[10px] text-white/30">&gt; SYSTEM_NOTE: DEMO_ENVIRONMENT_ACTIVE</p>
         </div>
       </div>
     </div>
   );
 };
 
-// 4. DASHBOARD VIEW (The "Job Queue")
+// 4. DASHBOARD VIEW (Updated New Project Click)
 const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
@@ -240,7 +245,6 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
           <div key={project.id} className="relative w-full p-6 border border-white/10 rounded-xl bg-white/5 backdrop-blur-md group hover:border-white/20 transition-all">
             <div className="absolute top-2 left-2 text-white/20 text-[10px]">+</div>
             <div className="absolute top-2 right-2 text-white/20 text-[10px]">+</div>
-
             <div className="flex justify-between items-start mb-6">
               <div>
                 <span className="block font-mono text-[10px] text-blue-400 mb-1 tracking-wider uppercase">
@@ -253,7 +257,6 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 <span className="font-mono text-[10px] text-white/60">LIVE</span>
               </div>
             </div>
-
             <div className="mb-6">
               <div className="flex justify-between text-[10px] font-mono text-white/40 mb-2">
                 <span>THRESHOLD 02/05</span>
@@ -268,7 +271,6 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 </div>
               </div>
             </div>
-
             <div className="flex justify-between items-end border-t border-white/5 pt-4">
               <div className="text-[10px] font-mono text-white/30">
                 LAST_EDIT :: {project.lastEdited}
@@ -284,8 +286,11 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
           </div>
         ))}
 
-        {/* New Project Placeholder */}
-        <div className="border border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors cursor-pointer group">
+        {/* New Project Placeholder - NOW FUNCTIONAL */}
+        <div 
+           onClick={() => onNavigate('PROJECT_WIZARD')}
+           className="border border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors cursor-pointer group"
+        >
            <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center mb-4 group-hover:border-[#FF7F50] transition-colors">
               <Plus className="w-6 h-6 text-white/40 group-hover:text-[#FF7F50]" />
            </div>
@@ -296,13 +301,24 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 5. PROJECT WORKFLOW (The 5-Stage Machine)
+// 5. PROJECT WORKFLOW (Updated w/ Gradient Bar, Checklist, & Back Nav)
 const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [stage, setStage] = useState<Stage>(1);
   const [gateUnlocked, setGateUnlocked] = useState(false);
   const [slidePosition, setSlidePosition] = useState(0);
   
-  // Tape Measure Navigation
+  // Checklist State
+  const [checklist, setChecklist] = useState({
+      scalability: false,
+      monochrome: false,
+      cultural: false,
+      production: false
+  });
+
+  const toggleCheck = (key: keyof typeof checklist) => {
+      setChecklist(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+  
   const stages = [
     { id: 1, label: 'STRATEGIC FOUNDATION' },
     { id: 2, label: 'CONCEPTUAL CLARITY' },
@@ -331,12 +347,36 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
     }
   };
 
+  const prevStage = () => {
+      if (stage > 1) {
+          setStage((s) => (s - 1) as Stage);
+          setGateUnlocked(false);
+          setSlidePosition(0);
+          window.scrollTo(0,0);
+      } else {
+          onNavigate('DASHBOARD');
+      }
+  }
+
+  // Calculate Progress % for Top Gradient Bar
+  const progressPercent = (stage / 5) * 100;
+
   return (
-    <div className="min-h-screen pb-40">
+    <div className="min-h-screen pb-40 relative">
+      
+      {/* NEW: TOP GRADIENT PROGRESS BAR */}
+      <div className="sticky top-[80px] left-0 right-0 h-[2px] bg-white/5 z-50">
+          <div 
+             className="h-full bg-gradient-to-r from-blue-500 to-[#FF7F50] transition-all duration-700 ease-out relative"
+             style={{ width: `${progressPercent}%` }}
+          >
+              <div className="absolute right-0 top-0 bottom-0 w-4 bg-white/50 blur-[4px]"></div>
+          </div>
+      </div>
+
       {/* Tape Measure Header */}
-      <div className="sticky top-[80px] z-40 bg-[#050505]/90 backdrop-blur border-b border-white/10 py-4 overflow-x-auto">
+      <div className="sticky top-[82px] z-40 bg-[#050505]/95 backdrop-blur border-b border-white/10 py-4 overflow-x-auto">
         <div className="flex items-center justify-between min-w-[600px] px-6 relative">
-          {/* Connecting Line */}
           <div className="absolute left-6 right-6 top-1/2 h-[1px] bg-white/10 -z-10"></div>
           
           {stages.map((s) => (
@@ -357,7 +397,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
         </div>
       </div>
 
-      {/* Stage Content Container */}
+      {/* Stage Content */}
       <div className="max-w-3xl mx-auto px-6 pt-12">
         {stage === 1 && (
           <div className="space-y-8 animate-in slide-in-from-right duration-500">
@@ -416,14 +456,48 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
         {stage === 3 && (
             <div className="space-y-4 animate-in slide-in-from-right duration-500">
                 <div className="font-mono text-xs text-[#FF7F50] mb-4">// INTEGRITY_CHECKLIST</div>
-                {['Scalability Test (16px)', 'Monochrome Integrity', 'Cultural Sensitivity Scan', 'Production Feasibility'].map((item, i) => (
-                    <div key={i} className="flex items-center justify-between p-4 border border-white/10 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
-                        <span className="font-medium text-sm">{item}</span>
-                        <div className="w-10 h-6 rounded-full border border-white/20 relative group-hover:border-[#FF7F50] transition-colors">
-                             <div className="absolute right-1 top-1 w-4 h-4 rounded-full bg-white/10 group-hover:bg-[#FF7F50] transition-colors"></div>
+                {/* FUNCTIONAL CHECKLIST */}
+                <div className="grid gap-4">
+                    <div onClick={() => toggleCheck('scalability')} className="flex items-start justify-between p-5 border border-white/10 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
+                        <div>
+                            <span className="font-medium text-sm block mb-1">Scalability Test (16px)</span>
+                            <span className="text-xs text-white/40 font-light">Verifies legibility at favicon and app icon sizes.</span>
+                        </div>
+                        <div className={cn("w-4 h-4 rounded border mt-1 transition-colors flex items-center justify-center", checklist.scalability ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20")}>
+                            {checklist.scalability && <Check className="w-3 h-3 text-black" />}
                         </div>
                     </div>
-                ))}
+
+                     <div onClick={() => toggleCheck('monochrome')} className="flex items-start justify-between p-5 border border-white/10 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
+                        <div>
+                            <span className="font-medium text-sm block mb-1">Monochrome Integrity</span>
+                            <span className="text-xs text-white/40 font-light">Ensures visual distinctiveness in single-color formats.</span>
+                        </div>
+                        <div className={cn("w-4 h-4 rounded border mt-1 transition-colors flex items-center justify-center", checklist.monochrome ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20")}>
+                            {checklist.monochrome && <Check className="w-3 h-3 text-black" />}
+                        </div>
+                    </div>
+
+                    <div onClick={() => toggleCheck('cultural')} className="flex items-start justify-between p-5 border border-white/10 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
+                        <div>
+                            <span className="font-medium text-sm block mb-1">Cultural Sensitivity Scan</span>
+                            <span className="text-xs text-white/40 font-light">AI-assisted scan for unintended negative connotations.</span>
+                        </div>
+                        <div className={cn("w-4 h-4 rounded border mt-1 transition-colors flex items-center justify-center", checklist.cultural ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20")}>
+                            {checklist.cultural && <Check className="w-3 h-3 text-black" />}
+                        </div>
+                    </div>
+
+                     <div onClick={() => toggleCheck('production')} className="flex items-start justify-between p-5 border border-white/10 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
+                        <div>
+                            <span className="font-medium text-sm block mb-1">Production Feasibility</span>
+                            <span className="text-xs text-white/40 font-light">Checks for gradients/lines that fail in embroidery/vinyl.</span>
+                        </div>
+                        <div className={cn("w-4 h-4 rounded border mt-1 transition-colors flex items-center justify-center", checklist.production ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20")}>
+                            {checklist.production && <Check className="w-3 h-3 text-black" />}
+                        </div>
+                    </div>
+                </div>
             </div>
         )}
 
@@ -439,54 +513,66 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
         )}
       </div>
 
-      {/* THE SLIDE GATE */}
+      {/* THE SLIDE GATE + BACK NAVIGATION */}
       <div className="fixed bottom-0 left-0 right-0 bg-[#050505] border-t border-white/10 p-6 z-50">
-        <div className="max-w-3xl mx-auto">
-            {!gateUnlocked ? (
-                <div className="relative h-14 bg-white/5 rounded-full overflow-hidden border border-white/10 select-none">
-                    <div 
-                        className="absolute top-0 left-0 bottom-0 bg-gradient-to-r from-blue-500 to-[#FF7F50] transition-all duration-75 ease-linear opacity-50"
-                        style={{ width: `${slidePosition}%` }}
-                    ></div>
-                    <div className="absolute inset-0 flex items-center justify-center font-mono text-xs tracking-widest text-white/40 pointer-events-none">
-                        SLIDE_TO_VERIFY_RATIONALE &gt;&gt;
-                    </div>
-                    <input 
-                        type="range" 
-                        min="0" 
-                        max="100" 
-                        value={slidePosition} 
-                        onChange={handleSlide}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize"
-                    />
-                    <div 
-                        className="absolute top-1 bottom-1 w-12 bg-white rounded-full shadow-lg flex items-center justify-center pointer-events-none transition-all duration-75 ease-linear"
-                        style={{ left: `calc(${slidePosition}% - ${slidePosition * 0.48}px)` }} // simple offset correction
-                    >
-                        <ChevronRight className="text-black w-4 h-4" />
-                    </div>
-                </div>
-            ) : (
-                <button 
-                    onClick={nextStage}
-                    className="w-full h-14 bg-[#FF7F50] hover:bg-[#FF7F50]/90 text-black font-bold tracking-widest uppercase rounded-full animate-in zoom-in duration-300 flex items-center justify-center gap-2 shadow-[0_0_20px_#FF7F50_50%]"
-                >
-                    <Lock className="w-4 h-4" /> THRESHOLD UNLOCKED :: PROCEED
-                </button>
-            )}
+        <div className="max-w-3xl mx-auto flex items-center gap-4">
             
-            <div className="text-center mt-3">
-                <span className="font-mono text-[10px] text-white/20">
-                    // BY PROCEEDING, YOU CERTIFY STRATEGIC ALIGNMENT
-                </span>
+            {/* BACK BUTTON */}
+            <button 
+                onClick={prevStage}
+                className="h-14 w-14 flex items-center justify-center rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/30 transition-all flex-shrink-0"
+            >
+                <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            {/* SLIDE GATE */}
+            <div className="flex-1 relative">
+                {!gateUnlocked ? (
+                    <div className="relative h-14 bg-white/5 rounded-full overflow-hidden border border-white/10 select-none">
+                        <div 
+                            className="absolute top-0 left-0 bottom-0 bg-gradient-to-r from-blue-500 to-[#FF7F50] transition-all duration-75 ease-linear opacity-50"
+                            style={{ width: `${slidePosition}%` }}
+                        ></div>
+                        <div className="absolute inset-0 flex items-center justify-center font-mono text-xs tracking-widest text-white/40 pointer-events-none">
+                            SLIDE_TO_VERIFY_RATIONALE &gt;&gt;
+                        </div>
+                        <input 
+                            type="range" 
+                            min="0" 
+                            max="100" 
+                            value={slidePosition} 
+                            onChange={handleSlide}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize"
+                        />
+                        <div 
+                            className="absolute top-1 bottom-1 w-12 bg-white rounded-full shadow-lg flex items-center justify-center pointer-events-none transition-all duration-75 ease-linear"
+                            style={{ left: `calc(${slidePosition}% - ${slidePosition * 0.48}px)` }}
+                        >
+                            <ChevronRight className="text-black w-4 h-4" />
+                        </div>
+                    </div>
+                ) : (
+                    <button 
+                        onClick={nextStage}
+                        className="w-full h-14 bg-[#FF7F50] hover:bg-[#FF7F50]/90 text-black font-bold tracking-widest uppercase rounded-full animate-in zoom-in duration-300 flex items-center justify-center gap-2 shadow-[0_0_20px_#FF7F50_50%]"
+                    >
+                        <Lock className="w-4 h-4" /> THRESHOLD UNLOCKED :: PROCEED
+                    </button>
+                )}
             </div>
+        </div>
+        
+        <div className="text-center mt-3 max-w-3xl mx-auto">
+            <span className="font-mono text-[10px] text-white/20">
+                // BY PROCEEDING, YOU CERTIFY STRATEGIC ALIGNMENT
+            </span>
         </div>
       </div>
     </div>
   );
 };
 
-// 6. PROTOCOLS VIEW (SOP)
+// 6. PROTOCOLS VIEW
 const ProtocolsView = () => {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
