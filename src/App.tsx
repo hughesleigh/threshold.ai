@@ -32,13 +32,17 @@ import {
   Edit2,
   FileBox,
   GraduationCap,
-  Wrench
+  Wrench,
+  Send,
+  FolderOpen,
+  File
 } from 'lucide-react';
 import { cn } from "@/components/ui/utils";
 
 // --- TYPES ---
 
-type View = 'HOME' | 'LOGIN' | 'DASHBOARD' | 'PROJECT_WIZARD' | 'PROTOCOLS' | 'RESOURCES';
+// Added PROJECT_HUB view
+type View = 'HOME' | 'LOGIN' | 'DASHBOARD' | 'PROJECT_HUB' | 'PROJECT_WIZARD' | 'PROTOCOLS' | 'RESOURCES';
 type Stage = 1 | 2 | 3 | 4 | 5;
 type ProjectStatus = 'ACTIVE' | 'ARCHIVED';
 
@@ -103,7 +107,7 @@ const SpecBlock = ({
 // --- GLOBAL LAYOUT WRAPPER ---
 const Layout = ({ children, currentView, onViewChange }: { children: React.ReactNode, currentView: View, onViewChange: (v: View) => void }) => {
   
-  const isLoggedInContext = currentView === 'DASHBOARD' || currentView === 'PROJECT_WIZARD';
+  const isLoggedInContext = currentView === 'DASHBOARD' || currentView === 'PROJECT_WIZARD' || currentView === 'PROJECT_HUB';
 
   return (
     <div className="relative min-h-screen w-full bg-[#050505] text-white selection:bg-[#FF7F50]/30 overflow-x-hidden font-sans flex flex-col">
@@ -129,7 +133,7 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
                 <button onClick={() => onViewChange('PROTOCOLS')} className={cn("hover:text-white transition-colors", currentView === 'PROTOCOLS' && "text-white")}>FRAMEWORK</button>
                 <button onClick={() => onViewChange('RESOURCES')} className={cn("hover:text-white transition-colors", currentView === 'RESOURCES' && "text-white")}>RESOURCES</button>
                 {isLoggedInContext && (
-                    <button onClick={() => onViewChange('DASHBOARD')} className={cn("hover:text-white transition-colors font-bold", currentView === 'DASHBOARD' && "text-[#FF7F50]")}>DASHBOARD</button>
+                    <button onClick={() => onViewChange('DASHBOARD')} className={cn("hover:text-white transition-colors font-bold", (currentView === 'DASHBOARD' || currentView === 'PROJECT_HUB') && "text-[#FF7F50]")}>DASHBOARD</button>
                 )}
             </div>
 
@@ -412,10 +416,10 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                       )}
                   </div>
                   <button 
-                    onClick={() => onNavigate('PROJECT_WIZARD')}
+                    onClick={() => onNavigate('PROJECT_HUB')}
                     className="flex items-center space-x-2 text-sm text-white hover:text-[#FF7F50] transition-colors group-hover:translate-x-1 duration-300"
                   >
-                    <span className="font-medium">Resume Session</span>
+                    <span className="font-medium">Open Project</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
               </div>
@@ -482,6 +486,116 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
+// NEW: PROJECT HUB VIEW
+const ProjectHubView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
+  return (
+      <div className="max-w-6xl mx-auto px-6 py-12">
+          
+          {/* Header & Nav Back */}
+          <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-white/10">
+              <div>
+                  <button onClick={() => onNavigate('DASHBOARD')} className="flex items-center gap-2 text-xs font-mono text-white/60 hover:text-white mb-4 transition-colors">
+                      <ChevronLeft className="w-3 h-3" /> BACK_TO_DASHBOARD
+                  </button>
+                  <div className="font-mono text-xs text-[#FF7F50] mb-2">// PROJECT_HUB :: ID_01</div>
+                  <h1 className="text-4xl font-bold">Pelvic Door Identity</h1>
+              </div>
+              <div className="flex gap-3">
+                  <button onClick={() => onNavigate('PROJECT_WIZARD')} className="flex items-center gap-2 px-4 py-2 bg-[#FF7F50] text-black text-sm font-bold rounded hover:bg-[#FF7F50]/90 transition-colors">
+                      <Play className="w-4 h-4 fill-current" /> CONTINUE WORKFLOW
+                  </button>
+                  <button className="p-2 border border-white/10 rounded hover:bg-white/5 transition-colors text-white/60 hover:text-white">
+                      <MoreHorizontal className="w-5 h-5" />
+                  </button>
+              </div>
+          </div>
+
+          {/* Hub Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              
+              {/* Column 1: Strategy & Research */}
+              <div className="space-y-6">
+                  
+                  {/* Strategic Brief Card */}
+                  <div className="border border-white/10 rounded-xl bg-white/5 p-6 relative group hover:border-white/20 transition-all">
+                       <div className="flex items-center justify-between mb-4">
+                           <div className="flex items-center gap-3">
+                               <div className="p-2 bg-blue-500/10 rounded-lg"><FileText className="w-5 h-5 text-blue-400" /></div>
+                               <h3 className="font-bold">Strategic Brief</h3>
+                           </div>
+                           <span className="text-[10px] font-mono text-white/40 bg-white/5 px-2 py-1 rounded">LOCKED</span>
+                       </div>
+                       <p className="text-sm text-white/60 mb-6 line-clamp-3">Primary Audience: Holistic wellness seekers. Core Message: Strength through vulnerability. Keywords: Organic, Resilient, Gateway.</p>
+                       <button className="text-xs font-mono text-white/60 hover:text-white flex items-center gap-2">VIEW DOCUMENT <ArrowRight className="w-3 h-3" /></button>
+                  </div>
+
+                  {/* Research Card */}
+                   <div className="border border-white/10 rounded-xl bg-white/5 p-6 relative group hover:border-white/20 transition-all">
+                       <div className="flex items-center justify-between mb-4">
+                           <div className="flex items-center gap-3">
+                               <div className="p-2 bg-purple-500/10 rounded-lg"><Sparkles className="w-5 h-5 text-purple-400" /></div>
+                               <h3 className="font-bold">Visual Intelligence</h3>
+                           </div>
+                           <span className="text-[10px] font-mono text-white/40 bg-white/5 px-2 py-1 rounded">3 ASSETS</span>
+                       </div>
+                       <div className="flex gap-2 mb-6">
+                          {[1,2,3].map(i => (
+                             <div key={i} className="w-12 h-12 rounded bg-black/40 border border-white/5 flex items-center justify-center"><ImageIcon className="w-4 h-4 text-white/20"/></div>
+                          ))}
+                       </div>
+                       <button className="text-xs font-mono text-white/60 hover:text-white flex items-center gap-2">VIEW MOODBOARD <ArrowRight className="w-3 h-3" /></button>
+                  </div>
+              </div>
+
+              {/* Column 2: Concepts & WIP */}
+              <div className="space-y-6">
+                  <div className="border border-white/10 rounded-xl bg-white/5 p-6 h-full relative group hover:border-white/20 transition-all flex flex-col">
+                       <div className="flex items-center justify-between mb-6">
+                           <div className="flex items-center gap-3">
+                               <div className="p-2 bg-[#FF7F50]/10 rounded-lg"><Zap className="w-5 h-5 text-[#FF7F50]" /></div>
+                               <h3 className="font-bold">Active Concepts</h3>
+                           </div>
+                           <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-[#FF7F50]/20 bg-[#FF7F50]/5">
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#FF7F50] animate-pulse"></div>
+                                <span className="font-mono text-[10px] text-[#FF7F50]">IN PROGRESS</span>
+                          </div>
+                       </div>
+                       
+                       <div className="flex-grow grid grid-cols-2 gap-4 mb-6">
+                          {['Concept A: The Archway', 'Concept B: Organic Shield'].map((c, i) => (
+                             <div key={i} className="aspect-square rounded-lg bg-black/40 border border-white/10 p-4 flex flex-col justify-end hover:bg-white/5 transition-colors cursor-pointer">
+                                <span className="font-bold text-sm">{c}</span>
+                                <span className="text-[10px] font-mono text-white/40">V2_REFINED</span>
+                             </div>
+                          ))}
+                       </div>
+                       <button onClick={() => onNavigate('PROJECT_WIZARD')} className="w-full py-3 border border-white/10 rounded bg-white/5 hover:bg-white/10 text-xs font-mono flex items-center justify-center gap-2 transition-colors">
+                           ENTER DESIGN WORKFLOW <ArrowRight className="w-3 h-3" />
+                       </button>
+                  </div>
+              </div>
+
+               {/* Column 3: Final Assets */}
+               <div className="space-y-6">
+                  <div className="border border-white/10 rounded-xl bg-white/5 p-6 h-full relative group hover:border-white/20 transition-all flex flex-col opacity-50">
+                       <div className="flex items-center justify-between mb-6">
+                           <div className="flex items-center gap-3">
+                               <div className="p-2 bg-green-500/10 rounded-lg"><FolderOpen className="w-5 h-5 text-green-400" /></div>
+                               <h3 className="font-bold">Final Deliverables</h3>
+                           </div>
+                           <Lock className="w-4 h-4 text-white/40" />
+                       </div>
+                       <p className="text-sm text-white/40 flex-grow flex items-center justify-center text-center px-6">
+                           Complete all 5 thresholds to unlock final asset generation and download package.
+                       </p>
+                  </div>
+              </div>
+
+          </div>
+      </div>
+  )
+};
+
 // 5. PROJECT WORKFLOW 
 const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [stage, setStage] = useState<Stage>(1);
@@ -489,13 +603,10 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [slidePosition, setSlidePosition] = useState(0);
   const [competitors, setCompetitors] = useState([1, 2, 3]); // Default 3
   
-  const [checklist, setChecklist] = useState({
-      scalability: false,
-      monochrome: false,
-      cultural: false,
-      production: false
-  });
-
+  // Stage 3 State
+  const [designApproved, setDesignApproved] = useState(false);
+  const [customDesignChecks, setCustomDesignChecks] = useState<string[]>([]);
+  const [newDesignCheckInput, setNewDesignCheckInput] = useState("");
   const [designChecklist, setDesignChecklist] = useState({
       scalability: false,
       monochrome: false,
@@ -503,6 +614,13 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       production: false
   });
 
+  // Stage 4 State
+  const [chatInput, setChatInput] = useState("");
+  const [chatHistory, setChatHistory] = useState<{role: 'user' | 'ai', content: string}[]>([
+      {role: 'ai', content: "I've analyzed your strategic brief and selected concepts. I can help draft talking points for stakeholders. What's your main concern for this presentation?"}
+  ]);
+  const [customPresChecks, setCustomPresChecks] = useState<string[]>([]);
+  const [newPresCheckInput, setNewPresCheckInput] = useState("");
   const [presChecklist, setPresChecklist] = useState({
       context: false,
       brief: false,
@@ -512,13 +630,40 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       nextSteps: false
   });
 
+
+  // Handlers
   const toggleDesignCheck = (key: keyof typeof designChecklist) => {
       setDesignChecklist(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
+  const addCustomDesignCheck = () => {
+      if (newDesignCheckInput.trim()) {
+          setCustomDesignChecks([...customDesignChecks, newDesignCheckInput.trim()]);
+          setNewDesignCheckInput("");
+      }
+  }
+
   const togglePresCheck = (key: keyof typeof presChecklist) => {
       setPresChecklist(prev => ({ ...prev, [key]: !prev[key] }));
   };
+
+  const addCustomPresCheck = () => {
+      if (newPresCheckInput.trim()) {
+          setCustomPresChecks([...customPresChecks, newPresCheckInput.trim()]);
+          setNewPresCheckInput("");
+      }
+  }
+
+  const handleChatSend = () => {
+      if(!chatInput.trim()) return;
+      const newUserMsg = { role: 'user' as const, content: chatInput };
+      setChatHistory([...chatHistory, newUserMsg]);
+      setChatInput("");
+      // Mock AI response
+      setTimeout(() => {
+          setChatHistory(prev => [...prev, { role: 'ai', content: "Acknowledged. Based on the 'Strength through Vulnerability' core message, emphasize how the organic line work in Concept B defies traditional corporate rigidity." }]);
+      }, 1000);
+  }
   
   const stages = [
     { id: 1, label: 'STRATEGIC FOUNDATION' },
@@ -544,7 +689,8 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       setSlidePosition(0);
       window.scrollTo(0,0);
     } else {
-        onNavigate('DASHBOARD');
+        // Navigate to Project Hub on completion
+        onNavigate('PROJECT_HUB');
     }
   };
 
@@ -707,7 +853,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
              </div>
         )}
 
-        {/* STAGE 3 */}
+        {/* STAGE 3 (Updated with Input and Custom Checks) */}
         {stage === 3 && (
             <div className="space-y-8 animate-in slide-in-from-right duration-500">
                 <div className="mb-8">
@@ -715,22 +861,19 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                     <p className="text-white/60 font-light">Refine and validate technical execution. AI assists with checks; you make strategic decisions.</p>
                 </div>
 
-                <div className="border border-white/10 p-6 rounded-xl bg-white/5 mb-8">
+                {/* AI Refinement Input */}
+                <div className="border border-white/10 p-6 rounded-xl bg-white/5 mb-8 relative">
                     <div className="flex items-center gap-2 mb-4">
                         <Zap className="w-4 h-4 text-[#FF7F50]" />
                         <h3 className="font-bold text-lg">AI-Assisted Refinement</h3>
                     </div>
-                    <p className="text-white/60 text-sm mb-6 max-w-xl">
-                        Request technical variations while maintaining strategic intent. Generate weight changes, simplify geometry, or test distinctiveness.
-                    </p>
-                    <div className="flex gap-4">
-                        <button className="px-4 py-2 bg-white/5 border border-white/10 rounded text-xs font-mono hover:border-white/30 transition-colors">
-                            GENERATE_BOLD_VARIANTS
-                        </button>
-                        <button className="px-4 py-2 bg-white/5 border border-white/10 rounded text-xs font-mono hover:border-white/30 transition-colors">
-                            SIMPLIFY_GEOMETRY
-                        </button>
-                    </div>
+                    <textarea 
+                        className="w-full bg-black/40 border border-white/10 rounded-lg p-4 text-sm font-light focus:border-blue-500 outline-none min-h-[100px] pr-32 resize-none placeholder-white/30"
+                        placeholder="Describe the refinement needed (e.g., 'Make lines bolder for small sizes', 'Simplify the geometry')..."
+                    />
+                    <button className="absolute right-6 bottom-6 px-4 py-2 bg-[#FF7F50]/10 border border-[#FF7F50]/50 text-[#FF7F50] text-xs font-mono rounded hover:bg-[#FF7F50] hover:text-black transition-all flex items-center gap-2">
+                        <Sparkles className="w-3 h-3" /> GENERATE VARIATIONS
+                    </button>
                 </div>
 
                 <div className="space-y-4">
@@ -752,12 +895,48 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                                 </div>
                             </div>
                         ))}
+                        {/* Custom Checks */}
+                        {customDesignChecks.map((check, i) => (
+                             <div key={i} className="flex items-center justify-between p-5 border border-white/10 rounded-lg bg-white/5">
+                                 <span className="font-medium text-sm">{check}</span>
+                                 <div className={cn("w-4 h-4 rounded border flex items-center justify-center bg-[#FF7F50] border-[#FF7F50]")}>
+                                     <Check className="w-3 h-3 text-black" />
+                                 </div>
+                             </div>
+                        ))}
+
+                        {/* Add Custom Check */}
+                        <div className="flex gap-2">
+                            <input 
+                                type="text" 
+                                value={newDesignCheckInput}
+                                onChange={(e) => setNewDesignCheckInput(e.target.value)}
+                                placeholder="Add agency-specific validation step..."
+                                className="flex-grow bg-white/5 border border-white/10 rounded px-4 py-2 text-sm outline-none focus:border-white/30"
+                            />
+                            <button onClick={addCustomDesignCheck} className="px-4 py-2 border border-white/10 rounded hover:bg-white/10 font-mono text-xs">ADD CHECK</button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* HUMAN GATE */}
+                <div className="mt-8 border border-[#FF7F50]/20 bg-[#FF7F50]/5 p-6 rounded-xl">
+                    <div className="flex items-center gap-3 mb-4">
+                        <ShieldCheck className="w-5 h-5 text-[#FF7F50]" />
+                        <h4 className="font-bold text-[#FF7F50]">Human Approval Gate</h4>
+                    </div>
+                    <p className="text-sm text-white/60 mb-6">Before proceeding, confirm the refined design(s) meet all strategic criteria and technical requirements.</p>
+                    <div onClick={() => setDesignApproved(!designApproved)} className="flex items-center gap-3 cursor-pointer">
+                        <div className={cn("w-5 h-5 rounded border transition-colors flex items-center justify-center", designApproved ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/40")}>
+                            {designApproved && <Check className="w-4 h-4 text-black" />}
+                        </div>
+                        <span className="text-sm text-white/80">I confirm the refined design maintains strategic alignment.</span>
                     </div>
                 </div>
             </div>
         )}
 
-        {/* STAGE 4 */}
+        {/* STAGE 4 (Updated with AI Chat and Custom Checks) */}
         {stage === 4 && (
              <div className="space-y-8 animate-in slide-in-from-right duration-500">
                 <div className="mb-8">
@@ -765,32 +944,31 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                     <p className="text-white/60 font-light">Stakeholder review and approval. Prepare your concept presentation using AI-powered tools.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                    <div className="border border-white/10 p-5 rounded-xl bg-white/5 hover:border-purple-500/50 transition-colors group cursor-pointer">
-                        <div className="flex justify-between items-start mb-4">
-                            <Presentation className="w-6 h-6 text-purple-400" />
-                            <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-white" />
-                        </div>
-                        <h4 className="font-bold mb-1">Gamma AI</h4>
-                        <p className="text-xs text-white/40">Generate beautiful, editable slide decks instantly.</p>
+                {/* AI Presentation Coach */}
+                 <div className="border border-white/10 p-6 rounded-xl bg-white/5 mb-8">
+                    <div className="flex items-center gap-2 mb-4">
+                        <MessageSquare className="w-4 h-4 text-blue-400" />
+                        <h3 className="font-bold text-lg">AI Presentation Coach</h3>
                     </div>
-                    <div className="border border-white/10 p-5 rounded-xl bg-white/5 hover:border-blue-500/50 transition-colors group cursor-pointer">
-                        <div className="flex justify-between items-start mb-4">
-                            <BookOpen className="w-6 h-6 text-blue-400" />
-                            <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-white" />
-                        </div>
-                        <h4 className="font-bold mb-1">NotebookLM</h4>
-                        <p className="text-xs text-white/40">Turn your brief and concepts into presentation notes.</p>
+                    <div className="bg-black/40 border border-white/10 rounded-lg h-48 p-4 mb-4 overflow-y-auto flex flex-col gap-4">
+                        {chatHistory.map((msg, i) => (
+                            <div key={i} className={cn("max-w-[80%] p-3 rounded-lg text-sm", msg.role === 'ai' ? "bg-white/10 self-start" : "bg-blue-500/20 self-end")}>
+                                {msg.content}
+                            </div>
+                        ))}
                     </div>
-                    <div className="border border-white/10 p-5 rounded-xl bg-white/5 hover:border-orange-500/50 transition-colors group cursor-pointer">
-                        <div className="flex justify-between items-start mb-4">
-                            <MessageSquare className="w-6 h-6 text-orange-400" />
-                            <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-white" />
-                        </div>
-                        <h4 className="font-bold mb-1">Claude</h4>
-                        <p className="text-xs text-white/40">Draft speaker notes and stakeholder talking points.</p>
+                    <div className="flex gap-2">
+                        <input 
+                            type="text" 
+                            value={chatInput}
+                            onChange={(e) => setChatInput(e.target.value)}
+                            placeholder="Ask for talking points, rationale, or objection handling..."
+                            className="flex-grow bg-white/5 border border-white/10 rounded px-4 py-2 text-sm outline-none focus:border-white/30"
+                        />
+                        <button onClick={handleChatSend} className="px-4 py-2 border border-white/10 rounded hover:bg-blue-500/20 font-mono text-xs text-blue-400 flex items-center justify-center"><Send className="w-4 h-4"/></button>
                     </div>
                 </div>
+
 
                 <div className="space-y-4">
                     <div className="font-mono text-xs text-[#FF7F50] mb-4">// PRESENTATION_CHECKLIST</div>
@@ -810,12 +988,33 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                                 <span className="text-sm text-white/80">{item}</span>
                             </div>
                         ))}
+                         {/* Custom Checks */}
+                        {customPresChecks.map((check, i) => (
+                             <div key={i} className="flex items-center gap-4 p-3 border border-white/5 rounded bg-white/5">
+                                <div className={cn("w-4 h-4 rounded border flex items-center justify-center bg-[#FF7F50] border-[#FF7F50]")}>
+                                    <Check className="w-3 h-3 text-black" />
+                                </div>
+                                <span className="text-sm text-white/80">{check}</span>
+                            </div>
+                        ))}
+
+                        {/* Add Custom Check */}
+                        <div className="flex gap-2 mt-2">
+                            <input 
+                                type="text" 
+                                value={newPresCheckInput}
+                                onChange={(e) => setNewPresCheckInput(e.target.value)}
+                                placeholder="Add custom presentation check..."
+                                className="flex-grow bg-white/5 border border-white/10 rounded px-4 py-2 text-sm outline-none focus:border-white/30"
+                            />
+                            <button onClick={addCustomPresCheck} className="px-4 py-2 border border-white/10 rounded hover:bg-white/10 font-mono text-xs">ADD</button>
+                        </div>
                     </div>
                 </div>
              </div>
         )}
 
-        {/* STAGE 5 */}
+        {/* STAGE 5 (Updated with Granular Downloads) */}
         {stage === 5 && (
              <div className="text-center py-20 animate-in slide-in-from-right duration-500">
                  <ShieldCheck className="w-20 h-20 text-[#FF7F50] mx-auto mb-8" />
@@ -824,14 +1023,56 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                     All strategic thresholds crossed. Protocols validated. 
                     Assets are compiled and ready for final export.
                  </p>
-                 <div className="flex flex-col gap-4 max-w-xs mx-auto">
-                    <button className="flex items-center justify-center gap-3 px-6 py-4 bg-white text-black font-bold rounded hover:bg-white/90 transition-colors">
-                        <Download className="w-5 h-5" /> DOWNLOAD ASSET PACKAGE
-                    </button>
-                    <button className="flex items-center justify-center gap-3 px-6 py-4 border border-white/20 rounded hover:bg-white/10 font-mono text-xs">
-                        <FileText className="w-4 h-4" /> EXPORT BRAND GUIDELINES PDF
-                    </button>
+                 
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left max-w-2xl mx-auto">
+                     <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
+                         <div className="flex items-center gap-3">
+                             <FileText className="w-5 h-5 text-blue-400" />
+                             <div>
+                                 <h4 className="font-bold">Strategic Brief PDF</h4>
+                                 <p className="text-xs text-white/40">1.2 MB</p>
+                             </div>
+                         </div>
+                         <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
+                     </div>
+                     
+                     <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
+                         <div className="flex items-center gap-3">
+                             <Sparkles className="w-5 h-5 text-purple-400" />
+                             <div>
+                                 <h4 className="font-bold">Visual Research Report</h4>
+                                 <p className="text-xs text-white/40">4.5 MB</p>
+                             </div>
+                         </div>
+                         <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
+                     </div>
+
+                     <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
+                         <div className="flex items-center gap-3">
+                             <ImageIcon className="w-5 h-5 text-orange-400" />
+                             <div>
+                                 <h4 className="font-bold">Logo Asset Suite</h4>
+                                 <p className="text-xs text-white/40">SVG, PNG, JPG (15.4 MB)</p>
+                             </div>
+                         </div>
+                         <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
+                     </div>
+
+                     <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
+                         <div className="flex items-center gap-3">
+                             <BookOpen className="w-5 h-5 text-green-400" />
+                             <div>
+                                 <h4 className="font-bold">Brand Guidelines PDF</h4>
+                                 <p className="text-xs text-white/40">8.1 MB</p>
+                             </div>
+                         </div>
+                         <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
+                     </div>
                  </div>
+
+                 <button className="mt-8 flex items-center justify-center gap-3 px-8 py-4 bg-[#FF7F50] text-black font-bold rounded hover:bg-[#FF7F50]/90 transition-colors mx-auto">
+                        <Download className="w-5 h-5" /> DOWNLOAD FULL PROJECT PACKAGE (ZIP)
+                 </button>
              </div>
         )}
       </div>
@@ -1049,6 +1290,7 @@ export default function App() {
       {currentView === 'HOME' && <HomeView onNavigate={setCurrentView} />}
       {currentView === 'LOGIN' && <LoginView onNavigate={setCurrentView} />}
       {currentView === 'DASHBOARD' && <DashboardView onNavigate={setCurrentView} />}
+      {currentView === 'PROJECT_HUB' && <ProjectHubView onNavigate={setCurrentView} />}
       {currentView === 'PROJECT_WIZARD' && <ProjectWizard onNavigate={setCurrentView} />}
       {currentView === 'PROTOCOLS' && <ProtocolsView />}
       {currentView === 'RESOURCES' && <ResourcesView />}
