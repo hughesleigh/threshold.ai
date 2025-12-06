@@ -26,29 +26,34 @@ import {
   Layout as LayoutIcon,
   Presentation,
   BookOpen,
-  MessageSquare
+  MessageSquare,
+  Trash2,
+  Archive,
+  Edit2
 } from 'lucide-react';
 import { cn } from "@/components/ui/utils";
 
 // --- TYPES ---
 
-type View = 'HOME' | 'LOGIN' | 'DASHBOARD' | 'PROJECT_WIZARD' | 'PROTOCOLS';
+type View = 'HOME' | 'LOGIN' | 'DASHBOARD' | 'PROJECT_WIZARD' | 'PROTOCOLS' | 'RESOURCES';
 type Stage = 1 | 2 | 3 | 4 | 5;
+type ProjectStatus = 'ACTIVE' | 'ARCHIVED';
 
 interface Project {
   id: string;
   name: string;
   type: string;
   progress: number;
-  status: 'ACTIVE' | 'ARCHIVED' | 'COMPLETED';
+  status: ProjectStatus;
   lastEdited: string;
 }
 
 // --- MOCK DATA ---
 
-const PROJECTS: Project[] = [
+const INITIAL_PROJECTS: Project[] = [
   { id: '1', name: 'Pelvic Door Identity', type: 'BRAND_IDENTITY', progress: 40, status: 'ACTIVE', lastEdited: '2h ago' },
   { id: '2', name: 'Nexus Architecture', type: 'WEB_DESIGN', progress: 20, status: 'ACTIVE', lastEdited: '1d ago' },
+  { id: '3', name: 'Legacy Banking Rebrand', type: 'BRAND_IDENTITY', progress: 100, status: 'ARCHIVED', lastEdited: '3mo ago' },
 ];
 
 // --- HELPER COMPONENTS ---
@@ -72,7 +77,6 @@ const SpecBlock = ({
       [ {id} ]
     </div>
     <h3 className="text-lg font-bold mb-4 text-white">{label}</h3>
-    
     <div className="relative">
       <textarea 
         className={`w-full bg-black/40 border border-white/10 rounded-lg p-4 text-sm font-light text-white/90 focus:border-blue-500 outline-none transition-colors resize-none ${height}`}
@@ -84,7 +88,6 @@ const SpecBlock = ({
         </button>
       </div>
     </div>
-    
     {hint && (
       <div className="mt-3 flex items-start gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
         <Activity className="w-3 h-3 text-[#FF7F50] mt-0.5 flex-shrink-0" />
@@ -100,20 +103,16 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
   const isLoggedInContext = currentView === 'DASHBOARD' || currentView === 'PROJECT_WIZARD';
 
   return (
-    <div className="relative min-h-screen w-full bg-[#050505] text-white selection:bg-[#FF7F50]/30 overflow-x-hidden font-sans">
+    <div className="relative min-h-screen w-full bg-[#050505] text-white selection:bg-[#FF7F50]/30 overflow-x-hidden font-sans flex flex-col">
       <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.03]"
            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}>
       </div>
 
       <nav className="relative z-50 flex items-center justify-between px-6 py-6 md:px-12 border-b border-white/5 bg-[#050505]/80 backdrop-blur-md sticky top-0">
         <div className="flex items-center gap-4 cursor-pointer" onClick={() => onViewChange('HOME')}>
-          {/* UPDATED LOGO: 3x3 Square Matrix */}
           <div className="grid grid-cols-3 gap-[2px]">
-            {/* Row 1 */}
             <div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div>
-            {/* Row 2 */}
             <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
-            {/* Row 3 */}
             <div className="w-1 h-1 bg-white/10 rounded-full"></div><div className="w-1 h-1 bg-white rounded-full"></div><div className="w-1 h-1 bg-white/10 rounded-full"></div>
           </div>
           <div className="flex items-baseline gap-2">
@@ -121,19 +120,19 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
           </div>
         </div>
 
-        <div className="flex items-center gap-6">
-           <button onClick={() => onViewChange('PROTOCOLS')} className="hidden md:block font-mono text-xs text-white/60 hover:text-white transition-colors">
-            // PROTOCOLS
-           </button>
-           
-           <div className="hidden md:flex items-center gap-2 border border-white/10 px-3 py-1 rounded-full bg-white/5">
-            <div className="w-1.5 h-1.5 bg-[#FF7F50] rounded-full animate-pulse"></div>
-            <span className="font-mono text-[10px] text-white/60">SYSTEM: ONLINE</span>
-          </div>
+        <div className="hidden md:flex items-center gap-8 font-mono text-xs text-white/60">
+            <button onClick={() => onViewChange('HOME')} className="hover:text-white transition-colors">HOME</button>
+            <button onClick={() => onViewChange('PROTOCOLS')} className="hover:text-white transition-colors">FRAMEWORK</button>
+            <button onClick={() => onViewChange('RESOURCES')} className="hover:text-white transition-colors">RESOURCES</button>
+            {isLoggedInContext && (
+                <button onClick={() => onViewChange('DASHBOARD')} className="hover:text-white transition-colors text-white font-bold">DASHBOARD</button>
+            )}
+        </div>
 
+        <div className="flex items-center gap-6">
           {!isLoggedInContext && currentView !== 'LOGIN' && (
-            <button onClick={() => onViewChange('LOGIN')} className="font-mono text-xs text-white hover:text-[#FF7F50] transition-colors">
-              // LOGIN
+            <button onClick={() => onViewChange('LOGIN')} className="font-mono text-xs px-4 py-2 border border-white/20 rounded-full text-white hover:border-[#FF7F50] hover:text-[#FF7F50] transition-colors flex items-center gap-2 group">
+              LOGIN <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
             </button>
           )}
 
@@ -147,7 +146,7 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
         </div>
       </nav>
 
-      <main className="relative z-10 min-h-[calc(100vh-80px)]">
+      <main className="relative z-10 flex-grow">
         {children}
       </main>
 
@@ -292,13 +291,9 @@ const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
 
         <div className="text-center mb-10">
           <div className="mx-auto mb-6 w-fit">
-            {/* UPDATED LOGO: 3x3 Square Matrix (Larger Dots) */}
             <div className="grid grid-cols-3 gap-[3px]">
-                {/* Row 1 */}
                 <div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-                {/* Row 2 */}
                 <div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div>
-                {/* Row 3 */}
                 <div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div>
             </div>
           </div>
@@ -312,7 +307,7 @@ const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
             <input type="email" className="w-full bg-white/5 border-b border-white/10 focus:border-blue-500 text-white px-3 py-3 outline-none transition-colors font-sans placeholder-white/20" placeholder="user@agency.com" />
           </div>
           <div className="group">
-            <label className="block font-mono text-[10px] text-white/50 mb-1 tracking-wider uppercase">[ SECURITY_KEY ]</label>
+            <label className="block font-mono text-[10px] text-white/50 mb-1 tracking-wider uppercase">[ PASSWORD ]</label>
             <input type="password" className="w-full bg-white/5 border-b border-white/10 focus:border-[#FF7F50] text-white px-3 py-3 outline-none transition-colors font-sans placeholder-white/20" placeholder="••••••••" />
           </div>
           <button 
@@ -330,23 +325,39 @@ const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 4. DASHBOARD VIEW
+// 4. DASHBOARD VIEW (Updated with Filters, Menu, and New Project Modal)
 const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
+  const [activeTab, setActiveTab] = useState<ProjectStatus>('ACTIVE');
+  const [showNewProjectModal, setShowNewProjectModal] = useState(false);
+  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+
+  const projects = INITIAL_PROJECTS.filter(p => p.status === activeTab);
+
   return (
-    <div className="max-w-5xl mx-auto px-6 py-12">
+    <div className="max-w-5xl mx-auto px-6 py-12 relative">
       <div className="flex justify-between items-end mb-12">
         <div>
           <div className="font-mono text-xs text-blue-400 mb-2">// WORKSPACE_OVERVIEW :: [USER_ASH]</div>
           <h1 className="text-4xl font-bold">Projects</h1>
         </div>
         <div className="hidden md:flex gap-2 font-mono text-xs">
-          <span className="bg-[#FF7F50]/20 text-[#FF7F50] px-3 py-1 rounded-full border border-[#FF7F50]/20">[ 2 ACTIVE ]</span>
-          <span className="bg-white/5 text-white/40 px-3 py-1 rounded-full border border-white/10">[ 1 ARCHIVED ]</span>
+          <button 
+            onClick={() => setActiveTab('ACTIVE')}
+            className={cn("px-3 py-1 rounded-full border transition-all", activeTab === 'ACTIVE' ? "bg-[#FF7F50]/20 text-[#FF7F50] border-[#FF7F50]/20" : "bg-white/5 text-white/40 border-white/10 hover:text-white")}
+          >
+            [ ACTIVE ]
+          </button>
+          <button 
+            onClick={() => setActiveTab('ARCHIVED')}
+            className={cn("px-3 py-1 rounded-full border transition-all", activeTab === 'ARCHIVED' ? "bg-[#FF7F50]/20 text-[#FF7F50] border-[#FF7F50]/20" : "bg-white/5 text-white/40 border-white/10 hover:text-white")}
+          >
+            [ ARCHIVED ]
+          </button>
         </div>
       </div>
 
       <div className="grid gap-6">
-        {PROJECTS.map((project) => (
+        {projects.map((project) => (
           <div key={project.id} className="relative w-full p-6 border border-white/10 rounded-xl bg-white/5 backdrop-blur-md group hover:border-white/20 transition-all">
             <div className="absolute top-2 left-2 text-white/20 text-[10px]">+</div>
             <div className="absolute top-2 right-2 text-white/20 text-[10px]">+</div>
@@ -358,8 +369,8 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 <h3 className="text-xl font-bold text-white tracking-tight">{project.name}</h3>
               </div>
               <div className="flex items-center space-x-2 px-3 py-1 rounded-full border border-white/5 bg-black/20">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#FF7F50] animate-pulse"></div>
-                <span className="font-mono text-[10px] text-white/60">LIVE</span>
+                <div className={cn("w-1.5 h-1.5 rounded-full animate-pulse", project.status === 'ACTIVE' ? "bg-[#FF7F50]" : "bg-white/40")}></div>
+                <span className="font-mono text-[10px] text-white/60">{project.status === 'ACTIVE' ? 'LIVE' : 'ARCHIVED'}</span>
               </div>
             </div>
             <div className="mb-6">
@@ -380,19 +391,34 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
               <div className="text-[10px] font-mono text-white/30">
                 LAST_EDIT :: {project.lastEdited}
               </div>
-              <button 
-                onClick={() => onNavigate('PROJECT_WIZARD')}
-                className="flex items-center space-x-2 text-sm text-white hover:text-[#FF7F50] transition-colors group-hover:translate-x-1 duration-300"
-              >
-                <span className="font-medium">Resume Session</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-4">
+                  {/* More Menu */}
+                  <div className="relative">
+                      <button onClick={() => setActiveMenuId(activeMenuId === project.id ? null : project.id)} className="p-2 hover:bg-white/10 rounded">
+                          <MoreHorizontal className="w-4 h-4 text-white/60" />
+                      </button>
+                      {activeMenuId === project.id && (
+                          <div className="absolute bottom-full right-0 mb-2 w-32 bg-black border border-white/20 rounded-lg p-1 shadow-xl z-50">
+                              <button className="flex items-center gap-2 w-full px-3 py-2 text-xs text-white/80 hover:bg-white/10 rounded"><Edit2 className="w-3 h-3"/> Edit</button>
+                              <button className="flex items-center gap-2 w-full px-3 py-2 text-xs text-white/80 hover:bg-white/10 rounded"><Archive className="w-3 h-3"/> Archive</button>
+                              <button className="flex items-center gap-2 w-full px-3 py-2 text-xs text-red-400 hover:bg-white/10 rounded"><Trash2 className="w-3 h-3"/> Delete</button>
+                          </div>
+                      )}
+                  </div>
+                  <button 
+                    onClick={() => onNavigate('PROJECT_WIZARD')}
+                    className="flex items-center space-x-2 text-sm text-white hover:text-[#FF7F50] transition-colors group-hover:translate-x-1 duration-300"
+                  >
+                    <span className="font-medium">Resume Session</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+              </div>
             </div>
           </div>
         ))}
 
         <div 
-           onClick={() => onNavigate('PROJECT_WIZARD')}
+           onClick={() => setShowNewProjectModal(true)}
            className="border border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors cursor-pointer group"
         >
            <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center mb-4 group-hover:border-[#FF7F50] transition-colors">
@@ -401,15 +427,62 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
            <h3 className="text-sm font-mono uppercase tracking-widest text-white/60 group-hover:text-white">Initialize New Protocol</h3>
         </div>
       </div>
+
+      {/* NEW PROJECT MODAL */}
+      {showNewProjectModal && (
+          <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="w-full max-w-4xl bg-[#0A0A0A] border border-white/10 rounded-2xl p-8 relative">
+                  <button onClick={() => setShowNewProjectModal(false)} className="absolute top-6 right-6 text-white/40 hover:text-white"><X className="w-6 h-6" /></button>
+                  <div className="font-mono text-xs text-[#FF7F50] mb-4">// START_NEW_PROJECT</div>
+                  <h2 className="text-3xl font-bold mb-8">Choose a Project Type</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {[
+                          { id: '01', title: 'Logo Design', desc: 'Create a distinctive brand mark with strategic clarity.' },
+                          { id: '02', title: 'Brand Identity', desc: 'Develop a comprehensive brand system with guidelines.' },
+                          { id: '03', title: 'Web Design', desc: 'Design comprehensive website experiences.', locked: true },
+                          { id: '04', title: 'Social Content', desc: 'Create engaging social media campaigns.', locked: true },
+                          { id: '05', title: 'Publication', desc: 'Design books, magazines, and reports.', locked: true },
+                          { id: '06', title: 'Copywriting', desc: 'Craft compelling brand messaging.', locked: true },
+                      ].map((item) => (
+                          <div 
+                            key={item.id} 
+                            onClick={() => {
+                                if(!item.locked) {
+                                    setShowNewProjectModal(false);
+                                    onNavigate('PROJECT_WIZARD');
+                                }
+                            }}
+                            className={cn(
+                                "p-6 border rounded-xl transition-all relative group",
+                                item.locked ? "border-white/5 opacity-50 cursor-not-allowed" : "border-white/10 bg-white/5 hover:border-white/30 cursor-pointer hover:bg-white/10"
+                            )}
+                          >
+                              <div className="font-mono text-[10px] text-[#FF7F50] mb-3">{item.id} / PROJECT TYPE</div>
+                              <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                              <p className="text-sm text-white/50 mb-6">{item.desc}</p>
+                              {item.locked ? (
+                                  <div className="inline-block border border-white/10 px-2 py-1 rounded text-[10px] font-mono">COMING SOON</div>
+                              ) : (
+                                  <div className="flex items-center gap-2 text-sm font-medium group-hover:text-[#FF7F50] transition-colors">
+                                      <Plus className="w-4 h-4" /> NEW PROJECT
+                                  </div>
+                              )}
+                          </div>
+                      ))}
+                  </div>
+              </div>
+          </div>
+      )}
     </div>
   );
 };
 
-// 5. PROJECT WORKFLOW
+// 5. PROJECT WORKFLOW 
 const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [stage, setStage] = useState<Stage>(1);
   const [gateUnlocked, setGateUnlocked] = useState(false);
   const [slidePosition, setSlidePosition] = useState(0);
+  const [competitors, setCompetitors] = useState([1, 2, 3]); // Default 3
   
   const [checklist, setChecklist] = useState({
       scalability: false,
@@ -418,10 +491,6 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       production: false
   });
 
-  // State for Stage 3 Gate
-  const [designApproved, setDesignApproved] = useState(false);
-
-  // Checklists
   const [designChecklist, setDesignChecklist] = useState({
       scalability: false,
       monochrome: false,
@@ -485,6 +554,10 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       }
   }
 
+  const addCompetitor = () => {
+      setCompetitors([...competitors, competitors.length + 1]);
+  }
+
   const progressPercent = (stage / 5) * 100;
 
   return (
@@ -523,10 +596,10 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
         </div>
       </div>
 
-      {/* Stage Content */}
-      <div className="max-w-3xl mx-auto px-6 pt-12">
+      {/* Stage Content - ADDED EXTRA BOTTOM PADDING FOR FOOTER CLEARANCE */}
+      <div className="max-w-3xl mx-auto px-6 pt-12 pb-32">
         
-        {/* STAGE 1: STRATEGIC FOUNDATION */}
+        {/* STAGE 1 */}
         {stage === 1 && (
           <div className="space-y-8 animate-in slide-in-from-right duration-500">
              
@@ -556,6 +629,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 <SpecBlock id="PARAM_10" label="Color Direction" placeholder="What palette supports your strategy?" hint="Ex: 'Deep Teals with Signal Orange'." />
              </div>
 
+             {/* STAGE 1.5: VISUAL INTELLIGENCE */}
              <div className="mt-16 pt-16 border-t border-white/10">
                 <div className="flex items-center justify-between mb-8">
                     <div>
@@ -571,7 +645,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                         <Upload className="w-6 h-6 text-white/40 group-hover:text-white mb-2" />
                         <span className="text-[10px] font-mono text-white/40 uppercase">Upload Reference</span>
                     </div>
-                    {[1, 2, 3].map((i) => (
+                    {competitors.map((i) => (
                         <div key={i} className="aspect-square border border-white/10 rounded-lg bg-black/40 relative group overflow-hidden">
                             <div className="absolute inset-0 bg-white/5 group-hover:bg-white/10 transition-colors"></div>
                             <div className="absolute inset-0 flex items-center justify-center opacity-20">
@@ -582,12 +656,15 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                             </div>
                         </div>
                     ))}
+                    <button onClick={addCompetitor} className="aspect-square border border-white/10 rounded-lg flex items-center justify-center hover:bg-white/5 transition-colors">
+                        <Plus className="w-6 h-6 text-white/40" />
+                    </button>
                 </div>
              </div>
           </div>
         )}
 
-        {/* STAGE 2: CONCEPTUAL CLARITY */}
+        {/* STAGE 2 */}
         {stage === 2 && (
              <div className="space-y-8 animate-in slide-in-from-right duration-500">
                 <div className="mb-8">
@@ -625,7 +702,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
              </div>
         )}
 
-        {/* STAGE 3: DESIGN INTEGRITY */}
+        {/* STAGE 3 */}
         {stage === 3 && (
             <div className="space-y-8 animate-in slide-in-from-right duration-500">
                 <div className="mb-8">
@@ -672,25 +749,10 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                         ))}
                     </div>
                 </div>
-
-                {/* HUMAN GATE */}
-                <div className="mt-8 border border-[#FF7F50]/20 bg-[#FF7F50]/5 p-6 rounded-xl">
-                    <div className="flex items-center gap-3 mb-4">
-                        <ShieldCheck className="w-5 h-5 text-[#FF7F50]" />
-                        <h4 className="font-bold text-[#FF7F50]">Human Approval Gate</h4>
-                    </div>
-                    <p className="text-sm text-white/60 mb-6">Before proceeding, confirm the refined design(s) meet all strategic criteria and technical requirements.</p>
-                    <div onClick={() => setDesignApproved(!designApproved)} className="flex items-center gap-3 cursor-pointer">
-                        <div className={cn("w-5 h-5 rounded border transition-colors flex items-center justify-center", designApproved ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/40")}>
-                            {designApproved && <Check className="w-4 h-4 text-black" />}
-                        </div>
-                        <span className="text-sm text-white/80">I confirm the refined design maintains strategic alignment.</span>
-                    </div>
-                </div>
             </div>
         )}
 
-        {/* STAGE 4: FINAL VALIDATION */}
+        {/* STAGE 4 */}
         {stage === 4 && (
              <div className="space-y-8 animate-in slide-in-from-right duration-500">
                 <div className="mb-8">
@@ -748,7 +810,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
              </div>
         )}
 
-        {/* STAGE 5: IMPLEMENTATION */}
+        {/* STAGE 5 */}
         {stage === 5 && (
              <div className="text-center py-20 animate-in slide-in-from-right duration-500">
                  <ShieldCheck className="w-20 h-20 text-[#FF7F50] mx-auto mb-8" />
@@ -875,6 +937,31 @@ const ProtocolsView = () => {
   );
 };
 
+// 7. RESOURCES VIEW (Placeholder)
+const ResourcesView = () => {
+    return (
+        <div className="max-w-4xl mx-auto px-6 py-12">
+            <div className="mb-12 border-b border-white/10 pb-8">
+                <div className="font-mono text-xs text-[#FF7F50] mb-2">// KNOWLEDGE_BASE</div>
+                <h1 className="text-4xl font-bold mb-4">Resources</h1>
+                <p className="text-white/60 font-light text-lg">
+                    Templates, guides, and case studies for the Threshold methodology.
+                </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Placeholders */}
+                {[1,2,3,4].map(i => (
+                    <div key={i} className="border border-white/10 p-6 rounded-xl bg-white/5">
+                        <div className="h-32 bg-white/5 rounded mb-4"></div>
+                        <h3 className="font-bold text-lg mb-2">Resource Title {i}</h3>
+                        <p className="text-sm text-white/40">Description of the resource goes here.</p>
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
+}
+
 // --- MAIN APP COMPONENT ---
 
 export default function App() {
@@ -887,6 +974,7 @@ export default function App() {
       {currentView === 'DASHBOARD' && <DashboardView onNavigate={setCurrentView} />}
       {currentView === 'PROJECT_WIZARD' && <ProjectWizard onNavigate={setCurrentView} />}
       {currentView === 'PROTOCOLS' && <ProtocolsView />}
+      {currentView === 'RESOURCES' && <ResourcesView />}
     </Layout>
   );
 }
