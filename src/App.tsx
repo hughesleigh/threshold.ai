@@ -271,7 +271,7 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
             Threshold.
           </h1>
           <p className="text-lg md:text-xl text-white/60 max-w-xl mx-auto font-light leading-relaxed">
-            An AI creative assistant built for professional designers. Strategic checkpoints prevent generic outputs while maintaining AI efficiency for high-stakes creative work.
+            The AI creative assistant for high-stakes brand work. Co-create strategic briefs, validate at critical checkpoints, and prevent generic outputs before they happen.
           </p>
           <div className="pt-8">
             <button 
@@ -290,57 +290,23 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       {/* CLARITY SECTION: THE 3 PROCESS CARDS */}
       <div className="mt-20 max-w-5xl mx-auto text-center space-y-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left">
+              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left relative group">
                   <ShieldCheck className="w-8 h-8 text-[#FF7F50] mb-4" />
-                  <h3 className="text-xl font-bold mb-2">1. Brief Your Assistant</h3>
-                  <p className="text-white/50 text-sm">Define strategic constraints before AI generates anything. Your creative boundaries become the AI's operating parameters.</p>
+                  <h3 className="text-xl font-bold mb-2">1. Co-Create Your Brief</h3>
+                  <p className="text-white/50 text-sm mb-4">Build strategic parameters with AI assistance. Define must-embody keywords and constraints. Lock in your framework.</p>
+                  <div className="text-[10px] font-mono text-[#FF7F50] uppercase tracking-wider">⚡ Strategy Precedes Symbol</div>
               </div>
-              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left">
+              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left relative group">
                   <Wrench className="w-8 h-8 text-blue-400 mb-4" />
-                  <h3 className="text-xl font-bold mb-2">2. AI Explores, You Direct</h3>
-                  <p className="text-white/50 text-sm">The assistant generates options within your guardrails. Human checkpoints ensure outputs stay strategic and distinct.</p>
+                  <h3 className="text-xl font-bold mb-2">2. AI Explores, You Interpret</h3>
+                  <p className="text-white/50 text-sm mb-4">AI extracts visual patterns. You interpret meaning and define territories. Checkpoints ensure outputs stay distinct.</p>
+                  <div className="text-[10px] font-mono text-blue-400 uppercase tracking-wider">⚡ AI expands data; humans expand meaning</div>
               </div>
-              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left">
+              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left relative group">
                   <Lock className="w-8 h-8 text-purple-400 mb-4" />
-                  <h3 className="text-xl font-bold mb-2">3. Automated Quality Checks</h3>
-                  <p className="text-white/50 text-sm">Built-in validation gates stress-test concepts against your brief. Approve what works, reject what doesn't.</p>
-              </div>
-          </div>
-      </div>
-
-      {/* NEW SECTION: HOW IT ACTUALLY WORKS */}
-      <div className="mt-32 max-w-4xl mx-auto border border-white/10 rounded-2xl bg-white/5 p-8 md:p-12">
-          <div className="inline-flex items-center gap-2 text-[#FF7F50] font-mono text-xs mb-6">
-              <Terminal className="w-3 h-3" />
-              <span>// HOW_IT_ACTUALLY_WORKS</span>
-          </div>
-          <h2 className="text-3xl font-bold mb-8">From Brief to Deliverable</h2>
-          
-          <div className="space-y-8">
-              <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center font-bold text-blue-400 text-sm">1</div>
-                  <div>
-                      <h4 className="font-bold text-white mb-1">Strategic Foundation</h4>
-                      <p className="text-white/60 text-sm">Upload your brief. AI extracts constraints and positioning. You validate parameters before generation begins.</p>
-                  </div>
-              </div>
-              <div className="w-[1px] h-8 bg-white/10 ml-4"></div>
-              
-              <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center font-bold text-purple-400 text-sm">2</div>
-                  <div>
-                      <h4 className="font-bold text-white mb-1">Conceptual Development</h4>
-                      <p className="text-white/60 text-sm">AI generates visual research. You interpret patterns and define creative direction.</p>
-                  </div>
-              </div>
-              <div className="w-[1px] h-8 bg-white/10 ml-4"></div>
-
-              <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#FF7F50]/20 flex items-center justify-center font-bold text-[#FF7F50] text-sm">3</div>
-                  <div>
-                      <h4 className="font-bold text-white mb-1">Design & Validation</h4>
-                      <p className="text-white/60 text-sm">Assistant creates options. You validate concepts against brief requirements. Refine selected direction with AI support.</p>
-                  </div>
+                  <h3 className="text-xl font-bold mb-2">3. Gates Before Advancement</h3>
+                  <p className="text-white/50 text-sm mb-4">Mandatory validation at five critical stages. Each gate must pass before work continues.</p>
+                  <div className="text-[10px] font-mono text-purple-400 uppercase tracking-wider">⚡ Human-in-the-Loop, not Human-in-the-Way</div>
               </div>
           </div>
       </div>
@@ -354,10 +320,10 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 </div>
                 <h2 className="text-4xl font-bold tracking-tight">Stop Generating Average.</h2>
                 <p className="text-xl text-white/60 font-light leading-relaxed">
-                    Generic AI outputs happen when there's no strategic framework to push against. Threshold gives your AI assistant strict rules—creative constraints that force unique solutions.
+                    LLMs default to the statistical mean—creating "average" by design. Threshold gives your AI assistant strict rules: creative constraints you define together, then locked in before generation begins.
                 </p>
                 <div className="mt-4 text-white/80 font-medium">
-                    The result? Work that's distinctly yours, executed at AI speed.
+                    By separating pattern recognition (AI) from meaning-making (Human), we prevent generic convergence.
                 </div>
             </div>
 
@@ -1518,7 +1484,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 6. PROTOCOLS VIEW (REWRITTEN FOR CLARITY)
+// 6. PROTOCOLS VIEW (REWRITTEN FOR CLARITY WITH 5 GATES)
 const ProtocolsView = () => {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
@@ -1544,6 +1510,37 @@ const ProtocolsView = () => {
                          By separating pattern recognition (AI) from strategy (Human), we preserve creative integrity.
                      </p>
                  </div>
+            </div>
+        </div>
+
+        {/* --- NEW SECTION: THE 5 GATES --- */}
+        <div className="mb-16 border border-white/10 rounded-xl bg-white/5 p-8">
+            <div className="flex items-center gap-2 mb-6">
+                <ShieldCheck className="w-6 h-6 text-[#FF7F50]" />
+                <h2 className="text-2xl font-bold">The Five Validation Gates</h2>
+            </div>
+            <p className="text-white/60 mb-8 max-w-2xl">
+                Professional creative workflows follow a universal pattern validated across leading agencies (IDEO, Pentagram, Landor, Wolff Olins). Threshold operationalizes this through five mandatory checkpoints:
+            </p>
+            
+            <div className="grid gap-6">
+                {[
+                    { id: 1, title: "Strategic Foundation", desc: "Co-create brief parameters with AI assistance. Define audience, constraints, and must-embody/must-avoid keywords. Lock in before generation begins." },
+                    { id: 2, title: "Conceptual Clarity", desc: "AI extracts visual patterns (2A). You interpret meanings and define symbolic territories (2B—human-only). Prevents LLM semiotic collapse." },
+                    { id: 3, title: "Design Integrity", desc: "Validate concepts against strategic alignment, distinctiveness, emotional accuracy, and technical quality. Minor refinements loop to iteration; major failures return to concept generation." },
+                    { id: 4, title: "Final Validation", desc: "Professional responsibility check. Could you defend this to the client? No hallucinated facts, copyright violations, or unsupported claims." },
+                    { id: 5, title: "Implementation Readiness", desc: "Comprehensive technical delivery prevents the 'Year Two Problem.' All file formats, color models, variations, and usage guidelines prepared for real-world implementation." }
+                ].map((gate) => (
+                    <div key={gate.id} className="flex gap-4 p-4 border border-white/5 rounded-lg bg-white/[0.02] hover:bg-white/5 transition-colors">
+                        <div className="flex-shrink-0 w-8 h-8 bg-[#FF7F50]/20 text-[#FF7F50] rounded-full flex items-center justify-center font-bold text-sm border border-[#FF7F50]/30">
+                            {gate.id}
+                        </div>
+                        <div>
+                            <h4 className="font-bold text-white mb-1">Gate {gate.id}: {gate.title}</h4>
+                            <p className="text-sm text-white/50 leading-relaxed">{gate.desc}</p>
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
 
