@@ -271,7 +271,7 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
             Threshold.
           </h1>
           <p className="text-lg md:text-xl text-white/60 max-w-xl mx-auto font-light leading-relaxed">
-            The AI creative assistant for high-stakes creative work. Co-create strategic briefs, validate at critical checkpoints, and prevent generic outputs before they happen.
+            The AI assistant for high-stakes creative work. Co-create strategic briefs, validate at critical checkpoints, and prevent generic outputs before they happen.
           </p>
           <div className="pt-8">
             <button 
