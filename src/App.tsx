@@ -5,17 +5,13 @@ import {
   ChevronRight, 
   ChevronLeft, 
   Lock, 
-  LayoutGrid, 
   FileText, 
   Terminal, 
   ShieldCheck, 
   Activity, 
-  Clock, 
   Plus, 
   MoreHorizontal, 
   Download, 
-  Search, 
-  AlertCircle, 
   X, 
   Play, 
   MousePointer2, 
@@ -23,7 +19,6 @@ import {
   Upload, 
   Sparkles, 
   Zap, 
-  Layout as LayoutIcon, 
   Presentation, 
   BookOpen, 
   MessageSquare, 
@@ -35,15 +30,14 @@ import {
   Wrench, 
   Send, 
   FolderOpen, 
-  File, 
   Grid, 
-  BarChart3, 
-  Eye, 
   BrainCircuit, 
   Target, 
   CornerUpLeft, 
   RefreshCcw,
-  UserPlus
+  UserPlus,
+  ArrowUp,
+  Info
 } from 'lucide-react';
 import { cn } from "@/components/ui/utils";
 
@@ -147,8 +141,26 @@ const SpecBlock = ({
 
 // --- GLOBAL LAYOUT WRAPPER ---
 const Layout = ({ children, currentView, onViewChange }: { children: React.ReactNode, currentView: View, onViewChange: (v: View) => void }) => {
-  
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const isLoggedInContext = ['DASHBOARD', 'PROJECT_WIZARD', 'PROJECT_HUB', 'MOODBOARD', 'WELCOME'].includes(currentView);
+
+  // Scroll Reset Logic
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentView]);
+
+  // Scroll Listener for "Back to Top" arrow
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className="relative min-h-screen w-full bg-[#050505] text-white selection:bg-[#FF7F50]/30 overflow-x-hidden font-sans flex flex-col">
@@ -158,7 +170,6 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
 
       <nav className="relative z-50 flex items-center justify-between px-6 py-6 md:px-12 border-b border-white/5 bg-[#050505]/80 backdrop-blur-md sticky top-0 h-20">
         <div className="flex items-center gap-4 cursor-pointer" onClick={() => onViewChange('HOME')}>
-          {/* 3x3 Square Matrix Logo */}
           <div className="grid grid-cols-3 gap-[3px]">
             <div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div>
             <div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div>
@@ -184,7 +195,7 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
             <div className="flex items-center gap-6">
                 {!isLoggedInContext && currentView !== 'LOGIN' && (
                     <button onClick={() => onViewChange('LOGIN')} className="font-mono text-xs px-4 py-2 border border-white/20 rounded-full text-white hover:border-[#FF7F50] hover:text-[#FF7F50] transition-colors flex items-center gap-2 group">
-                    LOGIN <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    LOGIN / JOIN <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     </button>
                 )}
 
@@ -206,6 +217,16 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
         {children}
       </main>
 
+      {/* STICKY SCROLL TO TOP */}
+      {showScrollTop && (
+        <button 
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 p-4 bg-[#FF7F50] text-black rounded-full shadow-[0_0_20px_rgba(255,127,80,0.4)] hover:scale-110 transition-all animate-in fade-in zoom-in"
+        >
+          <ArrowUp className="w-6 h-6" />
+        </button>
+      )}
+
        <footer className="relative z-10 border-t border-white/10 bg-[#020202] py-8 px-6 mt-auto">
         <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-[#FF7F50]/20"></div>
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-[10px] font-mono text-white/40">
@@ -222,7 +243,7 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
   );
 };
 
-// 2. HOME VIEW 
+// 2. HOME VIEW (UPDATED FOR CLARITY)
 const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [sliderVal, setSliderVal] = useState(50);
 
@@ -243,7 +264,7 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
             Threshold.
           </h1>
           <p className="text-lg md:text-xl text-white/60 max-w-xl mx-auto font-light leading-relaxed">
-            The rigorous methodology for <span className="text-white">AI-assisted</span> creative workflows. 
+            The rigorous methodology for <span className="text-white">AI-augmented</span> creative workflows. 
             Moving beyond prompt engineering to <span className="text-white/90 font-medium">strategic integrity</span>.
           </p>
           <div className="pt-8">
@@ -252,12 +273,33 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
               className="group relative inline-flex items-center justify-center px-8 py-4 font-mono text-sm uppercase tracking-widest border border-white/20 rounded hover:border-[#FF7F50]/50 transition-all duration-300 bg-black/20 hover:bg-[#FF7F50]/10 overflow-hidden"
             >
               <span className="relative z-10 group-hover:text-[#FFAB85] transition-colors flex items-center gap-2">
-                [ INITIATE_PROTOCOL ] <ArrowRight className="w-4 h-4" />
+                ENTER WORKSPACE <ArrowRight className="w-4 h-4" />
               </span>
               <div className="absolute inset-0 bg-[#FF7F50]/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </button>
           </div>
         </div>
+      </div>
+
+      {/* CLARITY SECTION: WHAT IS THIS? */}
+      <div className="mt-20 max-w-4xl mx-auto text-center space-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left">
+                  <ShieldCheck className="w-8 h-8 text-[#FF7F50] mb-4" />
+                  <h3 className="text-xl font-bold mb-2">1. Define</h3>
+                  <p className="text-white/50 text-sm">Lock in your strategy and constraints before you generate a single pixel.</p>
+              </div>
+              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left">
+                  <BrainCircuit className="w-8 h-8 text-blue-400 mb-4" />
+                  <h3 className="text-xl font-bold mb-2">2. Generate</h3>
+                  <p className="text-white/50 text-sm">Use our AI tools to explore concepts safely within your defined guardrails.</p>
+              </div>
+              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left">
+                  <Lock className="w-8 h-8 text-purple-400 mb-4" />
+                  <h3 className="text-xl font-bold mb-2">3. Validate</h3>
+                  <p className="text-white/50 text-sm">Stress-test your concepts against the brief to ensure professional integrity.</p>
+              </div>
+          </div>
       </div>
 
       <div className="mt-32 max-w-5xl w-full border-t border-white/5 pt-24">
@@ -269,23 +311,8 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 </div>
                 <h2 className="text-4xl font-bold tracking-tight">Stop Generating Average.</h2>
                 <p className="text-xl text-white/60 font-light leading-relaxed">
-                    Standard AI models are trained to be average. Without guidance, they produce generic work. 
-                    Threshold introduces <span className="text-white font-medium">strategic rules</span> to force the AI to create something unique.
+                    Standard AI makes everything look 'average' (the statistical mean). Threshold introduces strict rules—or <span className="text-white font-medium">strategic friction</span>—to force the AI to create something unique.
                 </p>
-                
-                <div className="grid grid-cols-2 gap-4 pt-4">
-                    <div className="p-4 rounded border border-white/10 bg-white/5">
-                        <div className="text-[10px] font-mono text-white/40 mb-2 uppercase tracking-wider">Unstructured AI</div>
-                        <div className="text-lg text-white/60 font-light">Generic Output</div>
-                    </div>
-                    <div className="p-4 rounded border border-[#FF7F50]/20 bg-[#FF7F50]/5 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-2 opacity-20">
-                            <ShieldCheck className="w-8 h-8 text-[#FF7F50]" />
-                        </div>
-                        <div className="text-[10px] font-mono text-[#FF7F50] mb-2 uppercase tracking-wider">Threshold Method</div>
-                        <div className="text-lg text-white font-medium">Strategic Asset</div>
-                    </div>
-                </div>
             </div>
 
             <div className="relative h-[400px] rounded-2xl border border-white/10 overflow-hidden select-none group cursor-ew-resize shadow-2xl bg-black">
@@ -336,7 +363,7 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 3. LOGIN VIEW
+// 3. LOGIN VIEW (WITH TOGGLE)
 const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [isSignUp, setIsSignUp] = useState(false);
 
@@ -397,7 +424,7 @@ const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 3.5 NEW: WELCOME SPLASH VIEW
+// 3.5 WELCOME SPLASH VIEW
 const WelcomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] px-6 text-center">
@@ -452,11 +479,27 @@ const WelcomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 4. UPDATED DASHBOARD VIEW (HERO LAYOUT)
+// 4. UPDATED DASHBOARD VIEW (HERO LAYOUT WITH MENU)
 const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
+  const [showHeroMenu, setShowHeroMenu] = useState(false);
+  const heroMenuRef = useRef<HTMLDivElement>(null);
+  
   const activeProject = INITIAL_PROJECTS[0];
   const otherProjects = INITIAL_PROJECTS.slice(1);
+
+  // Close hero menu on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (heroMenuRef.current && !heroMenuRef.current.contains(event.target as Node)) {
+        setShowHeroMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [heroMenuRef]);
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12 relative">
@@ -477,6 +520,25 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       <div className="mb-12">
         <h2 className="text-xs font-mono text-white/40 mb-4 uppercase tracking-widest">Active Directive</h2>
         <div className="relative w-full p-8 border border-white/10 rounded-2xl bg-gradient-to-br from-white/5 to-black group hover:border-[#FF7F50]/30 transition-all">
+            
+            {/* HERO MENU BUTTON */}
+            <div className="absolute top-6 right-6" ref={heroMenuRef}>
+                <button 
+                    onClick={() => setShowHeroMenu(!showHeroMenu)}
+                    className="p-2 text-white/40 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+                >
+                    <MoreHorizontal className="w-5 h-5" />
+                </button>
+                {showHeroMenu && (
+                    <div className="absolute top-full right-0 mt-2 w-48 bg-[#0A0A0A] border border-white/20 rounded-lg p-1 shadow-2xl z-50 animate-in fade-in zoom-in duration-200">
+                        <button className="flex items-center gap-2 w-full px-3 py-2 text-xs text-white/80 hover:bg-white/10 rounded"><Edit2 className="w-3 h-3"/> Edit Project</button>
+                        <button className="flex items-center gap-2 w-full px-3 py-2 text-xs text-white/80 hover:bg-white/10 rounded"><Archive className="w-3 h-3"/> Archive</button>
+                        <div className="h-[1px] bg-white/10 my-1"></div>
+                        <button className="flex items-center gap-2 w-full px-3 py-2 text-xs text-red-400 hover:bg-white/10 rounded"><Trash2 className="w-3 h-3"/> Delete</button>
+                    </div>
+                )}
+            </div>
+
             <div className="flex justify-between items-start mb-8">
                 <div>
                     <span className="inline-block px-2 py-1 rounded bg-blue-500/10 text-blue-400 text-[10px] font-mono mb-3 border border-blue-500/20">
