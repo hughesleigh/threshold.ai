@@ -3,7 +3,7 @@ import {
   ArrowRight, 
   Check, 
   ChevronRight, 
-  ChevronLeft,
+  ChevronLeft, 
   Lock, 
   LayoutGrid, 
   FileText, 
@@ -11,44 +11,44 @@ import {
   ShieldCheck, 
   Activity, 
   Clock, 
-  Plus,
-  MoreHorizontal,
-  Download,
-  Search,
-  AlertCircle,
-  X,
-  Play,
-  MousePointer2,
-  Image as ImageIcon,
-  Upload,
-  Sparkles,
-  Zap,
-  Layout as LayoutIcon,
-  Presentation,
-  BookOpen,
-  MessageSquare,
-  Trash2,
-  Archive,
-  Edit2,
-  FileBox,
-  GraduationCap,
-  Wrench,
-  Send,
-  FolderOpen,
-  File,
-  Grid,
-  BarChart3,
-  Eye,
-  BrainCircuit,
-  Target,
-  CornerUpLeft,
-  RefreshCcw
+  Plus, 
+  MoreHorizontal, 
+  Download, 
+  Search, 
+  AlertCircle, 
+  X, 
+  Play, 
+  MousePointer2, 
+  Image as ImageIcon, 
+  Upload, 
+  Sparkles, 
+  Zap, 
+  Layout as LayoutIcon, 
+  Presentation, 
+  BookOpen, 
+  MessageSquare, 
+  Trash2, 
+  Archive, 
+  Edit2, 
+  FileBox, 
+  GraduationCap, 
+  Wrench, 
+  Send, 
+  FolderOpen, 
+  File, 
+  Grid, 
+  BarChart3, 
+  Eye, 
+  BrainCircuit, 
+  Target, 
+  CornerUpLeft, 
+  RefreshCcw 
 } from 'lucide-react';
 import { cn } from "@/components/ui/utils";
 
 // --- TYPES ---
 
-type View = 'HOME' | 'LOGIN' | 'DASHBOARD' | 'PROJECT_HUB' | 'PROJECT_WIZARD' | 'PROTOCOLS' | 'RESOURCES' | 'MOODBOARD';
+type View = 'HOME' | 'LOGIN' | 'WELCOME' | 'DASHBOARD' | 'PROJECT_HUB' | 'PROJECT_WIZARD' | 'PROTOCOLS' | 'RESOURCES' | 'MOODBOARD';
 type Stage = 1 | 2 | 3 | 4 | 5;
 type ProjectStatus = 'ACTIVE' | 'ARCHIVED';
 
@@ -71,51 +71,87 @@ const INITIAL_PROJECTS: Project[] = [
 
 // --- HELPER COMPONENTS ---
 
+// Updated SpecBlock with Manual Enter + AI Assist
 const SpecBlock = ({ 
   id, 
   label, 
   placeholder, 
   hint, 
-  height = "h-32" 
+  height = "h-32",
+  value,
+  onChange
 }: { 
   id: string, 
   label: string, 
   placeholder: string, 
   hint?: string,
-  height?: string 
-}) => (
-  <div className="border border-white/10 p-6 rounded-xl bg-white/5 relative group transition-all hover:border-white/20">
-    <div className="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
-    <div className="font-mono text-[10px] text-blue-400 mb-2 uppercase tracking-wider">
-      [ {id} ]
-    </div>
-    <h3 className="text-lg font-bold mb-4 text-white">{label}</h3>
-    
-    <div className="relative">
-      <textarea 
-        className={`w-full bg-black/40 border border-white/10 rounded-lg p-4 text-sm font-light text-white/90 focus:border-blue-500 outline-none transition-colors resize-none ${height}`}
-        placeholder={placeholder}
-      />
-      <div className="absolute right-2 bottom-2">
-        <button className="flex items-center gap-2 text-[10px] font-mono bg-white/5 hover:bg-blue-500/20 border border-white/10 px-2 py-1 rounded text-white/60 hover:text-blue-300 transition-colors">
-          <Terminal className="w-3 h-3" /> AI_ASSIST
-        </button>
+  height?: string,
+  value?: string,
+  onChange?: (val: string) => void
+}) => {
+  const [isSaved, setIsSaved] = useState(false);
+
+  const handleSave = () => {
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 2000); // Reset after 2 seconds
+  };
+
+  return (
+    <div className="border border-white/10 p-6 rounded-xl bg-white/5 relative group transition-all hover:border-white/20">
+      <div className={cn("absolute top-0 left-0 w-1 h-full rounded-l-xl transition-all duration-500", isSaved ? "bg-green-500" : "bg-blue-500 opacity-50 group-hover:opacity-100")}></div>
+      
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-bold text-white">{label}</h3>
+        <div className="font-mono text-[10px] text-blue-400 uppercase tracking-wider">
+          [ {id} ]
+        </div>
       </div>
-    </div>
-    
-    {hint && (
-      <div className="mt-3 flex items-start gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
-        <Activity className="w-3 h-3 text-[#FF7F50] mt-0.5 flex-shrink-0" />
-        <p className="text-[10px] text-white/60 font-mono leading-tight">{hint}</p>
+      
+      <div className="relative">
+        <textarea 
+          className={`w-full bg-black/40 border border-white/10 rounded-lg p-4 text-sm font-light text-white/90 focus:border-blue-500 outline-none transition-colors resize-none ${height}`}
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => onChange && onChange(e.target.value)}
+        />
+        
+        {/* ACTION BAR */}
+        <div className="absolute right-2 bottom-2 flex gap-2">
+          {/* Manual Save Button */}
+          <button 
+            onClick={handleSave}
+            className={cn(
+              "flex items-center gap-2 text-[10px] font-mono border px-3 py-1.5 rounded transition-all",
+              isSaved 
+                ? "bg-green-500/20 border-green-500 text-green-400" 
+                : "bg-white/5 border-white/10 text-white/60 hover:text-white hover:bg-white/10"
+            )}
+          >
+            {isSaved ? <Check className="w-3 h-3" /> : <CornerUpLeft className="w-3 h-3" />}
+            {isSaved ? "SAVED" : "ENTER"}
+          </button>
+
+          {/* AI Assist Button */}
+          <button className="flex items-center gap-2 text-[10px] font-mono bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 px-3 py-1.5 rounded text-blue-400 hover:text-blue-300 transition-colors">
+            <Sparkles className="w-3 h-3" /> AI_ASSIST
+          </button>
+        </div>
       </div>
-    )}
-  </div>
-);
+      
+      {hint && (
+        <div className="mt-3 flex items-start gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
+          <Activity className="w-3 h-3 text-[#FF7F50] mt-0.5 flex-shrink-0" />
+          <p className="text-[10px] text-white/60 font-mono leading-tight">{hint}</p>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // --- GLOBAL LAYOUT WRAPPER ---
 const Layout = ({ children, currentView, onViewChange }: { children: React.ReactNode, currentView: View, onViewChange: (v: View) => void }) => {
   
-  const isLoggedInContext = ['DASHBOARD', 'PROJECT_WIZARD', 'PROJECT_HUB', 'MOODBOARD'].includes(currentView);
+  const isLoggedInContext = ['DASHBOARD', 'PROJECT_WIZARD', 'PROJECT_HUB', 'MOODBOARD', 'WELCOME'].includes(currentView);
 
   return (
     <div className="relative min-h-screen w-full bg-[#050505] text-white selection:bg-[#FF7F50]/30 overflow-x-hidden font-sans flex flex-col">
@@ -233,7 +269,7 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 </div>
                 <h2 className="text-4xl font-bold tracking-tight">Stop Generating Average.</h2>
                 <p className="text-xl text-white/60 font-light leading-relaxed">
-                    Standard AI models regress to the statistical mean. Threshold introduces <span className="text-white font-medium">strategic friction</span> to force distinctive output.
+                    Standard AI makes everything look 'average' (the statistical mean). Threshold introduces strict rules—or <span className="text-white font-medium">strategic friction</span>—to force the AI to create something unique.
                 </p>
                 
                 <div className="grid grid-cols-2 gap-4 pt-4">
@@ -253,13 +289,13 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
 
             <div className="relative h-[400px] rounded-2xl border border-white/10 overflow-hidden select-none group cursor-ew-resize shadow-2xl bg-black">
                 <div className="absolute inset-0 bg-[#111] flex items-center justify-center">
-                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-40 mix-blend-overlay"></div>
-                     <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-40 mix-blend-overlay"></div>
+                      <div className="absolute inset-0 flex items-center justify-center">
                         <span className="text-6xl md:text-8xl font-bold text-white/5 blur-sm tracking-tighter scale-110">AVERAGE</span>
-                     </div>
-                     <div className="absolute bottom-6 left-6 font-mono text-xs text-white/30">
+                      </div>
+                      <div className="absolute bottom-6 left-6 font-mono text-xs text-white/30">
                         [ STATUS: UNSTRUCTURED ]
-                     </div>
+                      </div>
                 </div>
 
                 <div 
@@ -331,7 +367,7 @@ const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
             <input type="password" className="w-full bg-white/5 border-b border-white/10 focus:border-[#FF7F50] text-white px-3 py-3 outline-none transition-colors font-sans placeholder-white/20" placeholder="••••••••" />
           </div>
           <button 
-            onClick={() => onNavigate('DASHBOARD')}
+            onClick={() => onNavigate('WELCOME')} // FIXED: Routes to Welcome Page
             className="w-full mt-8 py-3 border border-white/20 hover:border-[#FF7F50] text-white font-mono text-sm uppercase tracking-widest transition-all group relative overflow-hidden bg-white/5 hover:bg-[#FF7F50]/10"
           >
             <span className="relative z-10 group-hover:text-[#FFAB85]">Initiate Session -&gt;</span>
@@ -345,105 +381,140 @@ const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 4. DASHBOARD VIEW
-const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
-  const [activeTab, setActiveTab] = useState<ProjectStatus>('ACTIVE');
-  const [showNewProjectModal, setShowNewProjectModal] = useState(false);
-  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+// 3.5 NEW: WELCOME SPLASH VIEW
+const WelcomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[80vh] px-6 text-center">
+      <div className="max-w-2xl w-full space-y-8 animate-in fade-in zoom-in duration-700">
+        
+        {/* Animated Icon */}
+        <div className="w-20 h-20 mx-auto bg-white/5 rounded-full flex items-center justify-center border border-white/10 relative group">
+           <div className="absolute inset-0 bg-[#FF7F50]/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+           <BrainCircuit className="w-8 h-8 text-white group-hover:text-[#FF7F50] transition-colors" />
+        </div>
 
-  const projects = INITIAL_PROJECTS.filter(p => p.status === activeTab);
+        <div className="space-y-4">
+           <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-white">
+             System Online.
+           </h1>
+           <p className="text-lg text-white/60 leading-relaxed max-w-xl mx-auto">
+             You have accessed <span className="text-white font-medium">Threshold</span>: The professional operating system for AI-assisted design.
+           </p>
+           <p className="text-sm text-white/40 font-mono">
+             // PROTOCOL: HUMAN_LED_DESIGN :: AI_ASSISTED_VELOCITY
+           </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left py-8 border-y border-white/5">
+           <div className="p-4 rounded bg-white/5 border border-white/5">
+              <div className="text-[#FF7F50] mb-2"><ShieldCheck className="w-5 h-5"/></div>
+              <h3 className="font-bold text-sm mb-1">Strategic Integrity</h3>
+              <p className="text-xs text-white/50">Prevent generic AI slop by locking constraints first.</p>
+           </div>
+           <div className="p-4 rounded bg-white/5 border border-white/5">
+              <div className="text-blue-400 mb-2"><Zap className="w-5 h-5"/></div>
+              <h3 className="font-bold text-sm mb-1">Velocity</h3>
+              <p className="text-xs text-white/50">Draft concepts in minutes, not days.</p>
+           </div>
+           <div className="p-4 rounded bg-white/5 border border-white/5">
+              <div className="text-purple-400 mb-2"><Lock className="w-5 h-5"/></div>
+              <h3 className="font-bold text-sm mb-1">Audit Trail</h3>
+              <p className="text-xs text-white/50">Document every decision for client defense.</p>
+           </div>
+        </div>
+
+        <button 
+          onClick={() => onNavigate('DASHBOARD')}
+          className="group relative inline-flex items-center justify-center px-8 py-4 font-mono text-xs font-bold uppercase tracking-widest bg-[#FF7F50] text-black rounded hover:bg-[#FF7F50]/90 transition-all w-full md:w-auto"
+        >
+          <span className="flex items-center gap-2">
+            Enter Workspace <ArrowRight className="w-4 h-4" />
+          </span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// 4. UPDATED DASHBOARD VIEW (HERO LAYOUT)
+const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
+  const [showNewProjectModal, setShowNewProjectModal] = useState(false);
+  const activeProject = INITIAL_PROJECTS[0];
+  const otherProjects = INITIAL_PROJECTS.slice(1);
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12 relative">
       <div className="flex justify-between items-end mb-12">
         <div>
-          <div className="font-mono text-xs text-blue-400 mb-2">// WORKSPACE_OVERVIEW :: [USER_ASH]</div>
-          <h1 className="text-4xl font-bold">Projects</h1>
+          <div className="font-mono text-xs text-blue-400 mb-2">// WELCOME_BACK :: [USER_ASH]</div>
+          <h1 className="text-4xl font-bold">Mission Control</h1>
         </div>
-        <div className="hidden md:flex gap-2 font-mono text-xs">
-          <button 
-            onClick={() => setActiveTab('ACTIVE')}
-            className={cn("px-3 py-1 rounded-full border transition-all", activeTab === 'ACTIVE' ? "bg-[#FF7F50]/20 text-[#FF7F50] border-[#FF7F50]/20" : "bg-white/5 text-white/40 border-white/10 hover:text-white")}
-          >
-            [ ACTIVE ]
-          </button>
-          <button 
-            onClick={() => setActiveTab('ARCHIVED')}
-            className={cn("px-3 py-1 rounded-full border transition-all", activeTab === 'ARCHIVED' ? "bg-[#FF7F50]/20 text-[#FF7F50] border-[#FF7F50]/20" : "bg-white/5 text-white/40 border-white/10 hover:text-white")}
-          >
-            [ ARCHIVED ]
-          </button>
+        <button 
+           onClick={() => setShowNewProjectModal(true)}
+           className="flex items-center gap-2 px-4 py-2 bg-[#FF7F50] text-black text-xs font-bold font-mono rounded hover:bg-[#FF7F50]/90 transition-colors"
+        >
+           <Plus className="w-4 h-4" /> INITIALIZE_NEW
+        </button>
+      </div>
+
+      {/* 1. HERO CARD (Focus Hierarchy) */}
+      <div className="mb-12">
+        <h2 className="text-xs font-mono text-white/40 mb-4 uppercase tracking-widest">Active Directive</h2>
+        <div className="relative w-full p-8 border border-white/10 rounded-2xl bg-gradient-to-br from-white/5 to-black group hover:border-[#FF7F50]/30 transition-all">
+            <div className="flex justify-between items-start mb-8">
+                <div>
+                    <span className="inline-block px-2 py-1 rounded bg-blue-500/10 text-blue-400 text-[10px] font-mono mb-3 border border-blue-500/20">
+                        {activeProject.type}
+                    </span>
+                    <h3 className="text-3xl font-bold text-white mb-2">{activeProject.name}</h3>
+                    <p className="text-white/60 text-sm max-w-lg">
+                        Strategic brand identity development focusing on trauma-informed design principles.
+                    </p>
+                </div>
+                <div className="text-right">
+                    <div className="text-4xl font-bold text-[#FF7F50]">{activeProject.progress}%</div>
+                    <div className="text-[10px] font-mono text-white/40">COMPLETION_RATE</div>
+                </div>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden mb-8">
+                <div className="h-full bg-gradient-to-r from-blue-500 to-[#FF7F50]" style={{ width: `${activeProject.progress}%` }}></div>
+            </div>
+
+            <div className="flex items-center gap-4">
+                <button 
+                    onClick={() => onNavigate('PROJECT_HUB')}
+                    className="px-6 py-3 bg-white text-black font-bold text-sm rounded hover:bg-white/90 transition-colors flex items-center gap-2"
+                >
+                    CONTINUE WORKFLOW <ArrowRight className="w-4 h-4" />
+                </button>
+                <div className="text-xs font-mono text-white/40">
+                    LAST_EDIT :: {activeProject.lastEdited}
+                </div>
+            </div>
         </div>
       </div>
 
-      <div className="grid gap-6">
-        {projects.map((project) => (
-          <div key={project.id} className="relative w-full p-6 border border-white/10 rounded-xl bg-white/5 backdrop-blur-md group hover:border-white/20 transition-all">
-            <div className="absolute top-2 left-2 text-white/20 text-[10px]">+</div>
-            <div className="absolute top-2 right-2 text-white/20 text-[10px]">+</div>
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <span className="block font-mono text-[10px] text-blue-400 mb-1 tracking-wider uppercase">
-                  TYPE :: {project.type}
-                </span>
-                <h3 className="text-xl font-bold text-white tracking-tight">{project.name}</h3>
-              </div>
-              <div className="flex items-center space-x-2 px-3 py-1 rounded-full border border-white/5 bg-black/20">
-                <div className={cn("w-1.5 h-1.5 rounded-full animate-pulse", project.status === 'ACTIVE' ? "bg-[#FF7F50]" : "bg-white/40")}></div>
-                <span className="font-mono text-[10px] text-white/60">{project.status === 'ACTIVE' ? 'LIVE' : 'ARCHIVED'}</span>
-              </div>
-            </div>
-            <div className="mb-6">
-              <div className="flex justify-between text-[10px] font-mono text-white/40 mb-2">
-                <span>THRESHOLD 02/05</span>
-                <span>{project.progress}% COMPLETE</span>
-              </div>
-              <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-blue-500 to-[#FF7F50] relative"
-                  style={{ width: `${project.progress}%` }}
-                >
-                  <div className="absolute right-0 top-0 bottom-0 w-2 bg-white/50 blur-[2px]"></div>
+      {/* 2. SECONDARY LIST (Reduced Visual Noise) */}
+      <div>
+        <h2 className="text-xs font-mono text-white/40 mb-4 uppercase tracking-widest">Project Archive</h2>
+        <div className="grid gap-4">
+            {otherProjects.map((p) => (
+                <div key={p.id} className="flex items-center justify-between p-4 border border-white/5 rounded-lg bg-white/[0.02] hover:bg-white/5 transition-colors cursor-pointer group">
+                    <div className="flex items-center gap-4">
+                        <div className={`w-2 h-2 rounded-full ${p.status === 'ACTIVE' ? 'bg-green-500' : 'bg-white/20'}`}></div>
+                        <div>
+                            <h4 className="font-bold text-white group-hover:text-[#FF7F50] transition-colors">{p.name}</h4>
+                            <div className="text-[10px] font-mono text-white/40">{p.type} • Last edited {p.lastEdited}</div>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <span className="font-mono text-xs text-white/40">{p.progress}%</span>
+                        <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-white" />
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div className="flex justify-between items-end border-t border-white/5 pt-4">
-              <div className="text-[10px] font-mono text-white/30">
-                LAST_EDIT :: {project.lastEdited}
-              </div>
-              <div className="flex items-center gap-4">
-                  <div className="relative">
-                      <button onClick={() => setActiveMenuId(activeMenuId === project.id ? null : project.id)} className="p-2 hover:bg-white/10 rounded">
-                          <MoreHorizontal className="w-4 h-4 text-white/60" />
-                      </button>
-                      {activeMenuId === project.id && (
-                          <div className="absolute bottom-full right-0 mb-2 w-32 bg-black border border-white/20 rounded-lg p-1 shadow-xl z-50">
-                              <button className="flex items-center gap-2 w-full px-3 py-2 text-xs text-white/80 hover:bg-white/10 rounded"><Edit2 className="w-3 h-3"/> Edit</button>
-                              <button className="flex items-center gap-2 w-full px-3 py-2 text-xs text-white/80 hover:bg-white/10 rounded"><Archive className="w-3 h-3"/> Archive</button>
-                              <button className="flex items-center gap-2 w-full px-3 py-2 text-xs text-red-400 hover:bg-white/10 rounded"><Trash2 className="w-3 h-3"/> Delete</button>
-                          </div>
-                      )}
-                  </div>
-                  <button 
-                    onClick={() => onNavigate('PROJECT_HUB')}
-                    className="flex items-center space-x-2 text-sm text-white hover:text-[#FF7F50] transition-colors group-hover:translate-x-1 duration-300"
-                  >
-                    <span className="font-medium">Open Project</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-              </div>
-            </div>
-          </div>
-        ))}
-
-        <div 
-           onClick={() => setShowNewProjectModal(true)}
-           className="border border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors cursor-pointer group"
-        >
-           <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center mb-4 group-hover:border-[#FF7F50] transition-colors">
-              <Plus className="w-6 h-6 text-white/40 group-hover:text-[#FF7F50]" />
-           </div>
-           <h3 className="text-sm font-mono uppercase tracking-widest text-white/60 group-hover:text-white">Initialize New Protocol</h3>
+            ))}
         </div>
       </div>
 
@@ -500,7 +571,6 @@ const ProjectHubView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Close menu on click outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -545,83 +615,83 @@ const ProjectHubView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
               
               <div className="space-y-6">
                   <div className="border border-white/10 rounded-xl bg-white/5 p-6 relative group hover:border-white/20 transition-all cursor-pointer" onClick={() => onNavigate('PROJECT_WIZARD')}>
-                       <div className="flex items-center justify-between mb-4">
-                           <div className="flex items-center gap-3">
-                               <div className="p-2 bg-blue-500/10 rounded-lg"><FileText className="w-5 h-5 text-blue-400" /></div>
-                               <h3 className="font-bold">Strategic Brief</h3>
-                           </div>
-                           <span className="text-[10px] font-mono text-white/40 bg-white/5 px-2 py-1 rounded">LOCKED</span>
-                       </div>
-                       <p className="text-sm text-white/60 mb-6 line-clamp-3">Primary Audience: Holistic wellness seekers. Core Message: Strength through vulnerability. Keywords: Organic, Resilient, Gateway.</p>
-                       <button className="text-xs font-mono text-white/60 hover:text-white flex items-center gap-2">VIEW DOCUMENT <ArrowRight className="w-3 h-3" /></button>
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-blue-500/10 rounded-lg"><FileText className="w-5 h-5 text-blue-400" /></div>
+                                <h3 className="font-bold">Strategic Brief</h3>
+                            </div>
+                            <span className="text-[10px] font-mono text-white/40 bg-white/5 px-2 py-1 rounded">LOCKED</span>
+                        </div>
+                        <p className="text-sm text-white/60 mb-6 line-clamp-3">Primary Audience: Holistic wellness seekers. Core Message: Strength through vulnerability. Keywords: Organic, Resilient, Gateway.</p>
+                        <button className="text-xs font-mono text-white/60 hover:text-white flex items-center gap-2">VIEW DOCUMENT <ArrowRight className="w-3 h-3" /></button>
                   </div>
 
                    <div className="border border-white/10 rounded-xl bg-white/5 p-6 relative group hover:border-white/20 transition-all cursor-pointer" onClick={() => onNavigate('MOODBOARD')}>
-                       <div className="flex items-center justify-between mb-4">
-                           <div className="flex items-center gap-3">
-                               <div className="p-2 bg-purple-500/10 rounded-lg"><Sparkles className="w-5 h-5 text-purple-400" /></div>
-                               <h3 className="font-bold">Visuals & Research</h3>
-                           </div>
-                           <span className="text-[10px] font-mono text-white/40 bg-white/5 px-2 py-1 rounded">3 ASSETS</span>
-                       </div>
-                       
-                       <div className="space-y-3 mb-6">
-                           {['Moodboard', 'Competitor Audit', 'Market Trends'].map((item, i) => (
-                               <div key={i} className="flex items-center gap-2 text-sm text-white/60">
-                                   <div className="w-1 h-1 bg-purple-400 rounded-full"></div>
-                                   {item}
-                               </div>
-                           ))}
-                       </div>
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-purple-500/10 rounded-lg"><Sparkles className="w-5 h-5 text-purple-400" /></div>
+                                <h3 className="font-bold">Visuals & Research</h3>
+                            </div>
+                            <span className="text-[10px] font-mono text-white/40 bg-white/5 px-2 py-1 rounded">3 ASSETS</span>
+                        </div>
+                        
+                        <div className="space-y-3 mb-6">
+                            {['Moodboard', 'Competitor Audit', 'Market Trends'].map((item, i) => (
+                                <div key={i} className="flex items-center gap-2 text-sm text-white/60">
+                                    <div className="w-1 h-1 bg-purple-400 rounded-full"></div>
+                                    {item}
+                                </div>
+                            ))}
+                        </div>
 
-                       <div className="flex gap-2 mb-6">
-                          {[1,2,3].map(i => (
-                             <div key={i} className="w-12 h-12 rounded bg-black/40 border border-white/5 flex items-center justify-center"><ImageIcon className="w-4 h-4 text-white/20"/></div>
-                          ))}
-                       </div>
-                       <button className="text-xs font-mono text-white/60 hover:text-white flex items-center gap-2">VIEW ASSETS <ArrowRight className="w-3 h-3" /></button>
+                        <div className="flex gap-2 mb-6">
+                           {[1,2,3].map(i => (
+                              <div key={i} className="w-12 h-12 rounded bg-black/40 border border-white/5 flex items-center justify-center"><ImageIcon className="w-4 h-4 text-white/20"/></div>
+                           ))}
+                        </div>
+                        <button className="text-xs font-mono text-white/60 hover:text-white flex items-center gap-2">VIEW ASSETS <ArrowRight className="w-3 h-3" /></button>
                   </div>
               </div>
 
               <div className="space-y-6">
                   <div className="border border-white/10 rounded-xl bg-white/5 p-6 h-full relative group hover:border-white/20 transition-all flex flex-col">
-                       <div className="flex items-center justify-between mb-6">
-                           <div className="flex items-center gap-3">
-                               <div className="p-2 bg-[#FF7F50]/10 rounded-lg"><Zap className="w-5 h-5 text-[#FF7F50]" /></div>
-                               <h3 className="font-bold">Active Concepts</h3>
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-[#FF7F50]/10 rounded-lg"><Zap className="w-5 h-5 text-[#FF7F50]" /></div>
+                                <h3 className="font-bold">Active Concepts</h3>
+                            </div>
+                            <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-[#FF7F50]/20 bg-[#FF7F50]/5">
+                                 <div className="w-1.5 h-1.5 rounded-full bg-[#FF7F50] animate-pulse"></div>
+                                 <span className="font-mono text-[10px] text-[#FF7F50]">IN PROGRESS</span>
                            </div>
-                           <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-[#FF7F50]/20 bg-[#FF7F50]/5">
-                                <div className="w-1.5 h-1.5 rounded-full bg-[#FF7F50] animate-pulse"></div>
-                                <span className="font-mono text-[10px] text-[#FF7F50]">IN PROGRESS</span>
-                          </div>
-                       </div>
-                       
-                       <div className="flex-grow grid grid-cols-2 gap-4 mb-6">
-                          {['Concept A: The Archway', 'Concept B: Organic Shield'].map((c, i) => (
-                             <div key={i} className="aspect-square rounded-lg bg-black/40 border border-white/10 p-4 flex flex-col justify-end hover:bg-white/5 transition-colors cursor-pointer">
-                                <span className="font-bold text-sm">{c}</span>
-                                <span className="text-[10px] font-mono text-white/40">V2_REFINED</span>
-                             </div>
-                          ))}
-                       </div>
-                       <button onClick={() => onNavigate('PROJECT_WIZARD')} className="w-full py-3 border border-white/10 rounded bg-white/5 hover:bg-white/10 text-xs font-mono flex items-center justify-center gap-2 transition-colors">
-                           ENTER DESIGN WORKFLOW <ArrowRight className="w-3 h-3" />
-                       </button>
+                        </div>
+                        
+                        <div className="flex-grow grid grid-cols-2 gap-4 mb-6">
+                           {['Concept A: The Archway', 'Concept B: Organic Shield'].map((c, i) => (
+                              <div key={i} className="aspect-square rounded-lg bg-black/40 border border-white/10 p-4 flex flex-col justify-end hover:bg-white/5 transition-colors cursor-pointer">
+                                 <span className="font-bold text-sm">{c}</span>
+                                 <span className="text-[10px] font-mono text-white/40">V2_REFINED</span>
+                              </div>
+                           ))}
+                        </div>
+                        <button onClick={() => onNavigate('PROJECT_WIZARD')} className="w-full py-3 border border-white/10 rounded bg-white/5 hover:bg-white/10 text-xs font-mono flex items-center justify-center gap-2 transition-colors">
+                            ENTER DESIGN WORKFLOW <ArrowRight className="w-3 h-3" />
+                        </button>
                   </div>
               </div>
 
                <div className="space-y-6">
                   <div className="border border-white/10 rounded-xl bg-white/5 p-6 h-full relative group hover:border-white/20 transition-all flex flex-col opacity-50">
-                       <div className="flex items-center justify-between mb-6">
-                           <div className="flex items-center gap-3">
-                               <div className="p-2 bg-green-500/10 rounded-lg"><FolderOpen className="w-5 h-5 text-green-400" /></div>
-                               <h3 className="font-bold">Final Deliverables</h3>
-                           </div>
-                           <Lock className="w-4 h-4 text-white/40" />
-                       </div>
-                       <p className="text-sm text-white/40 flex-grow flex items-center justify-center text-center px-6">
-                           Complete all 5 thresholds to unlock final asset generation and download package.
-                       </p>
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-green-500/10 rounded-lg"><FolderOpen className="w-5 h-5 text-green-400" /></div>
+                                <h3 className="font-bold">Final Deliverables</h3>
+                            </div>
+                            <Lock className="w-4 h-4 text-white/40" />
+                        </div>
+                        <p className="text-sm text-white/40 flex-grow flex items-center justify-center text-center px-6">
+                            Complete all 5 thresholds to unlock final asset generation and download package.
+                        </p>
                   </div>
               </div>
 
@@ -802,8 +872,8 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       {/* TOP GRADIENT PROGRESS BAR */}
       <div className="sticky top-[80px] left-0 right-0 h-[2px] bg-white/5 z-50">
           <div 
-             className="h-full bg-gradient-to-r from-blue-500 to-[#FF7F50] transition-all duration-700 ease-out relative"
-             style={{ width: `${progressPercent}%` }}
+              className="h-full bg-gradient-to-r from-blue-500 to-[#FF7F50] transition-all duration-700 ease-out relative"
+              style={{ width: `${progressPercent}%` }}
           >
               <div className="absolute right-0 top-0 bottom-0 w-4 bg-white/50 blur-[4px]"></div>
           </div>
@@ -838,30 +908,30 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
         {/* STAGE 1 */}
         {stage === 1 && (
           <div className="space-y-8 animate-in slide-in-from-right duration-500">
-             
-             <div className="mb-8">
+              
+              <div className="mb-8">
                 <h2 className="text-3xl font-bold mb-2">Strategic Foundation</h2>
                 <p className="text-white/60 font-light">Define audience, core message, and strategic guardrails before generation.</p>
-             </div>
+              </div>
 
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <SpecBlock id="PARAM_01" label="Project Name" placeholder="Clear project identification..." hint="Be specific and descriptive." height="h-20" />
                 <SpecBlock id="PARAM_02" label="Brand/Org Name" placeholder="Exact name as it will appear in the logo..." hint="Confirm capitalization." height="h-20" />
-             </div>
+              </div>
 
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <SpecBlock id="PARAM_03" label="Business Problem" placeholder="What business problem does this solve?" hint="Connect to measurable outcomes." />
                 <SpecBlock id="PARAM_04" label="Desired Emotional Response" placeholder="How should the audience feel?" hint="E.g., 'Safe,' 'Understood,' 'Empowered'." />
-             </div>
+              </div>
 
-             <SpecBlock id="PARAM_05" label="Primary Audience & Insight" placeholder="Who are they? What do they value/fear?" hint="Demographics + Psychographics." />
+              <SpecBlock id="PARAM_05" label="Primary Audience & Insight" placeholder="Who are they? What do they value/fear?" hint="Demographics + Psychographics." />
 
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <SpecBlock id="PARAM_06" label="Must-Embody Keywords" placeholder="Non-negotiable qualities (3-5)..." hint="Specific, defendable adjectives." />
                 <SpecBlock id="PARAM_07" label="Must-Avoid Keywords" placeholder="Explicit guardrails (3-5)..." hint="What causes disengagement?" />
-             </div>
+              </div>
 
-             <SpecBlock id="PARAM_08" label="Sensitivity & Cultural Context" placeholder="What sensitive topics or identities must be handled with care?" hint="Trauma-informed, gender-inclusive, accessibility needs." />
+              <SpecBlock id="PARAM_08" label="Sensitivity & Cultural Context" placeholder="What sensitive topics or identities must be handled with care?" hint="Trauma-informed, gender-inclusive, accessibility needs." />
           </div>
         )}
 
@@ -1168,8 +1238,8 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                  <ShieldCheck className="w-20 h-20 text-[#FF7F50] mx-auto mb-8" />
                  <h2 className="text-4xl font-bold mb-4">Implementation Package</h2>
                  <p className="text-white/60 mb-12 max-w-md mx-auto">
-                    All strategic thresholds crossed. Protocols validated. 
-                    Assets are compiled and ready for final export.
+                   All strategic thresholds crossed. Protocols validated. 
+                   Assets are compiled and ready for final export.
                  </p>
                  
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left max-w-4xl mx-auto mb-8">
@@ -1209,7 +1279,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                                  </div>
                              </div>
                              <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
-                         </div>
+                          </div>
                      </div>
 
                      {/* RIGHT COLUMN: GOVERNANCE CHECK */}
@@ -1221,7 +1291,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                          <div className="space-y-6">
                              <div onClick={() => toggleGovernanceCheck('accessibility')} className="flex items-start gap-4 cursor-pointer group">
                                  <div className={cn("w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors mt-0.5", governanceChecks.accessibility ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20 group-hover:border-white/40")}>
-                                    {governanceChecks.accessibility && <Check className="w-3 h-3 text-black" />}
+                                     {governanceChecks.accessibility && <Check className="w-3 h-3 text-black" />}
                                  </div>
                                  <div>
                                      <span className="text-sm font-bold block group-hover:text-white transition-colors">Accessibility Compliance</span>
@@ -1231,9 +1301,9 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
 
                              <div onClick={() => toggleGovernanceCheck('technical')} className="flex items-start gap-4 cursor-pointer group">
                                  <div className={cn("w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors mt-0.5", governanceChecks.technical ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20 group-hover:border-white/40")}>
-                                    {governanceChecks.technical && <Check className="w-3 h-3 text-black" />}
+                                     {governanceChecks.technical && <Check className="w-3 h-3 text-black" />}
                                  </div>
-                                  <div>
+                                 <div>
                                      <span className="text-sm font-bold block group-hover:text-white transition-colors">Technical Standards</span>
                                      <span className="text-xs text-white/40 leading-relaxed block mt-1">Files meet all required formats and naming conventions.</span>
                                  </div>
@@ -1241,9 +1311,9 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
 
                               <div onClick={() => toggleGovernanceCheck('usage')} className="flex items-start gap-4 cursor-pointer group">
                                  <div className={cn("w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors mt-0.5", governanceChecks.usage ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20 group-hover:border-white/40")}>
-                                    {governanceChecks.usage && <Check className="w-3 h-3 text-black" />}
+                                     {governanceChecks.usage && <Check className="w-3 h-3 text-black" />}
                                  </div>
-                                  <div>
+                                 <div>
                                      <span className="text-sm font-bold block group-hover:text-white transition-colors">Usage Guidelines</span>
                                      <span className="text-xs text-white/40 leading-relaxed block mt-1">Clear space and minimum size rules are defined.</span>
                                  </div>
@@ -1391,11 +1461,17 @@ const ProtocolsView = () => {
 
 // 7. RESOURCES VIEW (Real Content)
 const ResourcesView = () => {
+    // Helper to scroll to section
+    const scrollTo = (id: string) => {
+        const element = document.getElementById(id);
+        if (element) element.scrollIntoView({ behavior: 'smooth' });
+    };
+
     return (
-        <div className="max-w-4xl mx-auto px-6 py-12">
+        <div className="max-w-4xl mx-auto px-6 py-12 relative">
             
             {/* Header */}
-            <div className="mb-12 border-b border-white/10 pb-8">
+            <div className="mb-8 border-b border-white/10 pb-8">
                 <div className="font-mono text-xs text-[#FF7F50] mb-2">// KNOWLEDGE_BASE</div>
                 <h1 className="text-4xl font-bold mb-4">Resources</h1>
                 <p className="text-white/60 font-light text-lg">
@@ -1403,8 +1479,21 @@ const ResourcesView = () => {
                 </p>
             </div>
 
+            {/* STICKY SUB-NAV */}
+            <div className="sticky top-24 z-40 bg-[#050505]/90 backdrop-blur border-y border-white/10 py-3 mb-12 flex gap-6 overflow-x-auto no-scrollbar">
+                <button onClick={() => scrollTo('downloads')} className="font-mono text-xs hover:text-[#FF7F50] transition-colors whitespace-nowrap flex items-center gap-2">
+                    <Download className="w-3 h-3" /> DOWNLOADS
+                </button>
+                <button onClick={() => scrollTo('learning')} className="font-mono text-xs hover:text-[#FF7F50] transition-colors whitespace-nowrap flex items-center gap-2">
+                    <BookOpen className="w-3 h-3" /> GUIDES
+                </button>
+                <button onClick={() => scrollTo('tools')} className="font-mono text-xs hover:text-[#FF7F50] transition-colors whitespace-nowrap flex items-center gap-2">
+                    <Wrench className="w-3 h-3" /> TOOLBELT
+                </button>
+            </div>
+
             {/* Templates Section */}
-            <div className="mb-16">
+            <div id="downloads" className="mb-24 scroll-mt-40">
                 <div className="flex items-center gap-2 mb-6 text-white/40 uppercase tracking-widest font-mono text-xs">
                     <FileBox className="w-4 h-4" /> Downloads
                 </div>
@@ -1431,7 +1520,7 @@ const ResourcesView = () => {
             </div>
 
             {/* Learning Section */}
-            <div className="mb-16">
+            <div id="learning" className="mb-24 scroll-mt-40">
                 <div className="flex items-center gap-2 mb-6 text-white/40 uppercase tracking-widest font-mono text-xs">
                     <GraduationCap className="w-4 h-4" /> Learning
                 </div>
@@ -1458,7 +1547,7 @@ const ResourcesView = () => {
             </div>
 
             {/* AI Tools Section */}
-            <div>
+            <div id="tools" className="mb-24 scroll-mt-40">
                 <div className="flex items-center gap-2 mb-6 text-white/40 uppercase tracking-widest font-mono text-xs">
                     <Wrench className="w-4 h-4" /> Toolbelt
                 </div>
@@ -1495,6 +1584,7 @@ export default function App() {
     <Layout currentView={currentView} onViewChange={setCurrentView}>
       {currentView === 'HOME' && <HomeView onNavigate={setCurrentView} />}
       {currentView === 'LOGIN' && <LoginView onNavigate={setCurrentView} />}
+      {currentView === 'WELCOME' && <WelcomeView onNavigate={setCurrentView} />}
       {currentView === 'DASHBOARD' && <DashboardView onNavigate={setCurrentView} />}
       {currentView === 'PROJECT_HUB' && <ProjectHubView onNavigate={setCurrentView} />}
       {currentView === 'PROJECT_WIZARD' && <ProjectWizard onNavigate={setCurrentView} />}
