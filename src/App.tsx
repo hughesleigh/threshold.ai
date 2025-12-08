@@ -5,13 +5,17 @@ import {
   ChevronRight, 
   ChevronLeft, 
   Lock, 
+  LayoutGrid, 
   FileText, 
   Terminal, 
   ShieldCheck, 
   Activity, 
+  Clock, 
   Plus, 
   MoreHorizontal, 
   Download, 
+  Search, 
+  AlertCircle, 
   X, 
   Play, 
   MousePointer2, 
@@ -19,6 +23,7 @@ import {
   Upload, 
   Sparkles, 
   Zap, 
+  Layout as LayoutIcon, 
   Presentation, 
   BookOpen, 
   MessageSquare, 
@@ -30,14 +35,16 @@ import {
   Wrench, 
   Send, 
   FolderOpen, 
+  File, 
   Grid, 
+  BarChart3, 
+  Eye, 
   BrainCircuit, 
   Target, 
   CornerUpLeft, 
   RefreshCcw,
   UserPlus,
-  ArrowUp,
-  Info
+  ArrowUp
 } from 'lucide-react';
 import { cn } from "@/components/ui/utils";
 
@@ -183,7 +190,7 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
         <div className="flex items-center gap-8">
             <div className="hidden md:flex items-center gap-8 font-mono text-xs text-white/60">
                 <button onClick={() => onViewChange('HOME')} className={cn("hover:text-white transition-colors", currentView === 'HOME' && "text-white")}>HOME</button>
-                <button onClick={() => onViewChange('PROTOCOLS')} className={cn("hover:text-white transition-colors", currentView === 'PROTOCOLS' && "text-white")}>METHODOLOGY</button>
+                <button onClick={() => onViewChange('PROTOCOLS')} className={cn("hover:text-white transition-colors", currentView === 'PROTOCOLS' && "text-white")}>HOW IT WORKS</button>
                 <button onClick={() => onViewChange('RESOURCES')} className={cn("hover:text-white transition-colors", currentView === 'RESOURCES' && "text-white")}>RESOURCES</button>
                 {isLoggedInContext && (
                     <button onClick={() => onViewChange('DASHBOARD')} className={cn("hover:text-white transition-colors font-bold", (currentView === 'DASHBOARD' || currentView === 'PROJECT_HUB' || currentView === 'MOODBOARD') && "text-[#FF7F50]")}>DASHBOARD</button>
@@ -202,7 +209,7 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
                 {isLoggedInContext && (
                     <div className="flex items-center gap-2">
                         <div className="hidden md:block text-[10px] font-mono text-green-400 border border-green-900/50 bg-green-900/20 px-2 py-1 rounded">
-                            AI_SYSTEM: ONLINE
+                            AI_ASSISTANT: READY
                         </div>
                         <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center font-mono text-xs font-bold ring-1 ring-white/20 cursor-pointer hover:ring-[#FF7F50] transition-all">
                         AH
@@ -231,11 +238,11 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
         <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-[#FF7F50]/20"></div>
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-[10px] font-mono text-white/40">
            <div className="mb-4 md:mb-0">
-             © 2025 THRESHOLD_METHOD
+             © 2025 THRESHOLD
            </div>
            <div className="flex gap-6">
-             <span>[ SECURITY: ENCRYPTED ]</span>
-             <span>[ LATENCY: 12ms ]</span>
+             <span>// STRATEGIC_FRAMEWORK: LOADED</span>
+             <span>// LATENCY: 12ms</span>
            </div>
         </div>
       </footer>
@@ -243,7 +250,7 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
   );
 };
 
-// 2. HOME VIEW (UPDATED FOR CLARITY)
+// 2. HOME VIEW (UPDATED COPY & SECTIONS)
 const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [sliderVal, setSliderVal] = useState(50);
 
@@ -258,14 +265,13 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
 
         <div className="text-center space-y-6">
           <div className="inline-block px-3 py-1 rounded text-[10px] font-mono tracking-widest text-[#FF7F50]/80 mb-2">
-            // SYSTEM STATUS: VALIDATED
+            // AI_ASSISTANT: READY
           </div>
           <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-white pb-2">
             Threshold.
           </h1>
           <p className="text-lg md:text-xl text-white/60 max-w-xl mx-auto font-light leading-relaxed">
-            The rigorous methodology for <span className="text-white">AI-augmented</span> creative workflows. 
-            Moving beyond prompt engineering to <span className="text-white/90 font-medium">strategic integrity</span>.
+            An AI creative assistant built for professional designers. Strategic checkpoints prevent generic outputs while maintaining AI efficiency for high-stakes creative work.
           </p>
           <div className="pt-8">
             <button 
@@ -281,23 +287,60 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
         </div>
       </div>
 
-      {/* CLARITY SECTION: WHAT IS THIS? */}
-      <div className="mt-20 max-w-4xl mx-auto text-center space-y-12">
+      {/* CLARITY SECTION: THE 3 PROCESS CARDS */}
+      <div className="mt-20 max-w-5xl mx-auto text-center space-y-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left">
                   <ShieldCheck className="w-8 h-8 text-[#FF7F50] mb-4" />
-                  <h3 className="text-xl font-bold mb-2">1. Define</h3>
-                  <p className="text-white/50 text-sm">Lock in your strategy and constraints before you generate a single pixel.</p>
+                  <h3 className="text-xl font-bold mb-2">1. Brief Your Assistant</h3>
+                  <p className="text-white/50 text-sm">Define strategic constraints before AI generates anything. Your creative boundaries become the AI's operating parameters.</p>
               </div>
               <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left">
-                  <BrainCircuit className="w-8 h-8 text-blue-400 mb-4" />
-                  <h3 className="text-xl font-bold mb-2">2. Generate</h3>
-                  <p className="text-white/50 text-sm">Use our AI tools to explore concepts safely within your defined guardrails.</p>
+                  <Wrench className="w-8 h-8 text-blue-400 mb-4" />
+                  <h3 className="text-xl font-bold mb-2">2. AI Explores, You Direct</h3>
+                  <p className="text-white/50 text-sm">The assistant generates options within your guardrails. Human checkpoints ensure outputs stay strategic and distinct.</p>
               </div>
               <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left">
                   <Lock className="w-8 h-8 text-purple-400 mb-4" />
-                  <h3 className="text-xl font-bold mb-2">3. Validate</h3>
-                  <p className="text-white/50 text-sm">Stress-test your concepts against the brief to ensure professional integrity.</p>
+                  <h3 className="text-xl font-bold mb-2">3. Automated Quality Checks</h3>
+                  <p className="text-white/50 text-sm">Built-in validation gates stress-test concepts against your brief. Approve what works, reject what doesn't.</p>
+              </div>
+          </div>
+      </div>
+
+      {/* NEW SECTION: HOW IT ACTUALLY WORKS */}
+      <div className="mt-32 max-w-4xl mx-auto border border-white/10 rounded-2xl bg-white/5 p-8 md:p-12">
+          <div className="inline-flex items-center gap-2 text-[#FF7F50] font-mono text-xs mb-6">
+              <Terminal className="w-3 h-3" />
+              <span>// HOW_IT_ACTUALLY_WORKS</span>
+          </div>
+          <h2 className="text-3xl font-bold mb-8">From Brief to Deliverable</h2>
+          
+          <div className="space-y-8">
+              <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center font-bold text-blue-400 text-sm">1</div>
+                  <div>
+                      <h4 className="font-bold text-white mb-1">Strategic Foundation</h4>
+                      <p className="text-white/60 text-sm">Upload your brief. AI extracts constraints and positioning. You validate parameters before generation begins.</p>
+                  </div>
+              </div>
+              <div className="w-[1px] h-8 bg-white/10 ml-4"></div>
+              
+              <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center font-bold text-purple-400 text-sm">2</div>
+                  <div>
+                      <h4 className="font-bold text-white mb-1">Conceptual Development</h4>
+                      <p className="text-white/60 text-sm">AI generates visual research. You interpret patterns and define creative direction.</p>
+                  </div>
+              </div>
+              <div className="w-[1px] h-8 bg-white/10 ml-4"></div>
+
+              <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#FF7F50]/20 flex items-center justify-center font-bold text-[#FF7F50] text-sm">3</div>
+                  <div>
+                      <h4 className="font-bold text-white mb-1">Design & Validation</h4>
+                      <p className="text-white/60 text-sm">Assistant creates options. You validate concepts against brief requirements. Refine selected direction with AI support.</p>
+                  </div>
               </div>
           </div>
       </div>
@@ -311,8 +354,11 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 </div>
                 <h2 className="text-4xl font-bold tracking-tight">Stop Generating Average.</h2>
                 <p className="text-xl text-white/60 font-light leading-relaxed">
-                    Standard AI makes everything look 'average' (the statistical mean). Threshold introduces strict rules—or <span className="text-white font-medium">strategic friction</span>—to force the AI to create something unique.
+                    Generic AI outputs happen when there's no strategic framework to push against. Threshold gives your AI assistant strict rules—creative constraints that force unique solutions.
                 </p>
+                <div className="mt-4 text-white/80 font-medium">
+                    The result? Work that's distinctly yours, executed at AI speed.
+                </div>
             </div>
 
             <div className="relative h-[400px] rounded-2xl border border-white/10 overflow-hidden select-none group cursor-ew-resize shadow-2xl bg-black">
@@ -363,7 +409,7 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 3. LOGIN VIEW (WITH TOGGLE)
+// 3. LOGIN VIEW (WITH ORANGE TOGGLES)
 const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [isSignUp, setIsSignUp] = useState(false);
 
@@ -411,7 +457,7 @@ const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
           </button>
 
           <div className="text-center pt-4">
-             <button onClick={() => setIsSignUp(!isSignUp)} className="text-xs text-white/40 hover:text-white transition-colors">
+             <button onClick={() => setIsSignUp(!isSignUp)} className="text-xs text-[#FF7F50] hover:text-[#FFAB85] transition-colors font-bold tracking-wide">
                 {isSignUp ? 'Already have an account? Login' : 'Need an account? Create one'}
              </button>
           </div>
@@ -479,7 +525,7 @@ const WelcomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 4. UPDATED DASHBOARD VIEW (HERO LAYOUT WITH MENU)
+// 4. UPDATED DASHBOARD VIEW (HERO LAYOUT WITH BOTTOM-RIGHT MENU)
 const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
   const [showHeroMenu, setShowHeroMenu] = useState(false);
@@ -521,16 +567,17 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
         <h2 className="text-xs font-mono text-white/40 mb-4 uppercase tracking-widest">Active Directive</h2>
         <div className="relative w-full p-8 border border-white/10 rounded-2xl bg-gradient-to-br from-white/5 to-black group hover:border-[#FF7F50]/30 transition-all">
             
-            {/* HERO MENU BUTTON */}
-            <div className="absolute top-6 right-6" ref={heroMenuRef}>
+            {/* HERO MENU BUTTON (BOTTOM RIGHT) */}
+            <div className="absolute bottom-6 right-6 z-20" ref={heroMenuRef}>
                 <button 
                     onClick={() => setShowHeroMenu(!showHeroMenu)}
                     className="p-2 text-white/40 hover:text-white hover:bg-white/10 rounded-full transition-colors"
                 >
                     <MoreHorizontal className="w-5 h-5" />
                 </button>
+                {/* MENU OPENS UPWARDS */}
                 {showHeroMenu && (
-                    <div className="absolute top-full right-0 mt-2 w-48 bg-[#0A0A0A] border border-white/20 rounded-lg p-1 shadow-2xl z-50 animate-in fade-in zoom-in duration-200">
+                    <div className="absolute bottom-full right-0 mb-2 w-48 bg-[#0A0A0A] border border-white/20 rounded-lg p-1 shadow-2xl z-50 animate-in fade-in zoom-in duration-200">
                         <button className="flex items-center gap-2 w-full px-3 py-2 text-xs text-white/80 hover:bg-white/10 rounded"><Edit2 className="w-3 h-3"/> Edit Project</button>
                         <button className="flex items-center gap-2 w-full px-3 py-2 text-xs text-white/80 hover:bg-white/10 rounded"><Archive className="w-3 h-3"/> Archive</button>
                         <div className="h-[1px] bg-white/10 my-1"></div>
@@ -572,7 +619,7 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 </div>
             </div>
         </div>
-      </div>
+    </div>
 
       {/* 2. SECONDARY LIST (Reduced Visual Noise) */}
       <div>
@@ -1471,31 +1518,30 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 6. PROTOCOLS VIEW
+// 6. PROTOCOLS VIEW (REWRITTEN FOR CLARITY)
 const ProtocolsView = () => {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
         <div className="mb-12 border-b border-white/10 pb-8">
-            <div className="font-mono text-xs text-[#FF7F50] mb-2">// THE_METHODOLOGY</div>
-            <h1 className="text-4xl font-bold mb-4">Strategic Governance</h1>
+            <div className="font-mono text-xs text-[#FF7F50] mb-2">// HOW_IT_WORKS</div>
+            <h1 className="text-4xl font-bold mb-4">AI Speed + Human Oversight</h1>
             <p className="text-white/60 font-light text-lg mb-8">
-                Threshold is not just a tool; it is a governance layer for high-stakes creative work.
-                We operationalize the "Human-in-the-Loop" standard to ensure AI outputs remain strategic, safe, and distinct.
+                Threshold is an AI design assistant with mandatory quality control. You set the creative strategy, the AI executes within those boundaries, and built-in validation gates ensure outputs match your brief.
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
                  <div>
-                     <h3 className="font-bold text-white mb-2">Why Threshold?</h3>
+                     <h3 className="font-bold text-white mb-2">Why Standard AI Fails</h3>
                      <p className="text-sm text-white/60 leading-relaxed">
                          Generative AI models default to the statistical mean—creating "average" work by design. 
-                         Without structural intervention, this leads to brand homogeneity and semiotic collapse.
+                         Without guidance, this leads to brand homogeneity and generic logos.
                      </p>
                  </div>
                  <div>
-                     <h3 className="font-bold text-white mb-2">The Solution</h3>
+                     <h3 className="font-bold text-white mb-2">The Threshold Solution</h3>
                      <p className="text-sm text-white/60 leading-relaxed">
-                         We introduce intentional friction at critical decision points. By separating 
-                         pattern recognition (AI) from meaning-making (Human), we preserve creative integrity.
+                         We introduce intentional pauses at decision points where meaning matters most. 
+                         By separating pattern recognition (AI) from strategy (Human), we preserve creative integrity.
                      </p>
                  </div>
             </div>
@@ -1506,22 +1552,22 @@ const ProtocolsView = () => {
                 { 
                     id: '01', 
                     title: 'STRATEGY PRECEDES SYMBOL', 
-                    desc: 'Don’t guess. Define the rules before you start generating. We do not prompt into the void; we prompt into a framework.' 
+                    desc: 'Don’t guess. Define the creative rules before the AI assistant generates anything. We don’t prompt into the void; we prompt into a framework.' 
                 },
                 { 
                     id: '02', 
                     title: 'DEFINE BOUNDARIES FIRST', 
-                    desc: 'Great design is about what you leave out. We block generic clichés upfront to force the AI into new territory.' 
+                    desc: 'Great design is about what you leave out. We block generic AI defaults upfront, forcing the assistant to explore only within your defined creative territory.' 
                 },
                 { 
                     id: '03', 
                     title: 'QUALITY CONTROL IS MANDATORY', 
-                    desc: 'Speed without checking is risky. The "Gate" forces you to pause and verify the work before moving forward.' 
+                    desc: 'Speed without validation is risky. Built-in "Gates" force you to pause and verify AI outputs match your strategy before moving to the next stage.' 
                 },
                  { 
                     id: '04', 
                     title: 'HUMAN INTENT, MACHINE SPEED', 
-                    desc: 'AI is the engine; You are the steering wheel. Automation is allowed only after you have set the direction.' 
+                    desc: 'AI is the engine; You are the steering wheel. The assistant executes your creative direction at scale—but only after you’ve set the strategic course.' 
                 }
             ].map((p) => (
                 <div key={p.id} className="flex gap-8 items-start group">
