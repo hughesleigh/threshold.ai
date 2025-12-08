@@ -250,7 +250,7 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
   );
 };
 
-// 2. HOME VIEW (UPDATED COPY & SECTIONS)
+// 2. HOME VIEW (CORRECTED)
 const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [sliderVal, setSliderVal] = useState(50);
 
@@ -271,7 +271,7 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
             Threshold.
           </h1>
           <p className="text-lg md:text-xl text-white/60 max-w-xl mx-auto font-light leading-relaxed">
-            The AI creative assistant for high-stakes <span className="text-white">creative</span> work. 
+            The AI creative assistant for high-stakes creative work. 
             Co-create strategic briefs, validate at critical checkpoints, and prevent generic outputs before they happen.
           </p>
           <div className="pt-8">
@@ -288,63 +288,34 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
         </div>
       </div>
 
-      {/* CLARITY SECTION: THE 3 PROCESS CARDS */}
+      {/* CLARITY SECTION: THE 3 PROCESS CARDS (ALIGNED) */}
       <div className="mt-20 max-w-5xl mx-auto text-center space-y-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left relative group">
-                  <ShieldCheck className="w-8 h-8 text-[#FF7F50] mb-4" />
-                  <h3 className="text-xl font-bold mb-2">1. Co-Create Your Brief</h3>
-                  <p className="text-white/50 text-sm mb-4">Build strategic parameters with AI assistance. Define must-embody keywords and constraints. Lock in your framework.</p>
-                  <div className="text-[10px] font-mono text-[#FF7F50] uppercase tracking-wider">⚡ Strategy Precedes Symbol</div>
-              </div>
-              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left relative group">
-                  <Wrench className="w-8 h-8 text-blue-400 mb-4" />
-                  <h3 className="text-xl font-bold mb-2">2. AI Explores, You Interpret</h3>
-                  <p className="text-white/50 text-sm mb-4">AI extracts visual patterns. You interpret meaning and define territories. Checkpoints ensure outputs stay distinct.</p>
-                  <div className="text-[10px] font-mono text-blue-400 uppercase tracking-wider">⚡ AI expands data; humans expand meaning</div>
-              </div>
-              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left relative group">
-                  <Lock className="w-8 h-8 text-purple-400 mb-4" />
-                  <h3 className="text-xl font-bold mb-2">3. Gates Before Advancement</h3>
-                  <p className="text-white/50 text-sm mb-4">Mandatory validation at five critical stages. Each gate must pass before work continues.</p>
-                  <div className="text-[10px] font-mono text-purple-400 uppercase tracking-wider">⚡ Human-in-the-Loop, not Human-in-the-Way</div>
-              </div>
-          </div>
-      </div>
-
-      {/* NEW SECTION: HOW IT ACTUALLY WORKS */}
-      <div className="mt-32 max-w-4xl mx-auto border border-white/10 rounded-2xl bg-white/5 p-8 md:p-12">
-          <div className="inline-flex items-center gap-2 text-[#FF7F50] font-mono text-xs mb-6">
-              <Terminal className="w-3 h-3" />
-              <span>// HOW_IT_ACTUALLY_WORKS</span>
-          </div>
-          <h2 className="text-3xl font-bold mb-8">From Brief to Deliverable</h2>
-          
-          <div className="space-y-8">
-              <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center font-bold text-blue-400 text-sm">1</div>
-                  <div>
-                      <h4 className="font-bold text-white mb-1">Strategic Foundation</h4>
-                      <p className="text-white/60 text-sm">Upload your brief. AI extracts constraints and positioning. You validate parameters before generation begins.</p>
+              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left relative group flex flex-col h-full">
+                  <div className="flex-grow">
+                      <ShieldCheck className="w-8 h-8 text-[#FF7F50] mb-4" />
+                      <h3 className="text-xl font-bold mb-2">1. Co-Create Your Brief</h3>
+                      <p className="text-white/50 text-sm mb-4">Build strategic parameters with AI assistance. Define must-embody keywords and constraints. Lock in your framework.</p>
                   </div>
+                  <div className="text-[10px] font-mono text-[#FF7F50] uppercase tracking-wider mt-auto">⚡ Strategy Precedes Symbol</div>
               </div>
-              <div className="w-[1px] h-8 bg-white/10 ml-4"></div>
               
-              <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center font-bold text-purple-400 text-sm">2</div>
-                  <div>
-                      <h4 className="font-bold text-white mb-1">Conceptual Development</h4>
-                      <p className="text-white/60 text-sm">AI generates visual research. You interpret patterns and define creative direction.</p>
+              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left relative group flex flex-col h-full">
+                  <div className="flex-grow">
+                      <Wrench className="w-8 h-8 text-blue-400 mb-4" />
+                      <h3 className="text-xl font-bold mb-2">2. AI Explores, You Interpret</h3>
+                      <p className="text-white/50 text-sm mb-4">AI extracts visual patterns. You interpret meaning and define territories. Checkpoints ensure outputs stay distinct.</p>
                   </div>
+                  <div className="text-[10px] font-mono text-blue-400 uppercase tracking-wider mt-auto">⚡ AI expands data; humans expand meaning</div>
               </div>
-              <div className="w-[1px] h-8 bg-white/10 ml-4"></div>
-
-              <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#FF7F50]/20 flex items-center justify-center font-bold text-[#FF7F50] text-sm">3</div>
-                  <div>
-                      <h4 className="font-bold text-white mb-1">Design & Validation</h4>
-                      <p className="text-white/60 text-sm">Assistant creates options. You validate concepts against brief requirements. Refine selected direction with AI support.</p>
+              
+              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left relative group flex flex-col h-full">
+                  <div className="flex-grow">
+                      <Lock className="w-8 h-8 text-purple-400 mb-4" />
+                      <h3 className="text-xl font-bold mb-2">3. Gates Before Advancement</h3>
+                      <p className="text-white/50 text-sm mb-4">Mandatory validation at five critical stages. Each gate must pass before work continues.</p>
                   </div>
+                  <div className="text-[10px] font-mono text-purple-400 uppercase tracking-wider mt-auto">⚡ Human-in-the-Loop, not Human-in-the-Way</div>
               </div>
           </div>
       </div>
@@ -360,8 +331,19 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 <p className="text-xl text-white/60 font-light leading-relaxed">
                     Standard AI makes everything look 'average' (the statistical mean). Threshold introduces strict rules—or <span className="text-white font-medium">strategic friction</span>—to force the AI to create something unique.
                 </p>
-                <div className="mt-4 text-white/80 font-medium">
-                    The result? Work that's distinctly yours, executed at AI speed.
+                
+                <div className="grid grid-cols-2 gap-4 pt-4">
+                    <div className="p-4 rounded border border-white/10 bg-white/5">
+                        <div className="text-[10px] font-mono text-white/40 mb-2 uppercase tracking-wider">Unstructured AI</div>
+                        <div className="text-lg text-white/60 font-light">Generic Output</div>
+                    </div>
+                    <div className="p-4 rounded border border-[#FF7F50]/20 bg-[#FF7F50]/5 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-2 opacity-20">
+                            <ShieldCheck className="w-8 h-8 text-[#FF7F50]" />
+                        </div>
+                        <div className="text-[10px] font-mono text-[#FF7F50] mb-2 uppercase tracking-wider">Threshold Method</div>
+                        <div className="text-lg text-white font-medium">Strategic Asset</div>
+                    </div>
                 </div>
             </div>
 
