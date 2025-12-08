@@ -250,7 +250,7 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
   );
 };
 
-// 2. HOME VIEW (UPDATED COPY & SECTIONS)
+// 2. HOME VIEW (UPDATED COPY & MOBILE FIXES)
 const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [sliderVal, setSliderVal] = useState(50);
 
@@ -290,23 +290,31 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
       {/* CLARITY SECTION: THE 3 PROCESS CARDS */}
       <div className="mt-20 max-w-5xl mx-auto text-center space-y-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left relative group">
-                  <ShieldCheck className="w-8 h-8 text-[#FF7F50] mb-4" />
-                  <h3 className="text-xl font-bold mb-2">1. Co-Create Your Brief</h3>
-                  <p className="text-white/50 text-sm mb-4">Build strategic parameters with AI assistance. Define must-embody keywords and constraints. Lock in your framework.</p>
-                  <div className="text-[10px] font-mono text-[#FF7F50] uppercase tracking-wider">⚡ Strategy Precedes Symbol</div>
+              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left relative group flex flex-col h-full">
+                  <div className="flex-grow">
+                      <ShieldCheck className="w-8 h-8 text-[#FF7F50] mb-4" />
+                      <h3 className="text-xl font-bold mb-2">1. Co-Create Your Brief</h3>
+                      <p className="text-white/50 text-sm mb-4">Build strategic parameters with AI assistance. Define must-embody keywords and constraints. Lock in your framework.</p>
+                  </div>
+                  <div className="text-[10px] font-mono text-[#FF7F50] uppercase tracking-wider mt-auto">⚡ Strategy Precedes Symbol</div>
               </div>
-              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left relative group">
-                  <Wrench className="w-8 h-8 text-blue-400 mb-4" />
-                  <h3 className="text-xl font-bold mb-2">2. AI Explores, You Interpret</h3>
-                  <p className="text-white/50 text-sm mb-4">AI extracts visual patterns. You interpret meaning and define territories. Checkpoints ensure outputs stay distinct.</p>
-                  <div className="text-[10px] font-mono text-blue-400 uppercase tracking-wider">⚡ AI expands data; humans expand meaning</div>
+              
+              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left relative group flex flex-col h-full">
+                  <div className="flex-grow">
+                      <Wrench className="w-8 h-8 text-blue-400 mb-4" />
+                      <h3 className="text-xl font-bold mb-2">2. AI Explores, You Interpret</h3>
+                      <p className="text-white/50 text-sm mb-4">AI extracts visual patterns. You interpret meaning and define territories. Checkpoints ensure outputs stay distinct.</p>
+                  </div>
+                  <div className="text-[10px] font-mono text-blue-400 uppercase tracking-wider mt-auto">⚡ AI expands data; humans expand meaning</div>
               </div>
-              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left relative group">
-                  <Lock className="w-8 h-8 text-purple-400 mb-4" />
-                  <h3 className="text-xl font-bold mb-2">3. Gates Before Advancement</h3>
-                  <p className="text-white/50 text-sm mb-4">Mandatory validation at five critical stages. Each gate must pass before work continues.</p>
-                  <div className="text-[10px] font-mono text-purple-400 uppercase tracking-wider">⚡ Human-in-the-Loop, not Human-in-the-Way</div>
+              
+              <div className="p-6 border border-white/5 rounded-2xl bg-white/5 hover:border-white/10 transition-colors text-left relative group flex flex-col h-full">
+                  <div className="flex-grow">
+                      <Lock className="w-8 h-8 text-purple-400 mb-4" />
+                      <h3 className="text-xl font-bold mb-2">3. Gates Before Advancement</h3>
+                      <p className="text-white/50 text-sm mb-4">Mandatory validation at five critical stages. Each gate must pass before work continues.</p>
+                  </div>
+                  <div className="text-[10px] font-mono text-purple-400 uppercase tracking-wider mt-auto">⚡ Human-in-the-Loop, not Human-in-the-Way</div>
               </div>
           </div>
       </div>
@@ -319,15 +327,19 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                     <span>// QUALITY_CONTROL_MONITOR</span>
                 </div>
                 <h2 className="text-4xl font-bold tracking-tight">Stop Generating Average.</h2>
-                <p className="text-xl text-white/60 font-light leading-relaxed">
-                    LLMs default to the statistical mean—creating "average" by design. Threshold gives your AI assistant strict rules: creative constraints you define together, then locked in before generation begins.
-                </p>
-                <div className="mt-4 text-white/80 font-medium">
-                    By separating pattern recognition (AI) from meaning-making (Human), we prevent generic convergence.
+                
+                {/* UPDATED COPY PER SCREENSHOT */}
+                <div className="space-y-6">
+                    <p className="text-lg text-white/60 font-light leading-relaxed">
+                        Generic AI outputs happen when there's no strategic framework to push against. Threshold gives your AI assistant strict rules—creative constraints that force unique solutions.
+                    </p>
+                    <p className="text-lg text-white font-medium leading-relaxed">
+                        The result? Work that's distinctly yours, executed at AI speed.
+                    </p>
                 </div>
             </div>
 
-            <div className="relative h-[400px] rounded-2xl border border-white/10 overflow-hidden select-none group cursor-ew-resize shadow-2xl bg-black">
+            <div className="relative h-[300px] md:h-[400px] rounded-2xl border border-white/10 overflow-hidden select-none group cursor-ew-resize shadow-2xl bg-black">
                 <div className="absolute inset-0 bg-[#111] flex items-center justify-center">
                       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-40 mix-blend-overlay"></div>
                       <div className="absolute inset-0 flex items-center justify-center">
@@ -375,7 +387,7 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 3. LOGIN VIEW (WITH ORANGE TOGGLES)
+// 3. LOGIN VIEW
 const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [isSignUp, setIsSignUp] = useState(false);
 
@@ -496,7 +508,7 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
   const [showHeroMenu, setShowHeroMenu] = useState(false);
   const heroMenuRef = useRef<HTMLDivElement>(null);
-  
+   
   const activeProject = INITIAL_PROJECTS[0];
   const otherProjects = INITIAL_PROJECTS.slice(1);
 
@@ -552,7 +564,8 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 )}
             </div>
 
-            <div className="flex justify-between items-start mb-8">
+            {/* Changed to flex-col on mobile, flex-row on desktop for better fit */}
+            <div className="flex flex-col md:flex-row justify-between items-start mb-8 gap-4">
                 <div>
                     <span className="inline-block px-2 py-1 rounded bg-blue-500/10 text-blue-400 text-[10px] font-mono mb-3 border border-blue-500/20">
                         {activeProject.type}
@@ -562,7 +575,7 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                         Strategic brand identity development focusing on trauma-informed design principles.
                     </p>
                 </div>
-                <div className="text-right">
+                <div className="text-left md:text-right w-full md:w-auto">
                     <div className="text-4xl font-bold text-[#FF7F50]">{activeProject.progress}%</div>
                     <div className="text-[10px] font-mono text-white/40">COMPLETION_RATE</div>
                 </div>
@@ -657,7 +670,7 @@ const DashboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// NEW: PROJECT HUB VIEW (Updated Visuals Card)
+// 5. RESTORED: PROJECT HUB VIEW
 const ProjectHubView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -791,7 +804,7 @@ const ProjectHubView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   )
 };
 
-// NEW: MOODBOARD VIEW
+// 6. RESTORED: MOODBOARD VIEW
 const MoodboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
     return (
         <div className="max-w-6xl mx-auto px-6 py-12">
@@ -831,7 +844,7 @@ const MoodboardView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
     )
 }
 
-// 5. PROJECT WORKFLOW 
+// 7. RESTORED: PROJECT WORKFLOW 
 const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   const [stage, setStage] = useState<Stage>(1);
   const [gateUnlocked, setGateUnlocked] = useState(false);
@@ -970,8 +983,8 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
           </div>
       </div>
 
-      {/* Tape Measure Header */}
-      <div className="sticky top-[82px] z-40 bg-[#050505]/95 backdrop-blur border-b border-white/10 py-4 overflow-x-auto">
+      {/* Tape Measure Header - Mobile Optimized with Scroll */}
+      <div className="sticky top-[82px] z-40 bg-[#050505]/95 backdrop-blur border-b border-white/10 py-4 overflow-x-auto no-scrollbar">
         <div className="flex items-center justify-between min-w-[600px] px-6 relative">
           <div className="absolute left-6 right-6 top-1/2 h-[1px] bg-white/10 -z-10"></div>
           
@@ -1334,88 +1347,88 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                  </p>
                  
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left max-w-4xl mx-auto mb-8">
-                     
-                     {/* LEFT COLUMN: DOWNLOADS */}
-                     <div className="space-y-4">
-                         <div className="font-mono text-xs text-blue-400 mb-2">// GENERATED_DOCUMENTATION</div>
-                         
-                         <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
-                             <div className="flex items-center gap-3">
-                                 <FileText className="w-5 h-5 text-blue-400" />
-                                 <div>
-                                     <h4 className="font-bold">Strategic Brief PDF</h4>
-                                     <p className="text-xs text-white/40">1.2 MB</p>
-                                 </div>
-                             </div>
-                             <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
-                         </div>
-
-                         <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
-                             <div className="flex items-center gap-3">
-                                 <BookOpen className="w-5 h-5 text-green-400" />
-                                 <div>
-                                     <h4 className="font-bold">Brand Guidelines PDF</h4>
-                                     <p className="text-xs text-white/40">Includes WCAG Rules</p>
-                                 </div>
-                             </div>
-                             <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
-                         </div>
+                      
+                      {/* LEFT COLUMN: DOWNLOADS */}
+                      <div className="space-y-4">
+                          <div className="font-mono text-xs text-blue-400 mb-2">// GENERATED_DOCUMENTATION</div>
+                          
+                          <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
+                              <div className="flex items-center gap-3">
+                                  <FileText className="w-5 h-5 text-blue-400" />
+                                  <div>
+                                      <h4 className="font-bold">Strategic Brief PDF</h4>
+                                      <p className="text-xs text-white/40">1.2 MB</p>
+                                  </div>
+                              </div>
+                              <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
+                          </div>
 
                           <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
-                             <div className="flex items-center gap-3">
-                                 <ImageIcon className="w-5 h-5 text-orange-400" />
-                                 <div>
-                                     <h4 className="font-bold">Logo Asset Suite</h4>
-                                     <p className="text-xs text-white/40">SVG, PNG, JPG</p>
-                                 </div>
-                             </div>
-                             <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
+                              <div className="flex items-center gap-3">
+                                  <BookOpen className="w-5 h-5 text-green-400" />
+                                  <div>
+                                      <h4 className="font-bold">Brand Guidelines PDF</h4>
+                                      <p className="text-xs text-white/40">Includes WCAG Rules</p>
+                                  </div>
+                              </div>
+                              <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
                           </div>
-                     </div>
 
-                     {/* RIGHT COLUMN: GOVERNANCE CHECK */}
-                     <div className="bg-white/5 p-6 rounded-xl border border-white/10 h-full flex flex-col justify-center">
-                         <div className="font-mono text-xs text-[#FF7F50] mb-6 flex items-center gap-2">
-                             <Lock className="w-3 h-3"/> GOVERNANCE_VERIFICATION
-                         </div>
-                         
-                         <div className="space-y-6">
-                             <div onClick={() => toggleGovernanceCheck('accessibility')} className="flex items-start gap-4 cursor-pointer group">
-                                 <div className={cn("w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors mt-0.5", governanceChecks.accessibility ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20 group-hover:border-white/40")}>
-                                     {governanceChecks.accessibility && <Check className="w-3 h-3 text-black" />}
-                                 </div>
-                                 <div>
-                                     <span className="text-sm font-bold block group-hover:text-white transition-colors">Accessibility Compliance</span>
-                                     <span className="text-xs text-white/40 leading-relaxed block mt-1">I have verified the assets against the WCAG guidelines in the generated PDF.</span>
-                                 </div>
-                             </div>
+                           <div className="p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between group hover:border-[#FF7F50]/50 transition-all cursor-pointer">
+                              <div className="flex items-center gap-3">
+                                  <ImageIcon className="w-5 h-5 text-orange-400" />
+                                  <div>
+                                      <h4 className="font-bold">Logo Asset Suite</h4>
+                                      <p className="text-xs text-white/40">SVG, PNG, JPG</p>
+                                  </div>
+                              </div>
+                              <Download className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
+                           </div>
+                      </div>
 
-                             <div onClick={() => toggleGovernanceCheck('technical')} className="flex items-start gap-4 cursor-pointer group">
-                                 <div className={cn("w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors mt-0.5", governanceChecks.technical ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20 group-hover:border-white/40")}>
-                                     {governanceChecks.technical && <Check className="w-3 h-3 text-black" />}
-                                 </div>
-                                 <div>
-                                     <span className="text-sm font-bold block group-hover:text-white transition-colors">Technical Standards</span>
-                                     <span className="text-xs text-white/40 leading-relaxed block mt-1">Files meet all required formats and naming conventions.</span>
-                                 </div>
-                             </div>
+                      {/* RIGHT COLUMN: GOVERNANCE CHECK */}
+                      <div className="bg-white/5 p-6 rounded-xl border border-white/10 h-full flex flex-col justify-center">
+                          <div className="font-mono text-xs text-[#FF7F50] mb-6 flex items-center gap-2">
+                              <Lock className="w-3 h-3"/> GOVERNANCE_VERIFICATION
+                          </div>
+                          
+                          <div className="space-y-6">
+                              <div onClick={() => toggleGovernanceCheck('accessibility')} className="flex items-start gap-4 cursor-pointer group">
+                                  <div className={cn("w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors mt-0.5", governanceChecks.accessibility ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20 group-hover:border-white/40")}>
+                                      {governanceChecks.accessibility && <Check className="w-3 h-3 text-black" />}
+                                  </div>
+                                  <div>
+                                      <span className="text-sm font-bold block group-hover:text-white transition-colors">Accessibility Compliance</span>
+                                      <span className="text-xs text-white/40 leading-relaxed block mt-1">I have verified the assets against the WCAG guidelines in the generated PDF.</span>
+                                  </div>
+                              </div>
 
-                              <div onClick={() => toggleGovernanceCheck('usage')} className="flex items-start gap-4 cursor-pointer group">
-                                 <div className={cn("w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors mt-0.5", governanceChecks.usage ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20 group-hover:border-white/40")}>
-                                     {governanceChecks.usage && <Check className="w-3 h-3 text-black" />}
-                                 </div>
-                                 <div>
-                                     <span className="text-sm font-bold block group-hover:text-white transition-colors">Usage Guidelines</span>
-                                     <span className="text-xs text-white/40 leading-relaxed block mt-1">Clear space and minimum size rules are defined.</span>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
+                              <div onClick={() => toggleGovernanceCheck('technical')} className="flex items-start gap-4 cursor-pointer group">
+                                  <div className={cn("w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors mt-0.5", governanceChecks.technical ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20 group-hover:border-white/40")}>
+                                      {governanceChecks.technical && <Check className="w-3 h-3 text-black" />}
+                                  </div>
+                                  <div>
+                                      <span className="text-sm font-bold block group-hover:text-white transition-colors">Technical Standards</span>
+                                      <span className="text-xs text-white/40 leading-relaxed block mt-1">Files meet all required formats and naming conventions.</span>
+                                  </div>
+                              </div>
 
-                 <button className="flex items-center justify-center gap-3 px-8 py-4 bg-[#FF7F50] text-black font-bold rounded hover:bg-[#FF7F50]/90 transition-colors mx-auto shadow-[0_0_30px_rgba(255,127,80,0.3)]">
-                        <Download className="w-5 h-5" /> DOWNLOAD FULL PROJECT PACKAGE (ZIP)
-                 </button>
+                               <div onClick={() => toggleGovernanceCheck('usage')} className="flex items-start gap-4 cursor-pointer group">
+                                  <div className={cn("w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-colors mt-0.5", governanceChecks.usage ? "bg-[#FF7F50] border-[#FF7F50]" : "border-white/20 group-hover:border-white/40")}>
+                                      {governanceChecks.usage && <Check className="w-3 h-3 text-black" />}
+                                  </div>
+                                  <div>
+                                      <span className="text-sm font-bold block group-hover:text-white transition-colors">Usage Guidelines</span>
+                                      <span className="text-xs text-white/40 leading-relaxed block mt-1">Clear space and minimum size rules are defined.</span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <button className="flex items-center justify-center gap-3 px-8 py-4 bg-[#FF7F50] text-black font-bold rounded hover:bg-[#FF7F50]/90 transition-colors mx-auto shadow-[0_0_30px_rgba(255,127,80,0.3)]">
+                         <Download className="w-5 h-5" /> DOWNLOAD FULL PROJECT PACKAGE (ZIP)
+                  </button>
              </div>
         )}
       </div>
@@ -1484,7 +1497,7 @@ const ProjectWizard = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
   );
 };
 
-// 6. PROTOCOLS VIEW (REWRITTEN FOR CLARITY WITH 5 GATES)
+// 8. RESTORED & POLISHED: PROTOCOLS VIEW 
 const ProtocolsView = () => {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
@@ -1513,8 +1526,8 @@ const ProtocolsView = () => {
             </div>
         </div>
 
-        {/* --- NEW SECTION: THE 5 GATES --- */}
-        <div className="mb-16 border border-white/10 rounded-xl bg-white/5 p-8">
+        {/* --- THE 5 GATES --- */}
+        <div className="mb-20 border border-white/10 rounded-xl bg-white/5 p-8">
             <div className="flex items-center gap-2 mb-6">
                 <ShieldCheck className="w-6 h-6 text-[#FF7F50]" />
                 <h2 className="text-2xl font-bold">The Five Validation Gates</h2>
@@ -1529,7 +1542,7 @@ const ProtocolsView = () => {
                     { id: 2, title: "Conceptual Clarity", desc: "AI extracts visual patterns (2A). You interpret meanings and define symbolic territories (2B—human-only). Prevents LLM semiotic collapse." },
                     { id: 3, title: "Design Integrity", desc: "Validate concepts against strategic alignment, distinctiveness, emotional accuracy, and technical quality. Minor refinements loop to iteration; major failures return to concept generation." },
                     { id: 4, title: "Final Validation", desc: "Professional responsibility check. Could you defend this to the client? No hallucinated facts, copyright violations, or unsupported claims." },
-                    { id: 5, title: "Implementation Readiness", desc: "Comprehensive technical delivery prevents the 'Year Two Problem.' All file formats, color models, variations, and usage guidelines prepared for real-world implementation." }
+                    { id: 5, title: "Implementation Readiness", desc: "Comprehensive technical delivery ensures consistent execution across all media. All file formats, color models, variations, and usage guidelines prepared for real-world implementation." }
                 ].map((gate) => (
                     <div key={gate.id} className="flex gap-4 p-4 border border-white/5 rounded-lg bg-white/[0.02] hover:bg-white/5 transition-colors">
                         <div className="flex-shrink-0 w-8 h-8 bg-[#FF7F50]/20 text-[#FF7F50] rounded-full flex items-center justify-center font-bold text-sm border border-[#FF7F50]/30">
@@ -1544,43 +1557,45 @@ const ProtocolsView = () => {
             </div>
         </div>
 
-        <div className="space-y-12">
-            {[
-                { 
-                    id: '01', 
-                    title: 'STRATEGY PRECEDES SYMBOL', 
-                    desc: 'Don’t guess. Define the creative rules before the AI assistant generates anything. We don’t prompt into the void; we prompt into a framework.' 
-                },
-                { 
-                    id: '02', 
-                    title: 'DEFINE BOUNDARIES FIRST', 
-                    desc: 'Great design is about what you leave out. We block generic AI defaults upfront, forcing the assistant to explore only within your defined creative territory.' 
-                },
-                { 
-                    id: '03', 
-                    title: 'QUALITY CONTROL IS MANDATORY', 
-                    desc: 'Speed without validation is risky. Built-in "Gates" force you to pause and verify AI outputs match your strategy before moving to the next stage.' 
-                },
-                 { 
-                    id: '04', 
-                    title: 'HUMAN INTENT, MACHINE SPEED', 
-                    desc: 'AI is the engine; You are the steering wheel. The assistant executes your creative direction at scale—but only after you’ve set the strategic course.' 
-                }
-            ].map((p) => (
-                <div key={p.id} className="flex gap-8 items-start group">
-                    <div className="font-mono text-xl text-white/20 group-hover:text-[#FF7F50] transition-colors">{p.id}</div>
-                    <div className="pt-1">
-                        <h3 className="text-xl font-bold mb-2 group-hover:text-white transition-colors text-white/90">{p.title}</h3>
-                        <p className="text-white/50 leading-relaxed max-w-2xl">{p.desc}</p>
+        {/* --- OUR CORE PRINCIPLES (GRID) --- */}
+        <div className="space-y-8">
+            <h3 className="text-2xl font-bold">Our Core Principles</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[
+                    { 
+                        id: '01', 
+                        title: 'STRATEGY PRECEDES SYMBOL', 
+                        desc: 'Don’t guess. Define the creative rules before the AI assistant generates anything. We don’t prompt into the void; we prompt into a framework.' 
+                    },
+                    { 
+                        id: '02', 
+                        title: 'DEFINE BOUNDARIES FIRST', 
+                        desc: 'Great design is about what you leave out. We block generic AI defaults upfront, forcing the assistant to explore only within your defined creative territory.' 
+                    },
+                    { 
+                        id: '03', 
+                        title: 'QUALITY CONTROL IS MANDATORY', 
+                        desc: 'Speed without validation is risky. Built-in "Gates" force you to pause and verify AI outputs match your strategy before moving to the next stage.' 
+                    },
+                    { 
+                        id: '04', 
+                        title: 'TECHNICAL DELIVERY ENSURES LONGEVITY', 
+                        desc: 'Beautiful concepts fail without proper technical execution. We mandate comprehensive file delivery: 10+ formats across 4 color models with all required variations. Built for real-world use.' 
+                    }
+                ].map((p) => (
+                    <div key={p.id} className="p-6 border border-white/10 rounded-xl bg-white/5 hover:border-white/20 transition-colors group">
+                        <div className="font-mono text-xl text-white/20 group-hover:text-[#FF7F50] transition-colors mb-4">{p.id}</div>
+                        <h3 className="text-xl font-bold mb-3 group-hover:text-white transition-colors text-white/90">{p.title}</h3>
+                        <p className="text-white/50 leading-relaxed text-sm">{p.desc}</p>
                     </div>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
     </div>
   );
 };
 
-// 7. RESOURCES VIEW (Real Content)
+// 9. RESOURCES VIEW (Real Content)
 const ResourcesView = () => {
     // Helper to scroll to section
     const scrollTo = (id: string) => {
