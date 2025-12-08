@@ -42,7 +42,8 @@ import {
   BrainCircuit, 
   Target, 
   CornerUpLeft, 
-  RefreshCcw 
+  RefreshCcw,
+  UserPlus
 } from 'lucide-react';
 import { cn } from "@/components/ui/utils";
 
@@ -71,7 +72,6 @@ const INITIAL_PROJECTS: Project[] = [
 
 // --- HELPER COMPONENTS ---
 
-// Updated SpecBlock with Manual Enter + AI Assist
 const SpecBlock = ({ 
   id, 
   label, 
@@ -93,7 +93,7 @@ const SpecBlock = ({
 
   const handleSave = () => {
     setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 2000); // Reset after 2 seconds
+    setTimeout(() => setIsSaved(false), 2000); 
   };
 
   return (
@@ -115,9 +115,7 @@ const SpecBlock = ({
           onChange={(e) => onChange && onChange(e.target.value)}
         />
         
-        {/* ACTION BAR */}
         <div className="absolute right-2 bottom-2 flex gap-2">
-          {/* Manual Save Button */}
           <button 
             onClick={handleSave}
             className={cn(
@@ -131,7 +129,6 @@ const SpecBlock = ({
             {isSaved ? "SAVED" : "ENTER"}
           </button>
 
-          {/* AI Assist Button */}
           <button className="flex items-center gap-2 text-[10px] font-mono bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 px-3 py-1.5 rounded text-blue-400 hover:text-blue-300 transition-colors">
             <Sparkles className="w-3 h-3" /> AI_ASSIST
           </button>
@@ -193,6 +190,9 @@ const Layout = ({ children, currentView, onViewChange }: { children: React.React
 
                 {isLoggedInContext && (
                     <div className="flex items-center gap-2">
+                        <div className="hidden md:block text-[10px] font-mono text-green-400 border border-green-900/50 bg-green-900/20 px-2 py-1 rounded">
+                            AI_SYSTEM: ONLINE
+                        </div>
                         <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center font-mono text-xs font-bold ring-1 ring-white/20 cursor-pointer hover:ring-[#FF7F50] transition-all">
                         AH
                         </div>
@@ -243,7 +243,7 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
             Threshold.
           </h1>
           <p className="text-lg md:text-xl text-white/60 max-w-xl mx-auto font-light leading-relaxed">
-            The rigorous methodology for AI-augmented creative workflows. 
+            The rigorous methodology for <span className="text-white">AI-assisted</span> creative workflows. 
             Moving beyond prompt engineering to <span className="text-white/90 font-medium">strategic integrity</span>.
           </p>
           <div className="pt-8">
@@ -265,23 +265,24 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
             <div className="space-y-8">
                 <div className="inline-flex items-center gap-2 text-[#FF7F50] font-mono text-xs">
                     <Activity className="w-3 h-3" />
-                    <span>// ENTROPY_MONITOR</span>
+                    <span>// QUALITY_CONTROL_MONITOR</span>
                 </div>
                 <h2 className="text-4xl font-bold tracking-tight">Stop Generating Average.</h2>
                 <p className="text-xl text-white/60 font-light leading-relaxed">
-                    Standard AI makes everything look 'average' (the statistical mean). Threshold introduces strict rules—or <span className="text-white font-medium">strategic friction</span>—to force the AI to create something unique.
+                    Standard AI models are trained to be average. Without guidance, they produce generic work. 
+                    Threshold introduces <span className="text-white font-medium">strategic rules</span> to force the AI to create something unique.
                 </p>
                 
                 <div className="grid grid-cols-2 gap-4 pt-4">
                     <div className="p-4 rounded border border-white/10 bg-white/5">
-                        <div className="text-[10px] font-mono text-white/40 mb-2 uppercase tracking-wider">Without Threshold</div>
-                        <div className="text-lg text-white/60 font-light">Generic Slop</div>
+                        <div className="text-[10px] font-mono text-white/40 mb-2 uppercase tracking-wider">Unstructured AI</div>
+                        <div className="text-lg text-white/60 font-light">Generic Output</div>
                     </div>
                     <div className="p-4 rounded border border-[#FF7F50]/20 bg-[#FF7F50]/5 relative overflow-hidden">
                         <div className="absolute top-0 right-0 p-2 opacity-20">
                             <ShieldCheck className="w-8 h-8 text-[#FF7F50]" />
                         </div>
-                        <div className="text-[10px] font-mono text-[#FF7F50] mb-2 uppercase tracking-wider">With Threshold</div>
+                        <div className="text-[10px] font-mono text-[#FF7F50] mb-2 uppercase tracking-wider">Threshold Method</div>
                         <div className="text-lg text-white font-medium">Strategic Asset</div>
                     </div>
                 </div>
@@ -337,6 +338,8 @@ const HomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
 
 // 3. LOGIN VIEW
 const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
+  const [isSignUp, setIsSignUp] = useState(false);
+
   return (
     <div className="min-h-[80vh] flex items-center justify-center p-4">
       <div className="relative w-full max-w-md p-10 border border-white/10 rounded-2xl backdrop-blur-xl bg-black/40 shadow-2xl overflow-hidden">
@@ -353,8 +356,12 @@ const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
                 <div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div><div className="w-1.5 h-1.5 bg-white rounded-full"></div><div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div>
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Authenticate.</h1>
-          <p className="font-mono text-xs text-[#FF7F50] mt-2">// ENTER_CREDENTIALS</p>
+          <h1 className="text-2xl font-bold text-white tracking-tight">
+            {isSignUp ? 'Create Account.' : 'Authenticate.'}
+          </h1>
+          <p className="font-mono text-xs text-[#FF7F50] mt-2">
+            {isSignUp ? '// INITIALIZE_NEW_USER' : '// ENTER_CREDENTIALS'}
+          </p>
         </div>
 
         <div className="space-y-6">
@@ -366,12 +373,21 @@ const LoginView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
             <label className="block font-mono text-[10px] text-white/50 mb-1 tracking-wider uppercase">[ PASSWORD ]</label>
             <input type="password" className="w-full bg-white/5 border-b border-white/10 focus:border-[#FF7F50] text-white px-3 py-3 outline-none transition-colors font-sans placeholder-white/20" placeholder="••••••••" />
           </div>
+          
           <button 
-            onClick={() => onNavigate('WELCOME')} // FIXED: Routes to Welcome Page
-            className="w-full mt-8 py-3 border border-white/20 hover:border-[#FF7F50] text-white font-mono text-sm uppercase tracking-widest transition-all group relative overflow-hidden bg-white/5 hover:bg-[#FF7F50]/10"
+            onClick={() => onNavigate('WELCOME')} 
+            className="w-full mt-4 py-3 border border-white/20 hover:border-[#FF7F50] text-white font-mono text-sm uppercase tracking-widest transition-all group relative overflow-hidden bg-white/5 hover:bg-[#FF7F50]/10"
           >
-            <span className="relative z-10 group-hover:text-[#FFAB85]">Initiate Session -&gt;</span>
+            <span className="relative z-10 group-hover:text-[#FFAB85]">
+                {isSignUp ? 'Initialize Account ->' : 'Initiate Session ->'}
+            </span>
           </button>
+
+          <div className="text-center pt-4">
+             <button onClick={() => setIsSignUp(!isSignUp)} className="text-xs text-white/40 hover:text-white transition-colors">
+                {isSignUp ? 'Already have an account? Login' : 'Need an account? Create one'}
+             </button>
+          </div>
         </div>
         <div className="mt-8 text-center border-t border-white/5 pt-4">
           <p className="font-mono text-[10px] text-white/30">&gt; SYSTEM_NOTE: DEMO_ENVIRONMENT_ACTIVE</p>
@@ -398,10 +414,10 @@ const WelcomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
              System Online.
            </h1>
            <p className="text-lg text-white/60 leading-relaxed max-w-xl mx-auto">
-             You have accessed <span className="text-white font-medium">Threshold</span>: The professional operating system for AI-assisted design.
+             You have accessed <span className="text-white font-medium">Threshold</span>: The professional operating system for <span className="text-[#FF7F50]">AI-assisted design</span>.
            </p>
            <p className="text-sm text-white/40 font-mono">
-             // PROTOCOL: HUMAN_LED_DESIGN :: AI_ASSISTED_VELOCITY
+             // PROTOCOL: HUMAN_LED_STRATEGY :: AI_POWERED_SPEED
            </p>
         </div>
 
@@ -409,17 +425,17 @@ const WelcomeView = ({ onNavigate }: { onNavigate: (v: View) => void }) => {
            <div className="p-4 rounded bg-white/5 border border-white/5">
               <div className="text-[#FF7F50] mb-2"><ShieldCheck className="w-5 h-5"/></div>
               <h3 className="font-bold text-sm mb-1">Strategic Integrity</h3>
-              <p className="text-xs text-white/50">Prevent generic AI slop by locking constraints first.</p>
+              <p className="text-xs text-white/50">Prevent generic AI slop by locking in your constraints first.</p>
            </div>
            <div className="p-4 rounded bg-white/5 border border-white/5">
               <div className="text-blue-400 mb-2"><Zap className="w-5 h-5"/></div>
               <h3 className="font-bold text-sm mb-1">Velocity</h3>
-              <p className="text-xs text-white/50">Draft concepts in minutes, not days.</p>
+              <p className="text-xs text-white/50">Draft professional concepts in minutes, not days.</p>
            </div>
            <div className="p-4 rounded bg-white/5 border border-white/5">
               <div className="text-purple-400 mb-2"><Lock className="w-5 h-5"/></div>
               <h3 className="font-bold text-sm mb-1">Audit Trail</h3>
-              <p className="text-xs text-white/50">Document every decision for client defense.</p>
+              <p className="text-xs text-white/50">Document every decision to defend your work to clients.</p>
            </div>
         </div>
 
@@ -1428,22 +1444,22 @@ const ProtocolsView = () => {
                 { 
                     id: '01', 
                     title: 'STRATEGY PRECEDES SYMBOL', 
-                    desc: 'No generation shall occur until the Strategic Foundation is locked. We do not prompt into the void; we prompt into a framework.' 
+                    desc: 'Don’t guess. Define the rules before you start generating. We do not prompt into the void; we prompt into a framework.' 
                 },
                 { 
                     id: '02', 
-                    title: 'CONSTRAIN THE LATENT SPACE', 
-                    desc: 'Quality is defined by what you reject. Every brief must include "Must-Avoid" parameters to block clichés and corporate tropes.' 
+                    title: 'DEFINE BOUNDARIES FIRST', 
+                    desc: 'Great design is about what you leave out. We block generic clichés upfront to force the AI into new territory.' 
                 },
                 { 
                     id: '03', 
-                    title: 'FRICTION IS A FEATURE', 
-                    desc: 'Velocity without verification is risk. The "Gate" is not a barrier; it is a quality filter. Engaging the gate is a binding contract of ownership.' 
+                    title: 'QUALITY CONTROL IS MANDATORY', 
+                    desc: 'Speed without checking is risky. The "Gate" forces you to pause and verify the work before moving forward.' 
                 },
                  { 
                     id: '04', 
-                    title: 'HUMAN INTENT, MACHINE VELOCITY', 
-                    desc: 'AI is the engine; You are the steering wheel. Automation is permitted only after intent is established. The roles must never reverse.' 
+                    title: 'HUMAN INTENT, MACHINE SPEED', 
+                    desc: 'AI is the engine; You are the steering wheel. Automation is allowed only after you have set the direction.' 
                 }
             ].map((p) => (
                 <div key={p.id} className="flex gap-8 items-start group">
@@ -1479,15 +1495,16 @@ const ResourcesView = () => {
                 </p>
             </div>
 
-            {/* STICKY SUB-NAV */}
-            <div className="sticky top-24 z-40 bg-[#050505]/90 backdrop-blur border-y border-white/10 py-3 mb-12 flex gap-6 overflow-x-auto no-scrollbar">
-                <button onClick={() => scrollTo('downloads')} className="font-mono text-xs hover:text-[#FF7F50] transition-colors whitespace-nowrap flex items-center gap-2">
+            {/* STICKY SUB-NAV (Horizontal Pill Menu) */}
+            <div className="sticky top-24 z-40 bg-[#050505]/90 backdrop-blur-md border-y border-white/10 py-3 mb-12 flex gap-6 overflow-x-auto no-scrollbar items-center">
+                <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest mr-2">JUMP TO:</span>
+                <button onClick={() => scrollTo('downloads')} className="font-mono text-xs px-3 py-1.5 rounded-full border border-white/10 hover:border-[#FF7F50] hover:text-[#FF7F50] transition-all whitespace-nowrap flex items-center gap-2 bg-white/5">
                     <Download className="w-3 h-3" /> DOWNLOADS
                 </button>
-                <button onClick={() => scrollTo('learning')} className="font-mono text-xs hover:text-[#FF7F50] transition-colors whitespace-nowrap flex items-center gap-2">
+                <button onClick={() => scrollTo('learning')} className="font-mono text-xs px-3 py-1.5 rounded-full border border-white/10 hover:border-[#FF7F50] hover:text-[#FF7F50] transition-all whitespace-nowrap flex items-center gap-2 bg-white/5">
                     <BookOpen className="w-3 h-3" /> GUIDES
                 </button>
-                <button onClick={() => scrollTo('tools')} className="font-mono text-xs hover:text-[#FF7F50] transition-colors whitespace-nowrap flex items-center gap-2">
+                <button onClick={() => scrollTo('tools')} className="font-mono text-xs px-3 py-1.5 rounded-full border border-white/10 hover:border-[#FF7F50] hover:text-[#FF7F50] transition-all whitespace-nowrap flex items-center gap-2 bg-white/5">
                     <Wrench className="w-3 h-3" /> TOOLBELT
                 </button>
             </div>
@@ -1594,3 +1611,4 @@ export default function App() {
     </Layout>
   );
 }
+ 
